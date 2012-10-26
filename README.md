@@ -9,11 +9,12 @@ Dependencies
 YetiJS uses a few libraries and tools:
 
 - Box2DWeb, a JavaScript port of the beautiful Box2D physics library
+- SAT (Separating Axis Theorem) from xxxx is a vary fast way to check if convex polygons collide
 - xxxx
 
 Documentation
 ------
-I used xxxx to create a class-documentation like you maybe know it from javadoc. It's accessible here: xxxx
+I used JSDoc 3 to create a class-documentation similar to javadoc. It's accessible here: xxxx
 
 Start a new YetiJS-project
 ------
