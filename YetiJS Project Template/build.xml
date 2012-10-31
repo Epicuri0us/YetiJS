@@ -1,0 +1,10 @@
+<project name="Game" default="concatenate">
+	<target name="concatenate" description="Concatenate all js files">
+		<concat destfile="${basedir}\game.js" fixlastline="true">
+			<filelist dir="${basedir}">
+				<file name="libs/yeti.js" />
+				<file name="src/game.js" />
+			</filelist>
+		</concat>
+	</target>
+</project>
