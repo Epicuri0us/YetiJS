@@ -5,7 +5,6 @@
  * @author Leo Zurbriggen
  * @constructor
  * @param {yVector} pPosition - The position of the polygon.
- * @deprecated
  */
 var yPolygon = function(pPosition) {
 	var that = this;
@@ -55,7 +54,6 @@ var yPolygon = function(pPosition) {
 	 * Draws polygon for debugging purposes
 	 */
 	yPolygon.prototype.draw = function(camera) {
-		
 		ctx.beginPath();
 		ctx.lineWidth = "1";
 		ctx.strokeStyle = "rgba(20, 20, 20, 0.7)";

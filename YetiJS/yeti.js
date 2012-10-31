@@ -443,7 +443,7 @@ F.prototype.DrawPolygon=function(G,K,y){if(K){var w=this.m_ctx,A=this.m_drawScal
 1;y<K;y++)w.lineTo(G[y].x*A,G[y].y*A);w.lineTo(G[0].x*A,G[0].y*A);w.closePath();w.fill();w.stroke()}};F.prototype.DrawCircle=function(G,K,y){if(K){var w=this.m_ctx,A=this.m_drawScale;w.beginPath();w.strokeStyle=this._color(y.color,this.m_alpha);w.arc(G.x*A,G.y*A,K*A,0,Math.PI*2,true);w.closePath();w.stroke()}};F.prototype.DrawSolidCircle=function(G,K,y,w){if(K){var A=this.m_ctx,U=this.m_drawScale,p=G.x*U,B=G.y*U;A.moveTo(0,0);A.beginPath();A.strokeStyle=this._color(w.color,this.m_alpha);A.fillStyle=
 this._color(w.color,this.m_fillAlpha);A.arc(p,B,K*U,0,Math.PI*2,true);A.moveTo(p,B);A.lineTo((G.x+y.x*K)*U,(G.y+y.y*K)*U);A.closePath();A.fill();A.stroke()}};F.prototype.DrawSegment=function(G,K,y){var w=this.m_ctx,A=this.m_drawScale;w.strokeStyle=this._color(y.color,this.m_alpha);w.beginPath();w.moveTo(G.x*A,G.y*A);w.lineTo(K.x*A,K.y*A);w.closePath();w.stroke()};F.prototype.DrawTransform=function(G){var K=this.m_ctx,y=this.m_drawScale;K.beginPath();K.strokeStyle=this._color(16711680,this.m_alpha);
 K.moveTo(G.position.x*y,G.position.y*y);K.lineTo((G.position.x+this.m_xformScale*G.R.col1.x)*y,(G.position.y+this.m_xformScale*G.R.col1.y)*y);K.strokeStyle=this._color(65280,this.m_alpha);K.moveTo(G.position.x*y,G.position.y*y);K.lineTo((G.position.x+this.m_xformScale*G.R.col2.x)*y,(G.position.y+this.m_xformScale*G.R.col2.y)*y);K.closePath();K.stroke()}})();var i;for(i=0;i<Box2D.postDefs.length;++i)Box2D.postDefs[i]();delete Box2D.postDefs;
-
+
 
 /*
        Common vector2 operations
@@ -501,6 +501,7 @@ function yArea(Vec1, Vec2){
 	that.topleft = Vec1;
 	that.botright = Vec2;
 }
+
 
 /** @preserve @author Jim Riecken - released under the MIT License. */
 /**
@@ -1274,6 +1275,8 @@ var SAT = window['SAT'] = {};
   };
   SAT['testPolygonPolygon'] = testPolygonPolygon;
 }(SAT));
+
+
 /*
  Execute the given function when the browser is ready to draw the next frame
 
@@ -1332,351 +1335,8 @@ var b2yVector = Box2D.Common.Math.b2yVector,
 	yPolygon = SAT.Polygon,
 	yCollisionRespone = SAT.Response,
 	yCircle = SAT.CIRCLE,
-	yBox = SAT.BOX; 
-
-/**
- * @classdesc The physics object saves physical data and collision models for very basic physics calculation. Use Box2DWeb for more accurate and advanced physics.
- * 
- * @author Leo Zurbriggen
- * @constructor
- * @param {yVector} pPosition - The position.
- * @param {Float} pWeight - The weight.
- * @property {yVector} position - The position.
- * @property {yVector} velocity - The active velocity.
- * @property {Float} friction - The friction.
- * @property {Float} weight - The weight.
- * @property {Float} cor - The "coefficient of restitution".
- * @property {yPolygon} model - The polygon that represents the object.
- * @property {yPhysicsObject} collisions - An array that stores every physics object this object collides with, clears every frame.
- */
-var yPhysicsObject = function(pPosition, pWeight) {
-	var that = this;
-	that.position = pPosition;
-	that.velocity = new yVector(0, 0);
-	that.acceleration = new yVector(0, 0);
-	that.friction = 0.99;
-	that.weight = pWeight;
-	that.cor = 0.5;
-	that.model;
-	that.collisions = [];
-
-	/**
-	 * Updates collisionbox
-	 */
-	yPhysicsObject.prototype.update = function() {
-		var that = this;
-		var acceleration = new yVector().copy(that.acceleration);
-		//console.log(that.acceleration.y, delta);
-		that.velocity.add(acceleration.scale(delta));
-		if(Math.abs(that.velocity.x) > 0){
-			that.velocity.x = that.velocity.x * that.friction;
-		}
-		if(Math.abs(that.velocity.y) > 0){
-			that.velocity.y = that.velocity.y;
-		}
-		var velocity = new yVector(that.velocity.x * delta, that.velocity.y * delta);
-
-		that.position = that.position.add(velocity);
-		that.model.pos = that.position;
-		that.collisions = [];
-	}
-
-	/**
-	 * Checks for collision with another physModel
-	 */
-	yPhysicsObject.prototype.checkCollision = function(pPhysObject) {
-		var response = new yCollisionRespone();
-		var collided = SAT.testPolygonPolygon(this.model, pPhysObject.model, response);
-		if(collided){
-			that.collisions.push(pPhysObject);
-			pPhysObject.collisions.push(this);
-			if(this.weight == Infinity){
-				pPhysObject.position.sub(response.overlapV);
-				var u = response.overlapN.scale(-(pPhysObject.velocity.dot(response.overlapN) / response.overlapN.dot(response.overlapN)));
-				var w = pPhysObject.velocity.sub(u);
-				
-				pPhysObject.velocity = w.scale(this.friction).sub(u.scale(pPhysObject.cor));
-			}else if(pPhysObject.weight == Infinity){
-				this.position.sub(response.overlapV);
-				var u = response.overlapN.scale(this.velocity.dot(response.overlapN) / response.overlapN.dot(response.overlapN));
-				var w = this.velocity.sub(u);
-				
-				this.velocity = w.scale(pPhysObject.friction).sub(u.scale(this.cor));
-			}else{
-				var maxWeight = 1/(this.weight + pPhysObject.weight);
-				this.position.sub(response.overlapV.scale(pPhysObject.weight*maxWeight, pPhysObject.weight*maxWeight));
-				pPhysObject.position.sub(response.overlapV.scale(this.weight*maxWeight, this.weight*maxWeight));
-			}
-		}
-	}
-
-	/**
-	 *Draws physics model for debugging purposes
-	 */
-	yPhysicsObject.prototype.draw = function(camera) {
-		var that = this;
-		that.model.draw(camera);
-	}
-
-}
-
-// var polygonCollisionResult = function() {
-	// // Are the polygons going to intersect forward in time?
-	// this.willIntersect;
-	// // Are the polygons currently intersecting?
-	// this.intersect;
-	// // The translation to apply to the first polygon to push the polygons apart.
-	// this.minimumTranslationVector;
-// }
-
-/*function getCollisionResult(polygon1, polygon2){
-// GETAXES	
-var axes = new Vector[shape.vertices.length];
-// loop over the vertices
-for (int i = 0; i < shape.vertices.length; i++) {
-  // get the current vertex
-  Vector p1 = shape.vertices[i];
-  // get the next vertex
-  Vector p2 = shape.vertices[i + 1 == shape.vertices.length ? 0 : i + 1];
-  // subtract the two to get the edge vector
-  Vector edge = p1.subtract(p2);
-  // get either perpendicular vector
-  Vector normal = edge.perp();
-  // the perp method is just (x, y) => (-y, x) or (y, -x)
-  axes[i] = normal;
-}
-
-// GET LIST OF AXES TO TEST
-Axis[] axes1 = shape1.getAxes();
-Axis[] axes2 = shape2.getAxes();
-// loop over the axes1
-for (int i = 0; i < axes1.length; i++) {
-  Axis axis = axes1[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  }
-}
-// loop over the axes2
-for (int i = 0; i < axes2.length; i++) {
-  Axis axis = axes2[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  }
-}
-// if we get here then we know that every axis had overlap on it
-// so we can guarantee an intersection
-return true;
-
-// PROJECT
-double min = axis.dot(shape.vertices[0]);
-double max = min;
-for (int i = 1; i < shape.vertices.length; i++) {
-  // NOTE: the axis must be normalized to get accurate projections
-  double p = axis.dot(shape.vertices[i]);
-  if (p < min) {
-    min = p;
-  } else if (p > max) {
-    max = p;
-  }
-}
-Projection proj = new Projection(min, max);
-return proj;
-
-
-
-// GET MTV
-double overlap = // really large value;
-Axis smallest = null;
-Axis[] axes1 = shape1.getAxes();
-Axis[] axes2 = shape2.getAxes();
-// loop over the axes1
-for (int i = 0; i < axes1.length; i++) {
-  Axis axis = axes1[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  } else {
-    // get the overlap
-    double o = p1.getOverlap(p2);
-    // check for minimum
-    if (o < overlap) {
-      // then set this one as the smallest
-      overlap = o;
-      smallest = axis;
-    }
-  }
-}
-// loop over the axes2
-for (int i = 0; i < axes2.length; i++) {
-  Axis axis = axes2[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  } else {
-    // get the overlap
-    double o = p1.getOverlap(p2);
-    // check for minimum
-    if (o < overlap) {
-      // then set this one as the smallest
-      overlap = o;
-      smallest = axis;
-    }
-  }
-}
-MTV mtv = new MTV(smallest, overlap);
-// if we get here then we know that every axis had overlap on it
-// so we can guarantee an intersection
-return mtv;
-
-
-	}
-
-
-}
-*/
-/*function getIntervalDistance(minA, maxA, minB, maxB){
-	if(minA < minB){
-		return minB - maxA;
-	}else{
-		return minA - maxB;
-	}
-}
-
-// Calculate the projection of a polygon on an axis
-// and returns it as a [min, max] interval
-function projectPolygon(axis, polygon, min, max) {
-	var points = polygon.getAbsolutePoints();
-
-	// To project a point on an axis use the dot product
-	var dotProduct = axis.dot(points[0]);
-	min = dotProduct;
-	max = dotProduct;
-
-	for (var i = 0; i < points.length; i++) {
-		dotProduct = points[i].dot(axis);
-		if (dotProduct < min) {
-			min = dotProduct;
-		} else {
-			if (dotProduct > max) {
-				max = dotProduct;
-			}
-		}
-	}
-	return new yVector(min, max);
-}
-
-// Check if polygon A is going to collide with polygon B.
-// The last parameter is the *relative* velocity
-// of the polygons (i.e. velocityA - velocityB)
-function polygonCollision(polygonA, polygonB, velocity) {
-	var result = new polygonCollisionResult();
-	result.intersect = true;
-	result.willIntersect = true;
+	yBox = SAT.BOX; 
 	
-	polygonA.setEdges();
-	polygonB.setEdges();
-
-	var edgeCountA = polygonA.edges.length;
-	var edgeCountB = polygonB.edges.length;
-	var minIntervalDistance = Infinity;
-	var translationAxis = new yVector(0, 0);
-	var edge;
-
-	// Loop through all the edges of both polygons
-	for (var edgeIndex = 0; edgeIndex < edgeCountA + edgeCountB; edgeIndex++) {
-		if (edgeIndex < edgeCountA) {
-			edge = polygonA.edges[edgeIndex];
-		} else {
-			edge = polygonB.edges[edgeIndex - edgeCountA];
-		}
-
-		// ===== 1. Find if the polygons are currently intersecting =====
-
-		// Find the axis perpendicular to the current edge
-		var axis = new yVector(-edge.y, edge.y);
-		axis.normalize();
-
-		// Find the projection of the polygon on the current axis
-		var projA = projectPolygon(axis, polygonA, minA, maxA);
-		var projB = projectPolygon(axis, polygonB, minB, maxB);
-		var minA = projA.x;
-		var minB = projB.x;
-		var maxA = projA.y;
-		var maxB = projB.y;
-
-		// Check if the polygon projections are currentlty intersecting
-		if (getIntervalDistance(minA, maxA, minB, maxB) > 0){
-			result.intersect = false;
-		}
-		if(result.intersect){
-			//console.log(Math.round(minA) + " " + Math.round(maxA) + " " + Math.round(minB) + " " + Math.round(maxB) + " " + result.intersect);
-		}
-		
-		// ===== 2. Now find if the polygons *will* intersect =====
-
-		// Project the velocity on the current axis
-		var velocityProjection = axis.dot(velocity);
-
-		// Get the projection of polygon A during the movement
-		if (velocityProjection < 0) {
-			minA += velocityProjection;
-		} else {
-			maxA += velocityProjection;
-		}
-
-		// Do the same test as above for the new projection
-		var intervalDistance = getIntervalDistance(minA, maxA, minB, maxB);
-		if (intervalDistance > 0) {
-			result.willIntersect = false;
-		}
-
-		// If the polygons are not intersecting and won't intersect, exit the loop
-		if (!result.intersect && !result.willIntersect) {
-			break;
-		}
-
-		// Check if the current interval distance is the minimum one. If so store
-		// the interval distance and the current distance.
-		// This will be used to calculate the minimum translation vector
-		intervalDistance = Math.abs(intervalDistance);
-		if (intervalDistance < minIntervalDistance) {
-			minIntervalDistance = intervalDistance;
-			translationAxis = axis;
-
-			var d = polygonA.getAbsoluteCenter().subV(polygonB.getAbsoluteCenter());
-			if (d.dot(translationAxis) < 0) {
-				
-				translationAxis = translationAxis.mulS(-1);
-			}
-		}
-	}
-
-	// The minimum translation vector
-	// can be used to push the polygons appart.
-	if (result.willIntersect) {
-		result.minimumTranslationVector = translationAxis;
-	}
-
-	return result;
-}*/
 
 /**
  * @classdesc The touch events save the state of a touch event. It is used by the input manager.
@@ -1710,6 +1370,7 @@ var yTouch = function(){
 		}
 	}
 };
+
 
 /**
  * @projectDescription YetiJS game framework
@@ -1786,7 +1447,7 @@ window.addEventListener("load", function(){
 	
 	// Create new game instance
 	game = new yGame();
-}, false);
+}, false);
 
 /**
  * @classdesc The gamestate handles all layers, it should be overwritten to be able to get better control over the layers and gamestate-switches.
@@ -1811,7 +1472,9 @@ var yGameState = function(){
 	yGameState.prototype.update = function(){
 		for(var i = 0; i < that.layers.length; i++)
 		{
-		    that.layers[i].update();
+			if(that.layers[i].active){
+				that.layers[i].update();
+			}
 		}
 	}
 
@@ -1821,10 +1484,12 @@ var yGameState = function(){
 	yGameState.prototype.draw = function(){
 		for(var i = 0; i < that.layers.length; i++)
 		{
-		    that.layers[i].draw();
+			if(that.layers[i].active){
+				that.layers[i].draw();
+			}
 		}
 	}
-};
+};
 
 /**
  * @classdesc A layer handles the game functionality and should be dedicated to one task (i.E. user inferface/menu/actual game/...), it has to be inherited and attached to a specific gamestate.
@@ -1836,122 +1501,18 @@ var yLayer = function(){
 	var that = this;
 	that.active = false;
 	that.entities = [];
-	that.gravity = 3000;
 	
 	var image = new Image();
 	image.src = "test.png";
 	
 	that.camera = new yCamera(new yVector(0.5, 0.5));
 	
-	var ent = new yEntity(image, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(30, 50), 1.2);
-	// ent.physModel.friction = 0.998;
-	
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new SAT.Vector(-30,0), new SAT.Vector(-20,-20), new SAT.Vector(0, -30), new SAT.Vector(20, -20), new SAT.Vector(30, 0), new SAT.Vector(20, 20), new SAT.Vector(0, 30), new SAT.Vector(-20, 20)]);
-	// var circle = new yCircle();
-	
-	ent.physModel.model = polygon1;
-	ent.physModel.cor = 0.005;
-	ent.physModel.friction = 0.97;
-	ent.physModel.acceleration.y = that.gravity;
-	
-	that.entities.push(ent);
-	
-	ent = new yEntity(image, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(400, 30), 0.8);
-	// ent.physModel.friction = 0.998;
-	
-	pol = new SAT.Polygon(new SAT.Vector(0, 0), [new SAT.Vector(-30,0), new SAT.Vector(-20,-20), new SAT.Vector(0, -30), new SAT.Vector(20, -20), new SAT.Vector(30, 0), new SAT.Vector(20, 20), new SAT.Vector(0, 30), new SAT.Vector(-20, 20)]);
-	
-	ent.physModel.model = pol;
-	ent.physModel.cor = 0.005;
-	ent.physModel.acceleration.y = that.gravity;
-	
-	that.entities.push(ent);
-	
-	var height = canvas.width/16*9;
-	// Left
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(-50, -500), new yVector(-1, -500), new yVector(-1, height), new yVector(-50, height)]);
-	ent.physModel.model = polygon1;
-	ent.physModel.friction = 1;
-	that.entities.push(ent);
-
-	// Right
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(canvas.width, -500), new yVector(canvas.width+50, -500), new yVector(canvas.width+50, height), new yVector(canvas.width, height)]);
-	ent.physModel.model = polygon1;
-	ent.physModel.friction = 1;
-	that.entities.push(ent);
-	
-	// Bottom
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = that.ground = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(0, height), new yVector(canvas.width, height), new yVector(canvas.width, height+50), new yVector(0, height+50)]);
-	ent.physModel.model = polygon1;
-	//ent.physModel.friction = 0.2;
-	that.entities.push(ent);
-	
-	// Top
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(0, -1), new yVector(0, -50), new yVector(canvas.width, -50), new yVector(canvas.width, -1),]);
-	ent.physModel.model = polygon1;
-	ent.physModel.friction = 1;
-	that.entities.push(ent);
-	
 	/**
 	 * Updates layer
 	 */
 	yLayer.prototype.update = function(){
 		var that = this;
-		if(that.active){
-			if(input.isAreaPressed(new yArea(new yVector(0, 0), new yVector(canvas.width/4, canvas.height)))){
-				that.entities[0].physModel.velocity.x -= 5000*delta;
-			}
-			if(input.isAreaPressed(new yArea(new yVector(canvas.width/4, 0), new yVector(canvas.width/2, canvas.height)))){
-				that.entities[0].physModel.velocity.x += 5000*delta;
-			}
-			if(input.isAreaPressed(new yArea(new yVector(canvas.width/2, 0), new yVector(canvas.width, canvas.height)))){
-				if(that.entities[0].physModel.collisions.contains(that.ground)){
-		    		that.entities[0].physModel.velocity.y = 200000;
-		    	}
-			}
-			that.entities[1].physModel.model.setRotation(67.5);
-		    if(input.isDown(input.SPACE)){
-		    	if(that.entities[0].physModel.collisions.contains(that.ground)){
-		    		that.entities[0].physModel.velocity.y = 200000;
-		    	}
-			}
-			
-			var keys = 0;
-		    if(input.isDown(input.LEFT)){
-		    	keys -= 1;
-				that.entities[0].physModel.acceleration.x -= 25000*delta;
-			}
-			if(input.isDown(input.RIGHT)){
-				keys += 1;
-				that.entities[0].physModel.acceleration.x += 25000*delta;
-			}
-			if(that.entities[0].physModel.velocity.x > 600){
-				that.entities[0].physModel.velocity.x = 600;
-			}else if(that.entities[0].physModel.velocity.x < -600){
-				that.entities[0].physModel.velocity.x = -600;
-			}
-			if(keys == 0){
-				that.entities[0].physModel.acceleration.x = 0;
-			}if(keys < 0 && that.entities[0].physModel.acceleration.x > 0){
-				
-			}else if(keys > 0 && that.entities[0].physModel.acceleration.x < 0){
-				
-			}
-			
-			for(var i = 0; i < that.entities.length; i++){
-		    	that.entities[i].update();
-		    }
-		}
+		
 	}
 	
 	/**
@@ -1959,13 +1520,9 @@ var yLayer = function(){
 	 */
 	yLayer.prototype.draw = function(){
 		var that = this;
-		if(that.active){
-			for(var i = 0; i < that.entities.length; i++){
-		    	that.entities[i].draw(that.camera);
-		    }
-		}
+		
 	}
-};
+};
 
 /**
  * @classdesc The input manager handles key-, mouse- and touch-events, saves the active keystates and provides methods to check for events.
@@ -2385,6 +1942,7 @@ var yInput = function() {
 	window.addEventListener('deviceorientation', that.handleOrientation, false);
 };
 
+
 /**
  * @classdesc Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game
  * 
@@ -2436,6 +1994,7 @@ var yEntity = function(pSprite, pPosition, pParent){
 		}
 	}
 };
+
 
 /**
  * @classdesc The camera provides functionality to handle different viewports, scrolling, zooming and so forth.
@@ -2490,7 +2049,7 @@ var yCamera = function(pPosition){
 	yCamera.prototype.update = function(){
 		var that = this;
 	}
-};
+};
 
 /**
  * @classdesc The sprite class contains an Image-element.
@@ -2505,7 +2064,7 @@ var ySprite = function(pSprite){
 	
 	this.sprite = new Image();
 	this.sprite.src = pSprite;
-};
+};
 
 /**
  * @classdesc The spritesheet contains a sprite with different states of a sprite and is used by the animation class.
@@ -2523,6 +2082,7 @@ var ySpriteSheet = function(pCols, pRows, pSprite){
 	
 };
 
+
 /**
  * @classdesc The animation-object saves all the information and provides all methods to play sprite animations
  * 
@@ -2532,7 +2092,7 @@ var ySpriteSheet = function(pCols, pRows, pSprite){
 var yAnimation = function(){
 	var that = this;
 	
-};
+};
 
 /**
  * @classdesc The tilemap contains an array with tile positions, a tileset to load the tiles from and functionality to draw them.
@@ -2581,7 +2141,7 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	that.prototype.importTMX = function(pFile){
 		
 	}
-};
+};
 
 /**
  * @classdesc The tileset contains a sprite and an array to map a number to a tile on the sprite.
@@ -2611,7 +2171,7 @@ var yTileSet = function(pSprite, pTileSize){
 	that.prototype.draw = function(pPosition){
 		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);
 	}
-};
+};
 
 /**
  * @classdesc The timer class is used for countdown purposes and is able to execute a function when time is elapsed.
@@ -2667,6 +2227,7 @@ var yTimer = function(pDuration){
 	}
 };
 
+
 /**
  * @classdesc The sound class should be used to play a short sound file.
  * 
@@ -2688,15 +2249,4 @@ var ySound = function(pFileName){
 	that.prototype.pause = function(){
 		this.audio.pause();
 	}
-};
-
-/**
- * @classdesc Contains a music file and provides functionality to play, pause and rewind it.
- * 
- * @author Leo Zurbriggen
- * @constructor
- */
-var yMusic = function(){
-	var that = this;
-	
 };

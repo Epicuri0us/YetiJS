@@ -22,7 +22,9 @@ var yGameState = function(){
 	yGameState.prototype.update = function(){
 		for(var i = 0; i < that.layers.length; i++)
 		{
-		    that.layers[i].update();
+			if(that.layers[i].active){
+				that.layers[i].update();
+			}
 		}
 	}
 
@@ -32,7 +34,9 @@ var yGameState = function(){
 	yGameState.prototype.draw = function(){
 		for(var i = 0; i < that.layers.length; i++)
 		{
-		    that.layers[i].draw();
+			if(that.layers[i].active){
+				that.layers[i].draw();
+			}
 		}
 	}
 };

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: yCamera</title>
+    <title>JSDoc: Class: yPolygon</title>
     
     <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: yCamera</h1>
+    <h1 class="page-title">Class: yPolygon</h1>
     
     
 
@@ -27,10 +27,8 @@
     
 <header>
     <h2>
-    yCamera
+    yPolygon
     </h2>
-    
-        <div class="class-description">The camera provides functionality to handle different viewports, scrolling, zooming and so forth.</div>
     
 </header>  
 
@@ -41,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="yCamera"><span class="type-signature"></span>new yCamera</h4>
+    <h4 class="name" id="yPolygon"><span class="type-signature"></span>new yPolygon</h4>
     
     
 </dt>
@@ -52,16 +50,10 @@
     
     
     
-    
-    
-<dl class="details">
-    
+        <h5>Parameters:</h5>
         
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
 
-<table class="props">
+<table class="params">
     <thead>
 	<tr>
 		
@@ -83,7 +75,7 @@
 	
         <tr>
             
-                <td class="name"><code>position</code></td>
+                <td class="name"><code>pPosition</code></td>
             
             
             <td class="type">
@@ -97,13 +89,16 @@
             
             
             
-            <td class="description last">The position of the camera.</td>
+            <td class="description last">The position of the polygon.</td>
         </tr>
 	
 	
 	</tbody>
-</table></dl>
-        
+</table>
+    
+    
+    
+<dl class="details">
     
         
 	
@@ -131,7 +126,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/camera.js, line 9</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/polygon.js, line 9</li></ul></dd>
 	
     
     
@@ -172,7 +167,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="update"><span class="type-signature"></span>update</h4>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw</h4>
     
     
 </dt>
@@ -180,7 +175,7 @@
     
     
     <div class="description">
-        Updates camera
+        Draws polygon for debugging purposes
     </div>
     
     
@@ -210,7 +205,251 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/camera.js, line 52</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/polygon.js, line 56</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getAbsoluteCenter"><span class="type-signature"></span>getAbsoluteCenter</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns absolute positions of points
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/polygon.js, line 26</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getAbsolutePoints"><span class="type-signature"></span>getAbsolutePoints</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns absolute positions of points
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/polygon.js, line 33</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setEdges"><span class="type-signature"></span>setEdges</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns absolute positions of points
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/polygon.js, line 46</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates polygon
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/polygon.js, line 19</li></ul></dd>
 	
     
     
@@ -252,7 +491,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Oct 31 2012 15:58:43 GMT+0100 (MEZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Oct 31 2012 15:58:44 GMT+0100 (MEZ)
 </footer>
 
 <script> sh_highlightDocument(); </script>

@@ -6,7 +6,6 @@
 				<file name="libs/vector2d.js" />
 				<file name="libs/SAT.js" />
 				<file name="js/utils.js" />
-				<file name="js/collisionutils.js" />
 				<file name="js/touch.js" />
 				<file name="js/game.js" />
 				<file name="js/gamestate.js" />
@@ -21,7 +20,6 @@
 				<file name="js/tileset.js" />
 				<file name="js/timer.js" />
 				<file name="js/sound.js" />
-				<file name="js/music.js" />
 			</filelist>
 			<filterchain>
 				<deletecharacters chars="ï»¿" />

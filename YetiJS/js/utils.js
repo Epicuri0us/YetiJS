@@ -1,3 +1,4 @@
+
 /*
  Execute the given function when the browser is ready to draw the next frame
 
@@ -57,3 +58,4 @@ var b2yVector = Box2D.Common.Math.b2yVector,
 	yCollisionRespone = SAT.Response,
 	yCircle = SAT.CIRCLE,
 	yBox = SAT.BOX; 
+	
