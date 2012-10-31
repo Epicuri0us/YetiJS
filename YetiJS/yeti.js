@@ -1782,7 +1782,7 @@ window.addEventListener("load", function(){
 	ctx = canvas.getContext("2d");
 	document.body.appendChild(canvas);
 	
-	input = new yInputManager();
+	input = new yInput();
 	
 	// Create new game instance
 	game = new yGame();
@@ -1801,7 +1801,7 @@ var yGameState = function(){
 	that.layers = new Array();
 	
 	that.layer1 = new yLayer();
-	that.layer1.enabled = true;
+	that.layer1.active = true;
 	
 	that.layers.push(that.layer1);
 	
@@ -1834,7 +1834,7 @@ var yGameState = function(){
  */
 var yLayer = function(){
 	var that = this;
-	that.enabled = false;
+	that.active = false;
 	that.entities = [];
 	that.gravity = 3000;
 	
@@ -1907,7 +1907,7 @@ var yLayer = function(){
 	 */
 	yLayer.prototype.update = function(){
 		var that = this;
-		if(that.enabled){
+		if(that.active){
 			if(input.isAreaPressed(new yArea(new yVector(0, 0), new yVector(canvas.width/4, canvas.height)))){
 				that.entities[0].physModel.velocity.x -= 5000*delta;
 			}
@@ -1959,7 +1959,7 @@ var yLayer = function(){
 	 */
 	yLayer.prototype.draw = function(){
 		var that = this;
-		if(that.enabled){
+		if(that.active){
 			for(var i = 0; i < that.entities.length; i++){
 		    	that.entities[i].draw(that.camera);
 		    }
@@ -2083,7 +2083,7 @@ var yLayer = function(){
  * @property {Float} orientationBeta - The beta orientation of the device.
  * @property {Float} orientationGamma - The gamma orientation of the device.
  */
-var yInputManager = function() {
+var yInput = function() {
 	var that = this;
 
 	that.keyState = [];
@@ -2214,7 +2214,7 @@ var yInputManager = function() {
 	 * Returns true, if the key with given keyCode is pressed, false otherwise
  	 * @param {Int} pKeyCode - The keycode
 	 */
-	yInputManager.prototype.isDown = function(pKeyCode) {
+	yInput.prototype.isDown = function(pKeyCode) {
 		return that.keyState[pKeyCode];
 	};
 
@@ -2222,7 +2222,7 @@ var yInputManager = function() {
 	 * Returns true, if the key with given keyCode is not pressed, false otherwise
  	 * @param {Int} pKeyCode - The keycode
 	 */
-	yInputManager.prototype.isUp = function(pKeyCode) {
+	yInput.prototype.isUp = function(pKeyCode) {
 		return !that.keyState[pKeyCode];
 	};
 
@@ -2230,7 +2230,7 @@ var yInputManager = function() {
 	 * Returns true, if the key with given keyCode was just released, false otherwise
  	 * @param {Int} pKeyCode - The keycode
 	 */
-	yInputManager.prototype.isReleased = function(pKeyCode) {
+	yInput.prototype.isReleased = function(pKeyCode) {
 		return (!that.keyState[pKeyCode] && that.lastKeyState[pKeyCode]);
 	};
 
@@ -2238,7 +2238,7 @@ var yInputManager = function() {
 	 * Returns true, if the mouse hovers a given area, false otherwise
  	 * @param {yArea} pArea - The area to check for
 	 */
-	yInputManager.prototype.isAreaHovered = function(pArea) {
+	yInput.prototype.isAreaHovered = function(pArea) {
 		if (that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -2257,7 +2257,7 @@ var yInputManager = function() {
 	 * Returns true, if the mouse is pressed within a given area, false otherwise
  	 * @param {yArea} pArea - The area to check for
 	 */
-	yInputManager.prototype.isAreaPressed = function(pArea) {
+	yInput.prototype.isAreaPressed = function(pArea) {
 		if (that.isDown(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -2276,7 +2276,7 @@ var yInputManager = function() {
 	 * Returns true, if the mouse was just released within a given area, false otherwise
  	 * @param {yArea} pArea - The area to check for
 	 */
-	yInputManager.prototype.isAreaReleased = function(pArea) {
+	yInput.prototype.isAreaReleased = function(pArea) {
 		if (that.isReleased(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -2291,30 +2291,30 @@ var yInputManager = function() {
 		return false;
 	}
 
-	yInputManager.prototype.onKeydown = function(event) {
+	yInput.prototype.onKeydown = function(event) {
 		that.keyState[event.keyCode] = true;
 	};
 
-	yInputManager.prototype.onKeyup = function(event) {
+	yInput.prototype.onKeyup = function(event) {
 		that.keyState[event.keyCode] = false;
 	};
 
-	yInputManager.prototype.onMouseDown = function(event) {
+	yInput.prototype.onMouseDown = function(event) {
 		that.keyState[event.button] = true;
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onMouseUp = function(event) {
+	yInput.prototype.onMouseUp = function(event) {
 		that.keyState[event.button] = false;
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onMouseMove = function(event) {
+	yInput.prototype.onMouseMove = function(event) {
 		that.mousePosition.x = event.clientX;
 		that.mousePosition.y = event.clientY;
 	};
 
-	yInputManager.prototype.onTouchStart = function(event) {
+	yInput.prototype.onTouchStart = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
 			if (that.touches[id] == null) {
@@ -2328,7 +2328,7 @@ var yInputManager = function() {
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onTouchEnd = function(event) {
+	yInput.prototype.onTouchEnd = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
 			if (that.touches[id] == null) {
@@ -2342,7 +2342,7 @@ var yInputManager = function() {
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onTouchMove = function(event) {
+	yInput.prototype.onTouchMove = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			that.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
 			that.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
@@ -2357,14 +2357,14 @@ var yInputManager = function() {
 	/**
 	 * Copies the active keystate into the lastKeyState-variable and updates touch objects
 	 */
-	yInputManager.prototype.update = function() {
+	yInput.prototype.update = function() {
 		that.lastKeyState = deepCopy(that.keyState);
 		for (var i = 0; i < that.lastTouches.length; i++) {
 			that.touches[i].update();
 		}
 	}
 
-	yInputManager.prototype.handleOrientation = function(event) {
+	yInput.prototype.handleOrientation = function(event) {
 		that.orientationGamma = event.gamma;
 		// used as x gravity
 		that.orientationBeta = event.beta;
@@ -2384,17 +2384,6 @@ var yInputManager = function() {
 	canvas.addEventListener("mouseup", that.onMouseUp, true);
 	window.addEventListener('deviceorientation', that.handleOrientation, false);
 };
-
-/**
- * @classdesc 
- * 
- * @author Leo Zurbriggen
- * @constructor
- */
-var ySoundManager = function(){
-	var that = this;
-	
-};
 
 /**
  * @classdesc Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game
@@ -2525,8 +2514,12 @@ var ySprite = function(pSprite){
  * @constructor
  * @param {String} pSprite - The path to an image file.
  */
-var ySpriteSheet = function(){
+var ySpriteSheet = function(pCols, pRows, pSprite){
 	var that = this;
+	this.rows = pRows;
+	this.cols = pCols;
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
 	
 };
 
@@ -2547,9 +2540,47 @@ var yAnimation = function(){
  * @author Leo Zurbriggen
  * @constructor
  */
-var yTileMap = function(){
+var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	var that = this;
+	this.tileSet = pTileSet;
+	this.map = [];
+	this.width = pWidth;
+	this.height = pHeight;
 	
+	/**
+	 * Initializes an empty map-array
+	 */
+	for(var l = 0; l < pLayers; l++){
+		this.map[l] = [];
+		for(var y = 0; y < this.height; y++){
+			this.map[l][y] = [];
+			for(var x = 0; x < this.width; x++){
+				this.map[l][y][x] = 0;
+			}
+		}
+	}
+	
+	/**
+	 * Draws the whole map depending on camera position
+	 */
+	that.prototype.draw = function(){
+		for(var l = 0; l < pLayers; l++){
+			for(var y = 0; y < this.height; y++){
+				for(var x = 0; x < this.width; x++){
+					var tileSet = this.tileSet;
+					var tilePosition = tileSet.getTilePositionByID(this.map[l][y][x]);
+					ctx.drawImage(tileSet.sprite, tilePosition.x, tilePosition.y, tileSet.tileSize, tileSet.tileSize, camera.position.x + x*tileSet.tileSize, camera.position.y + y*tileSet.tileSize, tileSet.tileSize, tileSet.tileSize);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Imports a map from a tmx file (not yet implemented)
+	 */
+	that.prototype.importTMX = function(pFile){
+		
+	}
 };
 
 /**
@@ -2559,9 +2590,27 @@ var yTileMap = function(){
  * @constructor
  * @param {ySprite} pSprite - The path to an image file.
  */
-var yTileSet = function(pSprite){
+var yTileSet = function(pSprite, pTileSize){
 	var that = this;
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
+	this.tileSize = pTileSize;
+	this.width = this.sprite.width / this.tileSize;
+	this.height = this.sprite.height / this.tileSize;
 	
+	/**
+	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels
+	 */
+	that.prototype.getTilePositionByID = function(pID){
+		return new yVector(pID % this.width * this.tileSize, Math.floor(pID / this.width) * this.tileSize);
+	}
+	
+	/**
+	 * Draws the tileset at a given position
+	 */
+	that.prototype.draw = function(pPosition){
+		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);
+	}
 };
 
 /**
@@ -2584,7 +2633,7 @@ var yTimer = function(pDuration){
 	that.remainingTime = Date.now();
 	that.paused = true;
 	that.elapsed = false;
-	that.elapseEvent = null;
+	that.callback = null;
 	
 	/**
 	 * Updates remaining time and checks if time is up
@@ -2595,8 +2644,8 @@ var yTimer = function(pDuration){
 			
 			if(remainingTime <= 0){
 				that.elapsed = true;
-				if(that.elapseEvent){
-					eval(that.elapseEvent);
+				if(that.callback){
+					eval(that.callback);
 				}
 				that.paused = true;
 			}
@@ -2624,9 +2673,21 @@ var yTimer = function(pDuration){
  * @author Leo Zurbriggen
  * @constructor
  */
-var ySound = function(){
+var ySound = function(pFileName){
 	var that = this;
+	if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
+		this.audio = new Audio(pFileName + ".ogg");
+	}else{
+		this.audio = new Audio(pFileName + ".mp3");
+	}
 	
+	that.prototype.play = function(){
+		this.audio.play();
+	}
+	
+	that.prototype.pause = function(){
+		this.audio.pause();
+	}
 };
 
 /**

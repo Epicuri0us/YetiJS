@@ -70,7 +70,7 @@ window.addEventListener("load", function(){
 	ctx = canvas.getContext("2d");
 	document.body.appendChild(canvas);
 	
-	input = new yInputManager();
+	input = new yInput();
 	
 	// Create new game instance
 	game = new yGame();

@@ -19,7 +19,7 @@ var yTimer = function(pDuration){
 	that.remainingTime = Date.now();
 	that.paused = true;
 	that.elapsed = false;
-	that.elapseEvent = null;
+	that.callback = null;
 	
 	/**
 	 * Updates remaining time and checks if time is up
@@ -30,8 +30,8 @@ var yTimer = function(pDuration){
 			
 			if(remainingTime <= 0){
 				that.elapsed = true;
-				if(that.elapseEvent){
-					eval(that.elapseEvent);
+				if(that.callback){
+					eval(that.callback);
 				}
 				that.paused = true;
 			}

@@ -12,7 +12,7 @@ var yGameState = function(){
 	that.layers = new Array();
 	
 	that.layer1 = new yLayer();
-	that.layer1.enabled = true;
+	that.layer1.active = true;
 	
 	that.layers.push(that.layer1);
 	

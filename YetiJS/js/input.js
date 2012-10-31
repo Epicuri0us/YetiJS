@@ -115,7 +115,7 @@
  * @property {Float} orientationBeta - The beta orientation of the device.
  * @property {Float} orientationGamma - The gamma orientation of the device.
  */
-var yInputManager = function() {
+var yInput = function() {
 	var that = this;
 
 	that.keyState = [];
@@ -246,7 +246,7 @@ var yInputManager = function() {
 	 * Returns true, if the key with given keyCode is pressed, false otherwise
  	 * @param {Int} pKeyCode - The keycode
 	 */
-	yInputManager.prototype.isDown = function(pKeyCode) {
+	yInput.prototype.isDown = function(pKeyCode) {
 		return that.keyState[pKeyCode];
 	};
 
@@ -254,7 +254,7 @@ var yInputManager = function() {
 	 * Returns true, if the key with given keyCode is not pressed, false otherwise
  	 * @param {Int} pKeyCode - The keycode
 	 */
-	yInputManager.prototype.isUp = function(pKeyCode) {
+	yInput.prototype.isUp = function(pKeyCode) {
 		return !that.keyState[pKeyCode];
 	};
 
@@ -262,7 +262,7 @@ var yInputManager = function() {
 	 * Returns true, if the key with given keyCode was just released, false otherwise
  	 * @param {Int} pKeyCode - The keycode
 	 */
-	yInputManager.prototype.isReleased = function(pKeyCode) {
+	yInput.prototype.isReleased = function(pKeyCode) {
 		return (!that.keyState[pKeyCode] && that.lastKeyState[pKeyCode]);
 	};
 
@@ -270,7 +270,7 @@ var yInputManager = function() {
 	 * Returns true, if the mouse hovers a given area, false otherwise
  	 * @param {yArea} pArea - The area to check for
 	 */
-	yInputManager.prototype.isAreaHovered = function(pArea) {
+	yInput.prototype.isAreaHovered = function(pArea) {
 		if (that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -289,7 +289,7 @@ var yInputManager = function() {
 	 * Returns true, if the mouse is pressed within a given area, false otherwise
  	 * @param {yArea} pArea - The area to check for
 	 */
-	yInputManager.prototype.isAreaPressed = function(pArea) {
+	yInput.prototype.isAreaPressed = function(pArea) {
 		if (that.isDown(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -308,7 +308,7 @@ var yInputManager = function() {
 	 * Returns true, if the mouse was just released within a given area, false otherwise
  	 * @param {yArea} pArea - The area to check for
 	 */
-	yInputManager.prototype.isAreaReleased = function(pArea) {
+	yInput.prototype.isAreaReleased = function(pArea) {
 		if (that.isReleased(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -323,30 +323,30 @@ var yInputManager = function() {
 		return false;
 	}
 
-	yInputManager.prototype.onKeydown = function(event) {
+	yInput.prototype.onKeydown = function(event) {
 		that.keyState[event.keyCode] = true;
 	};
 
-	yInputManager.prototype.onKeyup = function(event) {
+	yInput.prototype.onKeyup = function(event) {
 		that.keyState[event.keyCode] = false;
 	};
 
-	yInputManager.prototype.onMouseDown = function(event) {
+	yInput.prototype.onMouseDown = function(event) {
 		that.keyState[event.button] = true;
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onMouseUp = function(event) {
+	yInput.prototype.onMouseUp = function(event) {
 		that.keyState[event.button] = false;
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onMouseMove = function(event) {
+	yInput.prototype.onMouseMove = function(event) {
 		that.mousePosition.x = event.clientX;
 		that.mousePosition.y = event.clientY;
 	};
 
-	yInputManager.prototype.onTouchStart = function(event) {
+	yInput.prototype.onTouchStart = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
 			if (that.touches[id] == null) {
@@ -360,7 +360,7 @@ var yInputManager = function() {
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onTouchEnd = function(event) {
+	yInput.prototype.onTouchEnd = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
 			if (that.touches[id] == null) {
@@ -374,7 +374,7 @@ var yInputManager = function() {
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onTouchMove = function(event) {
+	yInput.prototype.onTouchMove = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			that.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
 			that.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
@@ -389,14 +389,14 @@ var yInputManager = function() {
 	/**
 	 * Copies the active keystate into the lastKeyState-variable and updates touch objects
 	 */
-	yInputManager.prototype.update = function() {
+	yInput.prototype.update = function() {
 		that.lastKeyState = deepCopy(that.keyState);
 		for (var i = 0; i < that.lastTouches.length; i++) {
 			that.touches[i].update();
 		}
 	}
 
-	yInputManager.prototype.handleOrientation = function(event) {
+	yInput.prototype.handleOrientation = function(event) {
 		that.orientationGamma = event.gamma;
 		// used as x gravity
 		that.orientationBeta = event.beta;

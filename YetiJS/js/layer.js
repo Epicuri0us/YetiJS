@@ -7,7 +7,7 @@
  */
 var yLayer = function(){
 	var that = this;
-	that.enabled = false;
+	that.active = false;
 	that.entities = [];
 	that.gravity = 3000;
 	
@@ -80,7 +80,7 @@ var yLayer = function(){
 	 */
 	yLayer.prototype.update = function(){
 		var that = this;
-		if(that.enabled){
+		if(that.active){
 			if(input.isAreaPressed(new yArea(new yVector(0, 0), new yVector(canvas.width/4, canvas.height)))){
 				that.entities[0].physModel.velocity.x -= 5000*delta;
 			}
@@ -132,7 +132,7 @@ var yLayer = function(){
 	 */
 	yLayer.prototype.draw = function(){
 		var that = this;
-		if(that.enabled){
+		if(that.active){
 			for(var i = 0; i < that.entities.length; i++){
 		    	that.entities[i].draw(that.camera);
 		    }

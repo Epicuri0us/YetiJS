@@ -11,8 +11,7 @@
 				<file name="js/game.js" />
 				<file name="js/gamestate.js" />
 				<file name="js/layer.js" />
-				<file name="js/inputmanager.js" />
-				<file name="js/soundmanager.js" />
+				<file name="js/input.js" />
 				<file name="js/entity.js" />
 				<file name="js/camera.js" />
 				<file name="js/sprite.js" />
