@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: yEntity</title>
+    
+    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: yEntity</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    yEntity
+    </h2>
+    
+        <div class="class-description">Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game</div>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="yEntity"><span class="type-signature"></span>new yEntity</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a new entity from following parameters:
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pSprite</code></td>
+            
+            
+            <td class="type">
+            
+                        Image
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The sprite of the entity.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pPosition</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The position of the entity.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pParent</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yLayer.html">yLayer</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The parent layer of the entity.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	<dt class="tag-author">Author:</dt>
+	<dd class="tag-author">
+        <ul>
+            <li>Leo Zurbriggen</li>
+        </ul>
+	</dd>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2278</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws the entity
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2306</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates the entity
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2289</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="yAnimation.html">yAnimation</a></li><li><a href="yCamera.html">yCamera</a></li><li><a href="global.html#yEntity">yEntity</a></li><li><a href="yGame.html">yGame</a></li><li><a href="yGameState.html">yGameState</a></li><li><a href="yInputManager.html">yInputManager</a></li><li><a href="yLayer.html">yLayer</a></li><li><a href="yMusic.html">yMusic</a></li><li><a href="yPhysicsObject.html">yPhysicsObject</a></li><li><a href="ySound.html">ySound</a></li><li><a href="ySoundManager.html">ySoundManager</a></li><li><a href="ySprite.html">ySprite</a></li><li><a href="ySpriteSheet.html">ySpriteSheet</a></li><li><a href="yTileMap.html">yTileMap</a></li><li><a href="yTileSet.html">yTileSet</a></li><li><a href="yTimer.html">yTimer</a></li><li><a href="yTouch.html">yTouch</a></li></ul><h3>Global</h3><ul><li><a href="global.html#game">game</a></li><li><a href="global.html#SAT">SAT</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Sep 21 2012 09:35:04 GMT+0200 (MESZ)
+</footer>
+
+<script> sh_highlightDocument(); </script>
+</body>
+</html>

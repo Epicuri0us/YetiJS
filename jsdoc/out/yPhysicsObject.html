@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: yPhysicsObject</title>
+    
+    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: yPhysicsObject</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    yPhysicsObject
+    </h2>
+    
+        <div class="class-description">The physics object saves physical data and collision models for very basic physics calculation. Use Box2DWeb for more accurate and advanced physics.</div>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="yPhysicsObject"><span class="type-signature"></span>new yPhysicsObject</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pPosition</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The position.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pWeight</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The weight.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The position.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>velocity</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The active velocity.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>friction</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The friction.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>weight</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The weight.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cor</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The "coefficient of restitution".</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>model</code></td>
+            
+            
+            <td class="type">
+            
+                        yPolygon
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The polygon that represents the object.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>collisions</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yPhysicsObject.html">yPhysicsObject</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">An array that stores every physics object this object collides with, clears every frame.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	<dt class="tag-author">Author:</dt>
+	<dd class="tag-author">
+        <ul>
+            <li>Leo Zurbriggen</li>
+        </ul>
+	</dd>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 1354</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="checkCollision"><span class="type-signature"></span>checkCollision</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Checks for collision with another physModel
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 1389</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws physics model for debugging purposes
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 1418</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates collisionbox
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 1368</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="yAnimation.html">yAnimation</a></li><li><a href="yCamera.html">yCamera</a></li><li><a href="yEntity.html">yEntity</a></li><li><a href="yGame.html">yGame</a></li><li><a href="yGameState.html">yGameState</a></li><li><a href="yInputManager.html">yInputManager</a></li><li><a href="yLayer.html">yLayer</a></li><li><a href="yMusic.html">yMusic</a></li><li><a href="yPhysicsObject.html">yPhysicsObject</a></li><li><a href="ySound.html">ySound</a></li><li><a href="ySoundManager.html">ySoundManager</a></li><li><a href="ySprite.html">ySprite</a></li><li><a href="ySpriteSheet.html">ySpriteSheet</a></li><li><a href="yTileMap.html">yTileMap</a></li><li><a href="yTileSet.html">yTileSet</a></li><li><a href="yTimer.html">yTimer</a></li><li><a href="yTouch.html">yTouch</a></li></ul><h3>Global</h3><ul><li><a href="global.html#game">game</a></li><li><a href="global.html#SAT">SAT</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Sep 21 2012 10:23:19 GMT+0200 (MESZ)
+</footer>
+
+<script> sh_highlightDocument(); </script>
+</body>
+</html>

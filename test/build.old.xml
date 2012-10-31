@@ -1,0 +1,100 @@
+<project name="YetiJS" default="concatenate">
+	<target name="concatenate" description="Concatenate all js files">
+		<concat destfile="${basedir}\yeti.js" outputencoding="UTF-8" fixlastline="true">
+			<filelist dir="${basedir}">
+				<file name="libs/prototype-1.6.0.2.js" />
+				<file name='js/box2d/common/b2Settings.js' />
+				<file name='js/box2d/common/math/b2Vec2.js' />
+				<file name='js/box2d/common/math/b2Mat22.js' />
+				<file name='js/box2d/common/math/b2Math.js' />
+				<file name='js/box2d/collision/b2AABB.js' />
+				<file name='js/box2d/collision/b2Bound.js' />
+				<file name='js/box2d/collision/b2BoundValues.js' />
+				<file name='js/box2d/collision/b2Pair.js' />
+				<file name='js/box2d/collision/b2PairCallback.js' />
+				<file name='js/box2d/collision/b2BufferedPair.js' />
+				<file name='js/box2d/collision/b2PairManager.js' />
+				<file name='js/box2d/collision/b2BroadPhase.js' />
+				<file name='js/box2d/collision/b2Collision.js' />
+				<file name='js/box2d/collision/Features.js' />
+				<file name='js/box2d/collision/b2ContactID.js' />
+				<file name='js/box2d/collision/b2ContactPoint.js' />
+				<file name='js/box2d/collision/b2Distance.js' />
+				<file name='js/box2d/collision/b2Manifold.js' />
+				<file name='js/box2d/collision/b2OBB.js' />
+				<file name='js/box2d/collision/b2Proxy.js' />
+				<file name='js/box2d/collision/ClipVertex.js' />
+				<file name='js/box2d/collision/shapes/b2Shape.js' />
+				<file name='js/box2d/collision/shapes/b2ShapeDef.js' />
+				<file name='js/box2d/collision/shapes/b2BoxDef.js' />
+				<file name='js/box2d/collision/shapes/b2CircleDef.js' />
+				<file name='js/box2d/collision/shapes/b2CircleShape.js' />
+				<file name='js/box2d/collision/shapes/b2MassData.js' />
+				<file name='js/box2d/collision/shapes/b2PolyDef.js' />
+				<file name='js/box2d/collision/shapes/b2PolyShape.js' />
+				<file name='js/box2d/dynamics/b2Body.js' />
+				<file name='js/box2d/dynamics/b2BodyDef.js' />
+				<file name='js/box2d/dynamics/b2CollisionFilter.js' />
+				<file name='js/box2d/dynamics/b2Island.js' />
+				<file name='js/box2d/dynamics/b2TimeStep.js' />
+				<file name='js/box2d/dynamics/contacts/b2ContactNode.js' />
+				<file name='js/box2d/dynamics/contacts/b2Contact.js' />
+				<file name='js/box2d/dynamics/contacts/b2ContactConstraint.js' />
+				<file name='js/box2d/dynamics/contacts/b2ContactConstraintPoint.js' />
+				<file name='js/box2d/dynamics/contacts/b2ContactRegister.js' />
+				<file name='js/box2d/dynamics/contacts/b2ContactSolver.js' />
+				<file name='js/box2d/dynamics/contacts/b2CircleContact.js' />
+				<file name='js/box2d/dynamics/contacts/b2Conservative.js' />
+				<file name='js/box2d/dynamics/contacts/b2NullContact.js' />
+				<file name='js/box2d/dynamics/contacts/b2PolyAndCircleContact.js' />
+				<file name='js/box2d/dynamics/contacts/b2PolyContact.js' />
+				<file name='js/box2d/dynamics/b2ContactManager.js' />
+				<file name='js/box2d/dynamics/b2World.js' />
+				<file name='js/box2d/dynamics/b2WorldListener.js' />
+				<file name='js/box2d/dynamics/joints/b2JointNode.js' />
+				<file name='js/box2d/dynamics/joints/b2Joint.js' />
+				<file name='js/box2d/dynamics/joints/b2JointDef.js' />
+				<file name='js/box2d/dynamics/joints/b2DistanceJoint.js' />
+				<file name='js/box2d/dynamics/joints/b2DistanceJointDef.js' />
+				<file name='js/box2d/dynamics/joints/b2Jacobian.js' />
+				<file name='js/box2d/dynamics/joints/b2GearJoint.js' />
+				<file name='js/box2d/dynamics/joints/b2GearJointDef.js' />
+				<file name='js/box2d/dynamics/joints/b2MouseJoint.js' />
+				<file name='js/box2d/dynamics/joints/b2MouseJointDef.js' />
+				<file name='js/box2d/dynamics/joints/b2PrismaticJoint.js' />
+				<file name='js/box2d/dynamics/joints/b2PrismaticJointDef.js' />
+				<file name='js/box2d/dynamics/joints/b2PulleyJoint.js' />
+				<file name='js/box2d/dynamics/joints/b2PulleyJointDef.js' />
+				<file name='js/box2d/dynamics/joints/b2RevoluteJoint.js' />
+				<file name='js/box2d/dynamics/joints/b2RevoluteJointDef.js' />
+				<file name="libs/sylvester.js" />
+				<file name="js/utils.js" />
+				<file name="js/touch.js" />
+				<file name="js/game.js" />
+				<file name="js/gamestate.js" />
+				<file name="js/layer.js" />
+				<file name="js/inputmanager.js" />
+				<file name="js/soundmanager.js" />
+				<file name="js/entity.js" />
+				<file name="js/camera.js" />
+				<file name="js/sprite.js" />
+				<file name="js/spritesheet.js" />
+				<file name="js/animation.js" />
+				<file name="js/tilemap.js" />
+				<file name="js/tileset.js" />
+				<file name="js/timer.js" />
+				<file name="js/sound.js" />
+				<file name="js/music.js" />
+			</filelist>
+			<filterchain>
+				<deletecharacters chars="ï»¿" />
+			</filterchain>
+		</concat>
+		<java fork="true" jar="${basedir}\libs\yuicompressor.jar" dir="${basedir}" output="${basedir}/yeti.min.js">
+			<arg value="${basedir}/yeti.js" />
+		</java>
+		<zip destfile="${basedir}\yeti.zip">
+			<zipfileset dir="${basedir}" includes="yeti.js, yeti.min.js" />
+		</zip>
+	</target>
+</project>

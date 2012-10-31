@@ -1,0 +1,3191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: yInputManager</title>
+    
+    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: yInputManager</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    yInputManager
+    </h2>
+    
+        <div class="class-description">The input manager handles key-, mouse- and touch-events, saves the active keystates and provides methods to check for events.</div>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="yInputManager"><span class="type-signature"></span>new yInputManager</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>keyState</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">An array that stores the active keystate.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>lastKeyState</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">An array that stores the last keystate.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>touches</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yTouch.html">yTouch</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">An array that stores 10 touch objects.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>lastTouches</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yTouch.html">yTouch</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">An array that stores the last touch state.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>mousePosition</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The active mouse position; the position of the last touch gets mapped to this vector to maintain functionality, Default is -1|-1</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MOUSELEFT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 0</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MOUSERIGHT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 2</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MOUSEMIDDLE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 1</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>BACKSPACE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 8</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>TAB</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 9</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ENTER</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 13</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SHIFT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 16</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>CTRL</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 17</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ALT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 18</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>PAUSE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 19</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>CAPS</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 20</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ESCAPE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 27</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SPACE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 32</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>PAGEUP</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 33</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>PAGEDOWN</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 34</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>END</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 35</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>HOME</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 36</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>LEFT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 37</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>UP</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 38</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>RIGHT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 39</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>DOWN</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 40</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>INSERT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 45</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>DELETE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 46</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ZERO</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 48</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ONE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 49</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>TWO</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 50</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>THREE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 51</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>FOUR</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 52</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>FIVE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 53</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SIX</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 54</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SEVEN</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 55</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>EIGHT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 56</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NINE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 57</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>A</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 65</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>B</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 66</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>C</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 67</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>D</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 68</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>E</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 69</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 70</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>G</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 71</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>H</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 72</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>I</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 73</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>J</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 74</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>K</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 75</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>L</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 76</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>M</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 77</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>N</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 78</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>O</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 79</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>P</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 80</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Q</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 81</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>R</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 82</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>S</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 83</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>T</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 84</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>U</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 85</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>V</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 86</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>W</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 87</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>X</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 88</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Y</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 89</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Z</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 90</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>WINDOWsLEFT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 91</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>WINDOWSRIGHT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 92</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SELECT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 93</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMZERO</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 96</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMONE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 97</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMTWO</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 98</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMTHREE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 99</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMFOUR</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 100</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMFIVE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 101</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMSIX</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 102</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMSEVEN</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 103</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMEIGHT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 104</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMNINE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 105</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>MULTIPLY</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 106</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>ADD</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 107</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SUBTRACT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 109</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>DECIMALPOINT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 110</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>DIVIDE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 111</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F1</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 112</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F2</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 113</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F3</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 114</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F4</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 115</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F5</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 116</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F6</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 117</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F7</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 118</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F8</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 119</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F9</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 120</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F10</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 121</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F11</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 122</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>F12</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 123</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>NUMLOCK</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 144</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SCROLLLOCK</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 145</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SEMICOLON</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 186</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>EQUALSIGN</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 187</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>COMMA</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 188</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>DASH</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 189</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>PERIOD</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 190</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>FORWARDSLASH</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 191</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>GRAVEACCENT</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 192</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>OPENBRACKET</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 219</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>BACKSLASH</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 220</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>CLOSEBRACKET</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 221</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SINGLEQUOTE</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">KeyCode: 222</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>orientationAlpha</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The alpha orientation of the device.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>orientationBeta</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The beta orientation of the device.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>orientationGamma</code></td>
+            
+            
+            <td class="type">
+            
+                        Float
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The gamma orientation of the device.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	<dt class="tag-author">Author:</dt>
+	<dd class="tag-author">
+        <ul>
+            <li>Leo Zurbriggen</li>
+        </ul>
+	</dd>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2078</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="isAreaHovered"><span class="type-signature"></span>isAreaHovered</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true, if the mouse hovers a given area, false otherwise
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pArea</code></td>
+            
+            
+            <td class="type">
+            
+                        yArea
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The area to check for</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2233</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isAreaPressed"><span class="type-signature"></span>isAreaPressed</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true, if the mouse is pressed within a given area, false otherwise
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pArea</code></td>
+            
+            
+            <td class="type">
+            
+                        yArea
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The area to check for</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2252</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isAreaReleased"><span class="type-signature"></span>isAreaReleased</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true, if the mouse was just released within a given area, false otherwise
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pArea</code></td>
+            
+            
+            <td class="type">
+            
+                        yArea
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The area to check for</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2271</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isDown"><span class="type-signature"></span>isDown</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true, if the key with given keyCode is pressed, false otherwise
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pKeyCode</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The keycode</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2209</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isReleased"><span class="type-signature"></span>isReleased</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true, if the key with given keyCode was just released, false otherwise
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pKeyCode</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The keycode</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2225</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isUp"><span class="type-signature"></span>isUp</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true, if the key with given keyCode is not pressed, false otherwise
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pKeyCode</code></td>
+            
+            
+            <td class="type">
+            
+                        Int
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The keycode</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2217</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Copies the active keystate into the lastKeyState-variable and updates touch objects
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../yeti.js, line 2352</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="yAnimation.html">yAnimation</a></li><li><a href="yCamera.html">yCamera</a></li><li><a href="yEntity.html">yEntity</a></li><li><a href="yGame.html">yGame</a></li><li><a href="yGameState.html">yGameState</a></li><li><a href="yInputManager.html">yInputManager</a></li><li><a href="yLayer.html">yLayer</a></li><li><a href="yMusic.html">yMusic</a></li><li><a href="yPhysicsObject.html">yPhysicsObject</a></li><li><a href="ySound.html">ySound</a></li><li><a href="ySoundManager.html">ySoundManager</a></li><li><a href="ySprite.html">ySprite</a></li><li><a href="ySpriteSheet.html">ySpriteSheet</a></li><li><a href="yTileMap.html">yTileMap</a></li><li><a href="yTileSet.html">yTileSet</a></li><li><a href="yTimer.html">yTimer</a></li><li><a href="yTouch.html">yTouch</a></li></ul><h3>Global</h3><ul><li><a href="global.html#game">game</a></li><li><a href="global.html#SAT">SAT</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Sep 21 2012 10:23:19 GMT+0200 (MESZ)
+</footer>
+
+<script> sh_highlightDocument(); </script>
+</body>
+</html>
