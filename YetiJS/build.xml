@@ -24,9 +24,9 @@
 				<deletecharacters chars="ï»¿" />
 			</filterchain>
 		</concat>
-		<!--<java fork="true" jar="${basedir}\tools\yuicompressor.jar" dir="${basedir}" output="${basedir}/yeti.min.js">
+		<java fork="true" jar="${basedir}\tools\yuicompressor.jar" dir="${basedir}" output="${basedir}/yeti.min.js">
 			<arg value="${basedir}/yeti.js" />
-		</java>-->
+		</java>
 		<zip destfile="${basedir}\yeti.zip">
 			<zipfileset dir="${basedir}" includes="yeti.js, test.png" />
 		</zip>
