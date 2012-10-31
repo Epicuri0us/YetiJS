@@ -4,7 +4,6 @@
 			<filelist dir="${basedir}">
 				<file name="libs/box2dweb.js" />
 				<file name="libs/vector2d.js" />
-				<file name="libs/SAT.js" />
 				<file name="js/utils.js" />
 				<file name="js/touch.js" />
 				<file name="js/game.js" />
