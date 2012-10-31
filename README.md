@@ -10,7 +10,7 @@ Dependencies
 ------
 YetiJS uses a few libraries and tools:
 
-- Box2DWeb, a JavaScript port of the beautiful Box2D physics library (http://code.google.com/p/box2dweb/)
+- Box2DWeb, a JavaScript port of the beautiful Box2D physics library from Erin Catto (http://code.google.com/p/box2dweb/)
 - SAT, a library (Separating Axis Theorem) from Jim Riecken is used as a vary fast way to check if convex polygons collide (https://github.com/jriecken/sat-js)
 - vector2d, a slightly modified version of Tudor Nita's 2D vector library (http://www.cgrats.com/javascript-2d-vector-library.html)
 - yui-compressor, a tool from yahoo used to compress the final js-file (http://developer.yahoo.com/yui/compressor/)
