@@ -5,6 +5,13 @@
  * @author Leo Zurbriggen
  * @constructor
  * @param {yVector} pPosition - The position of the polygon.
+ * @property {yVector} center - The center of the polygon, used for rotating operations etc.
+ * @property {yVector} position - The position of the polygon.
+ * @property {yVector[]} points - The position of the polygon.
+ * @property {yVector[]} edges - The position of the polygon.
+ * @property {String} lineWidth - User for drawing the polygon.
+ * @property {String} strokeStyle - User for drawing the polygon.
+ * @property {String} fillStyle - User for drawing the polygon.
  */
 var yPolygon = function(pPosition) {
 	var that = this;
@@ -12,6 +19,9 @@ var yPolygon = function(pPosition) {
 	that.position = pPosition;
 	that.points = [];
 	that.edges = [];
+	that.lineWidth = "1";
+	that.strokeStyle = "rgba(20, 20, 20, 0.7)";
+	that.fillStyle = "rgba(30, 30, 30, 0.5)";
 
 	/**
 	 * Updates polygon
@@ -55,9 +65,9 @@ var yPolygon = function(pPosition) {
 	 */
 	yPolygon.prototype.draw = function(camera) {
 		ctx.beginPath();
-		ctx.lineWidth = "1";
-		ctx.strokeStyle = "rgba(20, 20, 20, 0.7)";
-		ctx.fillStyle = "rgba(30, 30, 30, 0.5)";
+		ctx.lineWidth = this.lineWidth;
+		ctx.strokeStyle = this.strokeStyle;
+		ctx.fillStyle = this.fillStyle;
 		var points = this.getAbsolutePoints();
 		if (points.length > 1) {
 			ctx.moveTo(camera.position.x + points[0].x, camera.position.y + points[0].y);

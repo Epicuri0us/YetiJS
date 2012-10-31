@@ -5,6 +5,7 @@
  * @author Leo Zurbriggen
  * @constructor
  * @property {yVector} position - The position of the camera.
+ * @param {yVector} pPosition - The position of the camera.
  */
 var yCamera = function(pPosition){
 	var that = this;

@@ -4,13 +4,21 @@
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {yTileSet} pTileSet - The tileset used on the map.
+ * @param {Integer} pLayers - The number of layers of the map.
+ * @param {Integer} pWidth - The width of the map.
+ * @param {Integer} pHeight - The height of the map.
+ * @property {yTileSet} tileSet - The tileset used on the map.
+ * @property {Integer[]} map - The map array.
+ * @property {Integer} width - The width of the map.
+ * @property {Integer} height - The height of the map.
  */
 var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	var that = this;
-	this.tileSet = pTileSet;
-	this.map = [];
-	this.width = pWidth;
-	this.height = pHeight;
+	that.tileSet = pTileSet;
+	that.map = [];
+	that.width = pWidth;
+	that.height = pHeight;
 	
 	/**
 	 * Initializes an empty map-array

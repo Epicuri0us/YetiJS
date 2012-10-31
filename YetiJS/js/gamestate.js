@@ -4,7 +4,7 @@
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {yLayer} layers - An array that stores every layer of the gamestate.
+ * @property {yLayer[]} layers - An array that stores every layer of the gamestate.
  */
 var yGameState = function(){
 	var that = this;

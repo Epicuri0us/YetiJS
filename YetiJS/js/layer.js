@@ -4,14 +4,12 @@
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @property {Boolean} active - Checks if the layer is active.
+ * @property {yCamera} camera - The active camera.
  */
 var yLayer = function(){
 	var that = this;
 	that.active = false;
-	that.entities = [];
-	
-	var image = new Image();
-	image.src = "test.png";
 	
 	that.camera = new yCamera(new yVector(0.5, 0.5));
 	

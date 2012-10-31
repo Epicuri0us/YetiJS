@@ -4,10 +4,10 @@
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {Int} keyState - An array that stores the active keystate.
- * @property {Int} lastKeyState - An array that stores the last keystate.
- * @property {yTouch} touches - An array that stores 10 touch objects.
- * @property {yTouch} lastTouches - An array that stores the last touch state.
+ * @property {Int[]} keyState - An array that stores the active keystate.
+ * @property {Int[]} lastKeyState - An array that stores the last keystate.
+ * @property {yTouch[]} touches - An array that stores 10 touch objects.
+ * @property {yTouch[]} lastTouches - An array that stores the last touch state.
  * @property {yVector} mousePosition - The active mouse position; the position of the last touch gets mapped to this vector to maintain functionality, Default is -1|-1
  * @property {Int} MOUSELEFT - KeyCode: 0
  * @property {Int} MOUSERIGHT - KeyCode: 2

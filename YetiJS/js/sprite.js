@@ -5,11 +5,11 @@
  * @author Leo Zurbriggen
  * @constructor
  * @param {String} pSprite - The path to an image file.
- * @property {Image} sprite - The image; Use sprite.src to set a new path.
+ * @property {Image} sprite - The image.
  */
 var ySprite = function(pSprite){
 	var that = this;
 	
-	this.sprite = new Image();
-	this.sprite.src = pSprite;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
 };

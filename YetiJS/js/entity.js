@@ -11,7 +11,7 @@
  * @property {Image} sprite - The sprite of the entity.
  * @property {yPhsicalObject} physModel - The phyiscal object of the entity.
  * @property {yVector} position - The position of the entity.
- * @property {yParent} parent - The parent layer of the entity.
+ * @property {yLayer} parent - The parent layer of the entity.
  */
 var yEntity = function(pSprite, pPosition, pParent){
 	var that = this;

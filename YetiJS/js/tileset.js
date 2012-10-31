@@ -4,15 +4,20 @@
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {ySprite} pSprite - The path to an image file.
+ * @param {String} pSprite - The path to an image file.
+ * @param {Integer} pTileSize - The tilesize in pixels.
+ * @property {Integer} tileSize - The tilesize in pixels.
+ * @property {Image} sprite - The image of the tileset.
+ * @property {Integer} width - The width of the tileset in tiles.
+ * @property {Integer} height - The height of the tileset in tiles.
  */
 var yTileSet = function(pSprite, pTileSize){
 	var that = this;
-	this.sprite = new Image();
-	this.sprite.src = pSprite;
-	this.tileSize = pTileSize;
-	this.width = this.sprite.width / this.tileSize;
-	this.height = this.sprite.height / this.tileSize;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
+	that.tileSize = pTileSize;
+	that.width = that.sprite.width / that.tileSize;
+	that.height = that.sprite.height / that.tileSize;
 	
 	/**
 	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels

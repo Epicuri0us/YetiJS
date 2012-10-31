@@ -680,7 +680,7 @@ window.addEventListener("load", function(){
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {yLayer} layers - An array that stores every layer of the gamestate.
+ * @property {yLayer[]} layers - An array that stores every layer of the gamestate.
  */
 var yGameState = function(){
 	var that = this;
@@ -722,14 +722,12 @@ var yGameState = function(){
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @property {Boolean} active - Checks if the layer is active.
+ * @property {yCamera} camera - The active camera.
  */
 var yLayer = function(){
 	var that = this;
 	that.active = false;
-	that.entities = [];
-	
-	var image = new Image();
-	image.src = "test.png";
 	
 	that.camera = new yCamera(new yVector(0.5, 0.5));
 	
@@ -755,10 +753,10 @@ var yLayer = function(){
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {Int} keyState - An array that stores the active keystate.
- * @property {Int} lastKeyState - An array that stores the last keystate.
- * @property {yTouch} touches - An array that stores 10 touch objects.
- * @property {yTouch} lastTouches - An array that stores the last touch state.
+ * @property {Int[]} keyState - An array that stores the active keystate.
+ * @property {Int[]} lastKeyState - An array that stores the last keystate.
+ * @property {yTouch[]} touches - An array that stores 10 touch objects.
+ * @property {yTouch[]} lastTouches - An array that stores the last touch state.
  * @property {yVector} mousePosition - The active mouse position; the position of the last touch gets mapped to this vector to maintain functionality, Default is -1|-1
  * @property {Int} MOUSELEFT - KeyCode: 0
  * @property {Int} MOUSERIGHT - KeyCode: 2
@@ -1181,7 +1179,7 @@ var yInput = function() {
  * @property {Image} sprite - The sprite of the entity.
  * @property {yPhsicalObject} physModel - The phyiscal object of the entity.
  * @property {yVector} position - The position of the entity.
- * @property {yParent} parent - The parent layer of the entity.
+ * @property {yLayer} parent - The parent layer of the entity.
  */
 var yEntity = function(pSprite, pPosition, pParent){
 	var that = this;
@@ -1228,6 +1226,7 @@ var yEntity = function(pSprite, pPosition, pParent){
  * @author Leo Zurbriggen
  * @constructor
  * @property {yVector} position - The position of the camera.
+ * @param {yVector} pPosition - The position of the camera.
  */
 var yCamera = function(pPosition){
 	var that = this;
@@ -1283,13 +1282,13 @@ var yCamera = function(pPosition){
  * @author Leo Zurbriggen
  * @constructor
  * @param {String} pSprite - The path to an image file.
- * @property {Image} sprite - The image; Use sprite.src to set a new path.
+ * @property {Image} sprite - The image.
  */
 var ySprite = function(pSprite){
 	var that = this;
 	
-	this.sprite = new Image();
-	this.sprite.src = pSprite;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
 };
 
 /**
@@ -1297,6 +1296,8 @@ var ySprite = function(pSprite){
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {Integer} pCols - The number of columns of the spritesheet.
+ * @param {Integer} pRows - The number of rows of the spritesheet.
  * @param {String} pSprite - The path to an image file.
  */
 var ySpriteSheet = function(pCols, pRows, pSprite){
@@ -1325,13 +1326,21 @@ var yAnimation = function(){
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {yTileSet} pTileSet - The tileset used on the map.
+ * @param {Integer} pLayers - The number of layers of the map.
+ * @param {Integer} pWidth - The width of the map.
+ * @param {Integer} pHeight - The height of the map.
+ * @property {yTileSet} tileSet - The tileset used on the map.
+ * @property {Integer[]} map - The map array.
+ * @property {Integer} width - The width of the map.
+ * @property {Integer} height - The height of the map.
  */
 var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	var that = this;
-	this.tileSet = pTileSet;
-	this.map = [];
-	this.width = pWidth;
-	this.height = pHeight;
+	that.tileSet = pTileSet;
+	that.map = [];
+	that.width = pWidth;
+	that.height = pHeight;
 	
 	/**
 	 * Initializes an empty map-array
@@ -1374,15 +1383,20 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {ySprite} pSprite - The path to an image file.
+ * @param {String} pSprite - The path to an image file.
+ * @param {Integer} pTileSize - The tilesize in pixels.
+ * @property {Integer} tileSize - The tilesize in pixels.
+ * @property {Image} sprite - The image of the tileset.
+ * @property {Integer} width - The width of the tileset in tiles.
+ * @property {Integer} height - The height of the tileset in tiles.
  */
 var yTileSet = function(pSprite, pTileSize){
 	var that = this;
-	this.sprite = new Image();
-	this.sprite.src = pSprite;
-	this.tileSize = pTileSize;
-	this.width = this.sprite.width / this.tileSize;
-	this.height = this.sprite.height / this.tileSize;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
+	that.tileSize = pTileSize;
+	that.width = that.sprite.width / that.tileSize;
+	that.height = that.sprite.height / that.tileSize;
 	
 	/**
 	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels
@@ -1459,19 +1473,31 @@ var yTimer = function(pDuration){
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {String} pFileName - The file name of the sound.
  */
 var ySound = function(pFileName){
 	var that = this;
+	
+	/**
+	 * Loads the audio file that can be played by the browser
+	 */
 	if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
 		this.audio = new Audio(pFileName + ".ogg");
 	}else{
 		this.audio = new Audio(pFileName + ".mp3");
 	}
 	
+	/**
+	 * Plays the sound
+	 */
 	that.prototype.play = function(){
 		this.audio.play();
 	}
 	
+	
+	/**
+	 * Pauses the sound
+	 */
 	that.prototype.pause = function(){
 		this.audio.pause();
 	}
