@@ -443,7 +443,7 @@ F.prototype.DrawPolygon=function(G,K,y){if(K){var w=this.m_ctx,A=this.m_drawScal
 1;y<K;y++)w.lineTo(G[y].x*A,G[y].y*A);w.lineTo(G[0].x*A,G[0].y*A);w.closePath();w.fill();w.stroke()}};F.prototype.DrawCircle=function(G,K,y){if(K){var w=this.m_ctx,A=this.m_drawScale;w.beginPath();w.strokeStyle=this._color(y.color,this.m_alpha);w.arc(G.x*A,G.y*A,K*A,0,Math.PI*2,true);w.closePath();w.stroke()}};F.prototype.DrawSolidCircle=function(G,K,y,w){if(K){var A=this.m_ctx,U=this.m_drawScale,p=G.x*U,B=G.y*U;A.moveTo(0,0);A.beginPath();A.strokeStyle=this._color(w.color,this.m_alpha);A.fillStyle=
 this._color(w.color,this.m_fillAlpha);A.arc(p,B,K*U,0,Math.PI*2,true);A.moveTo(p,B);A.lineTo((G.x+y.x*K)*U,(G.y+y.y*K)*U);A.closePath();A.fill();A.stroke()}};F.prototype.DrawSegment=function(G,K,y){var w=this.m_ctx,A=this.m_drawScale;w.strokeStyle=this._color(y.color,this.m_alpha);w.beginPath();w.moveTo(G.x*A,G.y*A);w.lineTo(K.x*A,K.y*A);w.closePath();w.stroke()};F.prototype.DrawTransform=function(G){var K=this.m_ctx,y=this.m_drawScale;K.beginPath();K.strokeStyle=this._color(16711680,this.m_alpha);
 K.moveTo(G.position.x*y,G.position.y*y);K.lineTo((G.position.x+this.m_xformScale*G.R.col1.x)*y,(G.position.y+this.m_xformScale*G.R.col1.y)*y);K.strokeStyle=this._color(65280,this.m_alpha);K.moveTo(G.position.x*y,G.position.y*y);K.lineTo((G.position.x+this.m_xformScale*G.R.col2.x)*y,(G.position.y+this.m_xformScale*G.R.col2.y)*y);K.closePath();K.stroke()}})();var i;for(i=0;i<Box2D.postDefs.length;++i)Box2D.postDefs[i]();delete Box2D.postDefs;
-
+
 
 /*
        Common vector2 operations
@@ -502,778 +502,7 @@ function yArea(Vec1, Vec2){
 	that.botright = Vec2;
 }
 
-/** @preserve @author Jim Riecken - released under the MIT License. */
-/**
- * A simple library for determining intersections of circles and
- * polygons using the Separating Axis Theorem.
- */
-/*jshint shadow:true, sub:true, forin:true, noarg:true, noempty:true, 
-  eqeqeq:true, bitwise:true, strict:true, undef:true, 
-  curly:true, browser:true */
-var SAT = window['SAT'] = {};
-(function(SAT) {
-  "use strict";
-  
-  /** 
-   * Represents a vector in two dimensions.
-   * 
-   * @param {?number=} x The x position.
-   * @param {?number=} y The y position.
-   * @constructor
-   */
-  var Vector = function(x, y) {
-    this['x'] = this.x = x || 0;
-    this['y'] = this.y = y || 0;
-  };
-  SAT['Vector'] = Vector;
-  SAT['V'] = Vector;
-  /**
-   * Copy the values of another Vector into this one.
-   *
-   * @param {Vector} other The other Vector.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.copy = function(other) {
-    this.x = other.x; 
-    this.y = other.y;
-    return this;
-  };
-  Vector.prototype['copy'] = Vector.prototype.copy;
-    
-  /**
-   * Rotate this vector by 90 degrees
-   * 
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.perp = function() {
-    var x = this.x;
-    this.x = this.y; 
-    this.y = -x;
-    return this;
-  };
-  Vector.prototype['perp'] = Vector.prototype.perp;
-    
-  /**
-   * Reverse this vector.
-   * 
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.reverse = function() {
-    this.x = -this.x; 
-    this.y = -this.y;
-    return this;
-  };
-  Vector.prototype['reverse'] = Vector.prototype.reverse;
-  
-  /**
-   * Normalize (make unit length) this vector.
-   * 
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.normalize = function() {
-    var d = this.len();
-    if(d > 0) {
-      this.x = this.x / d; 
-      this.y = this.y / d;
-    }
-    return this;
-  };
-  Vector.prototype['normalize'] = Vector.prototype.normalize;
-  
-  /**
-   * Add another vector to this one.
-   * 
-   * @param {Vector} other The other Vector.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.add = function(other) {
-    this.x += other.x; 
-    this.y += other.y;
-    return this;
-  };
-  Vector.prototype['add'] = Vector.prototype.add;
-  
-  /**
-   * Subtract another vector from this one.
-   * 
-   * @param {Vector} other The other Vector.
-   * @return {Vector} This for chaiing.
-   */
-  Vector.prototype.sub = function(other) {
-    this.x -= other.x;
-    this.y -= other.y;
-    return this;
-  };
-  Vector.prototype['sub'] = Vector.prototype.sub;
-  
-  /**
-   * Scale this vector.
-   * 
-   * @param {number} x The scaling factor in the x direction.
-   * @param {?number=} y The scaling factor in the y direction.  If this
-   *   is not specified, the x scaling factor will be used.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.scale = function(x,y) {
-    this.x *= x; 
-    this.y *= y || x;
-    return this; 
-  };
-  Vector.prototype['scale'] = Vector.prototype.scale;
-  
-  /**
-   * Project this vector on to another vector.
-   * 
-   * @param {Vector} other The vector to project onto.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.project = function(other) {
-    var amt = this.dot(other) / other.len2();
-    this.x = amt * other.x; 
-    this.y = amt * other.y;
-    return this;
-  };
-  Vector.prototype['project'] = Vector.prototype.project;
-  
-  /**
-   * Project this vector onto a vector of unit length.
-   * 
-   * @param {Vector} other The unit vector to project onto.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.projectN = function(other) {
-    var amt = this.dot(other);
-    this.x = amt * other.x; 
-    this.y = amt * other.y;
-    return this;
-  };
-  Vector.prototype['projectN'] = Vector.prototype.projectN;
-  
-  /**
-   * Reflect this vector on an arbitrary axis.
-   * 
-   * @param {Vector} axis The vector representing the axis.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.reflect = function(axis) {
-    var x = this.x;
-    var y = this.y;
-    this.project(axis).scale(2);
-    this.x -= x; 
-    this.y -= y;
-    return this;
-  };
-  Vector.prototype['reflect'] = Vector.prototype.reflect;
-  
-  /**
-   * Reflect this vector on an arbitrary axis (represented by a unit vector)
-   * 
-   * @param {Vector} axis The unit vector representing the axis.
-   * @return {Vector} This for chaining.
-   */
-  Vector.prototype.reflectN = function(axis) {
-    var x = this.x;
-    var y = this.y;
-    this.projectN(axis).scale(2);
-    this.x -= x; 
-    this.y -= y;
-    return this;
-  };
-  Vector.prototype['relectN'] = Vector.prototype.reflectN;
-  
-  /**
-   * Get the dot product of this vector against another.
-   * 
-   * @param {Vector}  other The vector to dot this one against.
-   * @return {number} The dot product.
-   */
-  Vector.prototype.dot = function(other) {
-    return this.x * other.x + this.y * other.y;
-  };
-  Vector.prototype['dot'] = Vector.prototype.dot;
-  
-  /**
-   * Get the length^2 of this vector.
-   * 
-   * @return {number} The length^2 of this vector.
-   */
-  Vector.prototype.len2 = function() {
-    return this.dot(this);
-  };
-  Vector.prototype['len2'] = Vector.prototype.len2;
-  
-  /**
-   * Get the length of this vector.
-   * 
-   * @return {number} The length of this vector.
-   */
-  Vector.prototype.len = function() {
-    return Math.sqrt(this.len2());
-  };
-  Vector.prototype['len'] = Vector.prototype.len;
-  
-  /**
-   * A circle.
-   * 
-   * @param {Vector=} pos A vector representing the position of the center of the circle
-   * @param {?number=} r The radius of the circle
-   * @constructor
-   */
-  var Circle = function(pos, r) {
-    this['pos'] = this.pos = pos || new Vector();
-    this['r'] = this.r = r || 0;
-  };
-  SAT['Circle'] = Circle;
-  
-  /**
-   * A *convex* clockwise polygon.
-   * 
-   * @param {Vector=} pos A vector representing the origin of the polygon. (all other
-   *   points are relative to this one)
-   * @param {Array.<Vector>=} points An array of vectors representing the points in the polygon,
-   *   in clockwise order.
-   * @constructor
-   */
-  var Polygon = function(pos, points, center) {
-    this['pos'] = this.pos = pos || new Vector();
-    this['points'] = this.points = points || [];
-    this['center'] = this.center = center || new Vector();
-    this['rotation'] = this.rotation = 0;
-    this.recalc();
-  };
-  SAT['Polygon'] = Polygon;
-  
-  /**
-   * Recalculate the edges and normals of the polygon.  This
-   * MUST be called if the points array is modified at all and
-   * the edges or normals are to be accessed.
-   */
-  Polygon.prototype.recalc = function() {
-    var points = this.points;
-    var len = points.length;
-    this.edges = []; 
-    this.normals = [];
-    for (var i = 0; i < len; i++) {
-      var p1 = points[i]; 
-      var p2 = i < len - 1 ? points[i + 1] : points[0];
-      var e = new Vector().copy(p2).sub(p1);
-      var n = new Vector().copy(e).perp().normalize();
-      this.edges.push(e);
-      this.normals.push(n);
-    }
-  };
-  Polygon.prototype['recalc'] = Polygon.prototype.recalc;
-  
-  /**
-   * Rotates the polygon
-   */
-  Polygon.prototype.rotate = function(pRotation) {
-  	var that = this;
-  	that.rotation += pRotation;
-  	if(that.rotation > 360){
-  		that.rotation -= 360;
-  	}else if(that.rotation < 0){
-  		that.rotation += 360;
-  	}
-  	var rot = pRotation * (Math.PI/180);
-  	var center = that.center;
-    for(var i = 0; i < that.points.length; i++){
-    	var point = that.points[i];
-		that.points[i] = new Vector(center.x + ((point.x - center.x) * Math.cos(rot) - (point.y - center.y) * Math.sin(rot)), center.y + ((point.x - center.x) * Math.sin(rot) + (point.y - center.y) * Math.cos(rot)));
-	}
-	that.recalc();
-  };
-  Polygon.prototype['rotate'] = Polygon.prototype.rotate;
-  
-  /**
-   * Sets the rotation of a polygon to a specific point
-   */
-  Polygon.prototype.setRotation = function(pRotation) {
-  	var that = this;
-  	that.rotate(pRotation-that.rotation);
-  	that.rotation = pRotation;
-  	if(that.rotation > 360){
-  		that.rotation = 360;
-  	}else if(that.rotation < 0){
-  		that.rotation = 0;
-  	}
-  };
-  Polygon.prototype['setRotation'] = Polygon.prototype.setRotation;
-  
-  /**
-   * Draws the polygon for testing purposes
-   */
-  Polygon.prototype.draw = function(camera) {
-  	this.recalc();
-    var points = this.points;
-    ctx.beginPath();
-	ctx.lineWidth = "1";
-	ctx.strokeStyle = "rgba(20, 20, 20, 0.7)";
-	ctx.fillStyle = "rgba(30, 30, 30, 0.5)";
-	if (points.length > 1) {
-		ctx.moveTo(camera.position.x + points[0].x + this.pos.x - this.center.x, camera.position.y + points[0].y + this.pos.y - this.center.y);
-		for (var i = 1; i < points.length; i++) {
-		ctx.lineTo(camera.position.x + points[i].x + this.pos.x - this.center.x, camera.position.y + points[i].y + this.pos.y - this.center.y);
-		}
-	}
-	ctx.closePath();
-	ctx.fill();
-	ctx.stroke();
-  };
-  Polygon.prototype['draw'] = Polygon.prototype.draw;
-  
-  /**
-   * An axis-aligned box, with width and height.
-   * 
-   * @param {Vector=} pos A vector representing the top-left of the box.
-   * @param {?number=} w The width of the box.
-   * @param {?number=} h The height of the box.
-   * @constructor
-   */
-  var Box = function(pos, w, h) {
-    this['pos'] = this.pos = pos || new Vector();
-    this['w'] = this.w = w || 0; 
-    this['h'] = this.h = h || 0;
-  };
-  SAT['Box'] = Box;
 
-  /**
-   * Create a polygon that is the same as this box.
-   * 
-   * @return {Polygon} A new Polygon that represents this box.
-   */
-  Box.prototype.toPolygon = function() {
-    var pos = this.pos;
-    var w = this.w;
-    var h = this.h;
-    return new Polygon(new Vector(pos.x, pos.y), [
-     new Vector(), new Vector(w, 0), 
-     new Vector(w,h), new Vector(0,h)
-    ]);
-  };
-  Box.prototype['toPolygon'] = Box.prototype.toPolygon;
-  
-  /**
-   * Pool of Vectors used in calculations.
-   * 
-   * @type {Array.<Vector>}
-   */
-  var T_VECTORS = [];
-  for (var i = 0; i < 10; i++) { T_VECTORS.push(new Vector()); }
-  /**
-   * Pool of Arrays used in calculations.
-   * 
-   * @type {Array.<Array.<*>>}
-   */
-  var T_ARRAYS = [];
-  for (var i = 0; i < 5; i++) { T_ARRAYS.push([]); }
-
-  /**
-   * An object representing the result of an intersection. Contain information about:
-   * - The two objects participating in the intersection
-   * - The vector representing the minimum change necessary to extract the first object
-   *   from the second one.
-   * - Whether the first object is entirely inside the second, or vice versa.
-   * 
-   * @constructor
-   */  
-  var Response = function() {
-    this['a'] = this.a = null;
-    this['b'] = this.b = null;
-    this['overlapN'] = this.overlapN = new Vector(); // Unit vector in the direction of overlap
-    this['overlapV'] = this.overlapV = new Vector(); // Subtract this from a's position to extract it from b
-    this.clear();
-  };
-  SAT['Response'] = Response;
-
-  /**
-   * Set some values of the response back to their defaults.  Call this between tests if 
-   * you are going to reuse a single Response object for multiple intersection tests (recommented)
-   * 
-   * @return {Response} This for chaining
-   */
-  Response.prototype.clear = function() {
-    this['aInB'] = this.aInB = true; // Is a fully inside b?
-    this['bInA'] = this.bInA = true; // Is b fully inside a?
-    this['overlap'] = this.overlap = Number.MAX_VALUE; // Amount of overlap (magnitude of overlapV). Can be 0 (if a and b are touching)
-    return this;
-  };
-  Response.prototype['clear'] = Response.prototype.clear;
-  
-  /**
-   * Flattens the specified array of points onto a unit vector axis,
-   * resulting in a one dimensional range of the minimum and 
-   * maximum value on that axis.
-   *
-   * @param {Array.<Vector>} points The points to flatten.
-   * @param {Vector} normal The unit vector axis to flatten on.
-   * @param {Array.<number>} result An array.  After calling this function,
-   *   result[0] will be the minimum value,
-   *   result[1] will be the maximum value.
-   */
-  var flattenPointsOn = function(points, normal, result) {
-    var min = Number.MAX_VALUE;
-    var max = -Number.MAX_VALUE;
-    var len = points.length;
-    for (var i = 0; i < len; i++ ) {
-      // Get the magnitude of the projection of the point onto the normal
-      var dot = points[i].dot(normal);
-      if (dot < min) { min = dot; }
-      if (dot > max) { max = dot; }
-    }
-    result[0] = min; result[1] = max;
-  };
-  
-  /**
-   * Check whether two convex clockwise polygons are separated by the specified
-   * axis (must be a unit vector).
-   * 
-   * @param {Vector} aPos The position of the first polygon.
-   * @param {Vector} bPos The position of the second polygon.
-   * @param {Array.<Vector>} aPoints The points in the first polygon.
-   * @param {Array.<Vector>} bPoints The points in the second polygon.
-   * @param {Vector} axis The axis (unit sized) to test against.  The points of both polygons
-   *   will be projected onto this axis.
-   * @param {Response=} response A Response object (optional) which will be populated
-   *   if the axis is not a separating axis.
-   * @return {boolean} true if it is a separating axis, false otherwise.  If false,
-   *   and a response is passed in, information about how much overlap and
-   *   the direction of the overlap will be populated.
-   */
-  var isSeparatingAxis = function(aPos, bPos, aPoints, bPoints, axis, response) {
-    var rangeA = T_ARRAYS.pop();
-    var rangeB = T_ARRAYS.pop();
-    // Get the magnitude of the offset between the two polygons
-    var offsetV = T_VECTORS.pop().copy(bPos).sub(aPos);
-    var projectedOffset = offsetV.dot(axis);
-    // Project the polygons onto the axis.
-    flattenPointsOn(aPoints, axis, rangeA);
-    flattenPointsOn(bPoints, axis, rangeB);
-    // Move B's range to its position relative to A.
-    rangeB[0] += projectedOffset;
-    rangeB[1] += projectedOffset;
-    // Check if there is a gap. If there is, this is a separating axis and we can stop
-    if (rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1]) {
-      T_VECTORS.push(offsetV); 
-      T_ARRAYS.push(rangeA); 
-      T_ARRAYS.push(rangeB);
-      return true;
-    }
-    // If we're calculating a response, calculate the overlap.
-    if (response) {
-      var overlap = 0;
-      // A starts further left than B
-      if (rangeA[0] < rangeB[0]) {
-        response.aInB = false;
-        // A ends before B does. We have to pull A out of B
-        if (rangeA[1] < rangeB[1]) { 
-          overlap = rangeA[1] - rangeB[0];
-          response.bInA = false;
-        // B is fully inside A.  Pick the shortest way out.
-        } else {
-          var option1 = rangeA[1] - rangeB[0];
-          var option2 = rangeB[1] - rangeA[0];
-          overlap = option1 < option2 ? option1 : -option2;
-        }
-      // B starts further left than A
-      } else {
-        response.bInA = false;
-        // B ends before A ends. We have to push A out of B
-        if (rangeA[1] > rangeB[1]) { 
-          overlap = rangeA[0] - rangeB[1];
-          response.aInB = false;
-        // A is fully inside B.  Pick the shortest way out.
-        } else {
-          var option1 = rangeA[1] - rangeB[0];
-          var option2 = rangeB[1] - rangeA[0];
-          overlap = option1 < option2 ? option1 : -option2;
-        }
-      }
-      // If this is the smallest amount of overlap we've seen so far, set it as the minimum overlap.
-      var absOverlap = Math.abs(overlap);
-      if (absOverlap < response.overlap) {
-        response.overlap = absOverlap;
-        response.overlapN.copy(axis);
-        if (overlap < 0) {
-          response.overlapN.reverse();
-        }
-      }      
-    }
-    T_VECTORS.push(offsetV); 
-    T_ARRAYS.push(rangeA); 
-    T_ARRAYS.push(rangeB);
-    return false;
-  };
-  
-  /**
-   * Calculates which Vornoi region a point is on a line segment.
-   * It is assumed that both the line and the point are relative to (0, 0)
-   * 
-   *             |       (0)      | 
-   *      (-1)  [0]--------------[1]  (1)
-   *             |       (0)      | 
-   * 
-   * @param {Vector} line The line segment.
-   * @param {Vector} point The point.
-   * @return  {number} LEFT_VORNOI_REGION (-1) if it is the left region, 
-   *          MIDDLE_VORNOI_REGION (0) if it is the middle region, 
-   *          RIGHT_VORNOI_REGION (1) if it is the right region.
-   */
-  var vornoiRegion = function(line, point) {
-    var len2 = line.len2();
-    var dp = point.dot(line);
-    if (dp < 0) { return LEFT_VORNOI_REGION; }
-    else if (dp > len2) { return RIGHT_VORNOI_REGION; }
-    else { return MIDDLE_VORNOI_REGION; }
-  };
-  /**
-   * @const
-   */
-  var LEFT_VORNOI_REGION = -1;
-  /**
-   * @const
-   */
-  var MIDDLE_VORNOI_REGION = 0;
-  /**
-   * @const
-   */
-  var RIGHT_VORNOI_REGION = 1;
-  
-  /**
-   * Check if two circles intersect.
-   * 
-   * @param {Circle} a The first circle.
-   * @param {Circle} b The second circle.
-   * @param {Response=} response Response object (optional) that will be populated if
-   *   the circles intersect.
-   * @return {boolean} true if the circles intersect, false if they don't. 
-   */
-  var testCircleCircle = function(a, b, response) {
-    var differenceV = T_VECTORS.pop().copy(b.pos).sub(a.pos);
-    var totalRadius = a.r + b.r;
-    var totalRadiusSq = totalRadius * totalRadius;
-    var distanceSq = differenceV.len2();
-    if (distanceSq > totalRadiusSq) {
-      // They do not intersect 
-      T_VECTORS.push(differenceV);
-      return false;
-    }
-    // They intersect.  If we're calculating a response, calculate the overlap.
-    if (response) { 
-      var dist = Math.sqrt(distanceSq);
-      response.a = a;
-      response.b = b;
-      response.overlap = totalRadius - dist;
-      response.overlapN.copy(differenceV.normalize());
-      response.overlapV.copy(differenceV).scale(response.overlap);
-      response.aInB = a.r <= b.r && dist <= b.r - a.r;
-      response.bInA = b.r <= a.r && dist <= a.r - b.r;
-    }
-    T_VECTORS.push(differenceV);
-    return true;
-  };
-  SAT['testCircleCircle'] = testCircleCircle;
-  
-  /**
-   * Check if a polygon and a circle intersect.
-   * 
-   * @param {Polygon} polygon The polygon.
-   * @param {Circle} circle The circle.
-   * @param {Response=} response Response object (optional) that will be populated if
-   *   they interset.
-   * @return {boolean} true if they intersect, false if they don't.
-   */
-  var testPolygonCircle = function(polygon, circle, response) {
-    var circlePos = T_VECTORS.pop().copy(circle.pos).sub(polygon.pos);
-    var radius = circle.r;
-    var radius2 = radius * radius;
-    var points = polygon.points;
-    var len = points.length;
-    var edge = T_VECTORS.pop();
-    var point = T_VECTORS.pop();
-    
-    // For each edge in the polygon
-    for (var i = 0; i < len; i++) {
-      var next = i === len - 1 ? 0 : i + 1;
-      var prev = i === 0 ? len - 1 : i - 1;
-      var overlap = 0;
-      var overlapN = null;
-      
-      // Get the edge
-      edge.copy(polygon.edges[i]);
-      // Calculate the center of the cirble relative to the starting point of the edge
-      point.copy(circlePos).sub(points[i]);
-      
-      // If the distance between the center of the circle and the point
-      // is bigger than the radius, the polygon is definitely not fully in
-      // the circle.
-      if (response && point.len2() > radius2) {
-        response.aInB = false;
-      }
-      
-      // Calculate which Vornoi region the center of the circle is in.
-      var region = vornoiRegion(edge, point);
-      if (region === LEFT_VORNOI_REGION) { 
-        // Need to make sure we're in the RIGHT_VORNOI_REGION of the previous edge.
-        edge.copy(polygon.edges[prev]);
-        // Calculate the center of the circle relative the starting point of the previous edge
-        var point2 = T_VECTORS.pop().copy(circlePos).sub(points[prev]);
-        region = vornoiRegion(edge, point2);
-        if (region === RIGHT_VORNOI_REGION) {
-          // It's in the region we want.  Check if the circle intersects the point.
-          var dist = point.len();
-          if (dist > radius) {
-            // No intersection
-            T_VECTORS.push(circlePos); 
-            T_VECTORS.push(edge);
-            T_VECTORS.push(point); 
-            T_VECTORS.push(point2);
-            return false;
-          } else if (response) {
-            // It intersects, calculate the overlap
-            response.bInA = false;
-            overlapN = point.normalize();
-            overlap = radius - dist;
-          }
-        }
-        T_VECTORS.push(point2);
-      } else if (region === RIGHT_VORNOI_REGION) {
-        // Need to make sure we're in the left region on the next edge
-        edge.copy(polygon.edges[next]);
-        // Calculate the center of the circle relative to the starting point of the next edge
-        point.copy(circlePos).sub(points[next]);
-        region = vornoiRegion(edge, point);
-        if (region === LEFT_VORNOI_REGION) {
-          // It's in the region we want.  Check if the circle intersects the point.
-          var dist = point.len();
-          if (dist > radius) {
-            // No intersection
-            T_VECTORS.push(circlePos); 
-            T_VECTORS.push(edge); 
-            T_VECTORS.push(point);
-            return false;              
-          } else if (response) {
-            // It intersects, calculate the overlap
-            response.bInA = false;
-            overlapN = point.normalize();
-            overlap = radius - dist;
-          }
-        }
-      // MIDDLE_VORNOI_REGION
-      } else {
-        // Need to check if the circle is intersecting the edge,
-        // Change the edge into its "edge normal".
-        var normal = edge.perp().normalize();
-        // Find the perpendicular distance between the center of the 
-        // circle and the edge.
-        var dist = point.dot(normal);
-        var distAbs = Math.abs(dist);
-        // If the circle is on the outside of the edge, there is no intersection
-        if (dist > 0 && distAbs > radius) {
-          T_VECTORS.push(circlePos); 
-          T_VECTORS.push(normal); 
-          T_VECTORS.push(point);
-          return false;
-        } else if (response) {
-          // It intersects, calculate the overlap.
-          overlapN = normal;
-          overlap = radius - dist;
-          // If the center of the circle is on the outside of the edge, or part of the
-          // circle is on the outside, the circle is not fully inside the polygon.
-          if (dist >= 0 || overlap < 2 * radius) {
-            response.bInA = false;
-          }
-        }
-      }
-      
-      // If this is the smallest overlap we've seen, keep it. 
-      // (overlapN may be null if the circle was in the wrong Vornoi region)
-      if (overlapN && response && Math.abs(overlap) < Math.abs(response.overlap)) {
-        response.overlap = overlap;
-        response.overlapN.copy(overlapN);
-      }
-    }
-    
-    // Calculate the final overlap vector - based on the smallest overlap.
-    if (response) {
-      response.a = polygon;
-      response.b = circle;
-      response.overlapV.copy(response.overlapN).scale(response.overlap);
-    }
-    T_VECTORS.push(circlePos); 
-    T_VECTORS.push(edge); 
-    T_VECTORS.push(point);
-    return true;
-  };
-  SAT['testPolygonCircle'] = testPolygonCircle;
-  
-  /**
-   * Check if a circle and a polygon intersect.
-   * 
-   * NOTE: This runs slightly slower than polygonCircle as it just
-   * runs polygonCircle and reverses everything at the end.
-   * 
-   * @param {Circle} circle The circle.
-   * @param {Polygon} polygon The polygon.
-   * @param {Response=} response Response object (optional) that will be populated if
-   *   they interset.
-   * @return {boolean} true if they intersect, false if they don't.
-   */
-  var testCirclePolygon = function(circle, polygon, response) {
-    var result = testPolygonCircle(polygon, circle, response);
-    if (result && response) {
-      // Swap A and B in the response.
-      var a = response.a;
-      var aInB = response.aInB;
-      response.overlapN.reverse();
-      response.overlapV.reverse();
-      response.a = response.b; 
-      response.b = a;
-      response.aInB = response.bInA; 
-      response.bInA = aInB;
-    }
-    return result;
-  };
-  SAT['testCirclePolygon'] = testCirclePolygon;
-  
-  /**
-   * Checks whether two convex, clockwise polygons intersect.
-   * 
-   * @param {Polygon} a The first polygon.
-   * @param {Polygon} b The second polygon.
-   * @param {Response=} response Response object (optional) that will be populated if
-   *   they interset.
-   * @return {boolean} true if they intersect, false if they don't.
-   */
-  var testPolygonPolygon = function(a, b, response) {
-    var aPoints = a.points;
-    var aLen = aPoints.length;
-    var bPoints = b.points;
-    var bLen = bPoints.length;
-    // If any of the edge normals of A is a separating axis, no intersection.
-    for (var i = 0; i < aLen; i++) {
-      if (isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, a.normals[i], response)) {
-        return false;
-      }
-    }
-    // If any of the edge normals of B is a separating axis, no intersection.
-    for (var i = 0;i < bLen; i++) {
-      if (isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, b.normals[i], response)) {
-        return false;
-      }
-    }
-    // Since none of the edge normals of A or B are a separating axis, there is an intersection
-    // and we've already calculated the smallest overlap (in isSeparatingAxis).  Calculate the
-    // final overlap vector.
-    if (response) {
-      response.a = a;
-      response.b = b;
-      response.overlapV.copy(response.overlapN).scale(response.overlap);
-    }
-    return true;
-  };
-  SAT['testPolygonPolygon'] = testPolygonPolygon;
-}(SAT));
 /*
  Execute the given function when the browser is ready to draw the next frame
 
@@ -1316,7 +545,9 @@ function deepCopy(obj) {
 }
 
 // Aliasing Box2DWeb-components
-var b2yVector = Box2D.Common.Math.b2yVector, 
+var b2Vec2 = Box2D.Common.Math.b2Vec2,
+	yVector = Box2D.Common.Math.b2Vec2,
+	b2yVector = Box2D.Common.Math.b2yVector, 
 	b2AABB = Box2D.Collision.b2AABB, 
 	b2BodyDef = Box2D.Dynamics.b2BodyDef, 
 	b2Body = Box2D.Dynamics.b2Body, 
@@ -1327,356 +558,8 @@ var b2yVector = Box2D.Common.Math.b2yVector,
 	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape, 
 	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape, 
 	b2DebugDraw = Box2D.Dynamics.b2DebugDraw, 
-	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
-	yVector = SAT.Vector,
-	yPolygon = SAT.Polygon,
-	yCollisionRespone = SAT.Response,
-	yCircle = SAT.CIRCLE,
-	yBox = SAT.BOX; 
-
-/**
- * @classdesc The physics object saves physical data and collision models for very basic physics calculation. Use Box2DWeb for more accurate and advanced physics.
- * 
- * @author Leo Zurbriggen
- * @constructor
- * @param {yVector} pPosition - The position.
- * @param {Float} pWeight - The weight.
- * @property {yVector} position - The position.
- * @property {yVector} velocity - The active velocity.
- * @property {Float} friction - The friction.
- * @property {Float} weight - The weight.
- * @property {Float} cor - The "coefficient of restitution".
- * @property {yPolygon} model - The polygon that represents the object.
- * @property {yPhysicsObject} collisions - An array that stores every physics object this object collides with, clears every frame.
- */
-var yPhysicsObject = function(pPosition, pWeight) {
-	var that = this;
-	that.position = pPosition;
-	that.velocity = new yVector(0, 0);
-	that.acceleration = new yVector(0, 0);
-	that.friction = 0.99;
-	that.weight = pWeight;
-	that.cor = 0.5;
-	that.model;
-	that.collisions = [];
-
-	/**
-	 * Updates collisionbox
-	 */
-	yPhysicsObject.prototype.update = function() {
-		var that = this;
-		var acceleration = new yVector().copy(that.acceleration);
-		//console.log(that.acceleration.y, delta);
-		that.velocity.add(acceleration.scale(delta));
-		if(Math.abs(that.velocity.x) > 0){
-			that.velocity.x = that.velocity.x * that.friction;
-		}
-		if(Math.abs(that.velocity.y) > 0){
-			that.velocity.y = that.velocity.y;
-		}
-		var velocity = new yVector(that.velocity.x * delta, that.velocity.y * delta);
-
-		that.position = that.position.add(velocity);
-		that.model.pos = that.position;
-		that.collisions = [];
-	}
-
-	/**
-	 * Checks for collision with another physModel
-	 */
-	yPhysicsObject.prototype.checkCollision = function(pPhysObject) {
-		var response = new yCollisionRespone();
-		var collided = SAT.testPolygonPolygon(this.model, pPhysObject.model, response);
-		if(collided){
-			that.collisions.push(pPhysObject);
-			pPhysObject.collisions.push(this);
-			if(this.weight == Infinity){
-				pPhysObject.position.sub(response.overlapV);
-				var u = response.overlapN.scale(-(pPhysObject.velocity.dot(response.overlapN) / response.overlapN.dot(response.overlapN)));
-				var w = pPhysObject.velocity.sub(u);
-				
-				pPhysObject.velocity = w.scale(this.friction).sub(u.scale(pPhysObject.cor));
-			}else if(pPhysObject.weight == Infinity){
-				this.position.sub(response.overlapV);
-				var u = response.overlapN.scale(this.velocity.dot(response.overlapN) / response.overlapN.dot(response.overlapN));
-				var w = this.velocity.sub(u);
-				
-				this.velocity = w.scale(pPhysObject.friction).sub(u.scale(this.cor));
-			}else{
-				var maxWeight = 1/(this.weight + pPhysObject.weight);
-				this.position.sub(response.overlapV.scale(pPhysObject.weight*maxWeight, pPhysObject.weight*maxWeight));
-				pPhysObject.position.sub(response.overlapV.scale(this.weight*maxWeight, this.weight*maxWeight));
-			}
-		}
-	}
-
-	/**
-	 *Draws physics model for debugging purposes
-	 */
-	yPhysicsObject.prototype.draw = function(camera) {
-		var that = this;
-		that.model.draw(camera);
-	}
-
-}
-
-// var polygonCollisionResult = function() {
-	// // Are the polygons going to intersect forward in time?
-	// this.willIntersect;
-	// // Are the polygons currently intersecting?
-	// this.intersect;
-	// // The translation to apply to the first polygon to push the polygons apart.
-	// this.minimumTranslationVector;
-// }
-
-/*function getCollisionResult(polygon1, polygon2){
-// GETAXES	
-var axes = new Vector[shape.vertices.length];
-// loop over the vertices
-for (int i = 0; i < shape.vertices.length; i++) {
-  // get the current vertex
-  Vector p1 = shape.vertices[i];
-  // get the next vertex
-  Vector p2 = shape.vertices[i + 1 == shape.vertices.length ? 0 : i + 1];
-  // subtract the two to get the edge vector
-  Vector edge = p1.subtract(p2);
-  // get either perpendicular vector
-  Vector normal = edge.perp();
-  // the perp method is just (x, y) => (-y, x) or (y, -x)
-  axes[i] = normal;
-}
-
-// GET LIST OF AXES TO TEST
-Axis[] axes1 = shape1.getAxes();
-Axis[] axes2 = shape2.getAxes();
-// loop over the axes1
-for (int i = 0; i < axes1.length; i++) {
-  Axis axis = axes1[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  }
-}
-// loop over the axes2
-for (int i = 0; i < axes2.length; i++) {
-  Axis axis = axes2[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  }
-}
-// if we get here then we know that every axis had overlap on it
-// so we can guarantee an intersection
-return true;
-
-// PROJECT
-double min = axis.dot(shape.vertices[0]);
-double max = min;
-for (int i = 1; i < shape.vertices.length; i++) {
-  // NOTE: the axis must be normalized to get accurate projections
-  double p = axis.dot(shape.vertices[i]);
-  if (p < min) {
-    min = p;
-  } else if (p > max) {
-    max = p;
-  }
-}
-Projection proj = new Projection(min, max);
-return proj;
-
-
-
-// GET MTV
-double overlap = // really large value;
-Axis smallest = null;
-Axis[] axes1 = shape1.getAxes();
-Axis[] axes2 = shape2.getAxes();
-// loop over the axes1
-for (int i = 0; i < axes1.length; i++) {
-  Axis axis = axes1[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  } else {
-    // get the overlap
-    double o = p1.getOverlap(p2);
-    // check for minimum
-    if (o < overlap) {
-      // then set this one as the smallest
-      overlap = o;
-      smallest = axis;
-    }
-  }
-}
-// loop over the axes2
-for (int i = 0; i < axes2.length; i++) {
-  Axis axis = axes2[i];
-  // project both shapes onto the axis
-  Projection p1 = shape1.project(axis);
-  Projection p2 = shape2.project(axis);
-  // do the projections overlap?
-  if (!p1.overlap(p2)) {
-    // then we can guarantee that the shapes do not overlap
-    return false;
-  } else {
-    // get the overlap
-    double o = p1.getOverlap(p2);
-    // check for minimum
-    if (o < overlap) {
-      // then set this one as the smallest
-      overlap = o;
-      smallest = axis;
-    }
-  }
-}
-MTV mtv = new MTV(smallest, overlap);
-// if we get here then we know that every axis had overlap on it
-// so we can guarantee an intersection
-return mtv;
-
-
-	}
-
-
-}
-*/
-/*function getIntervalDistance(minA, maxA, minB, maxB){
-	if(minA < minB){
-		return minB - maxA;
-	}else{
-		return minA - maxB;
-	}
-}
-
-// Calculate the projection of a polygon on an axis
-// and returns it as a [min, max] interval
-function projectPolygon(axis, polygon, min, max) {
-	var points = polygon.getAbsolutePoints();
-
-	// To project a point on an axis use the dot product
-	var dotProduct = axis.dot(points[0]);
-	min = dotProduct;
-	max = dotProduct;
-
-	for (var i = 0; i < points.length; i++) {
-		dotProduct = points[i].dot(axis);
-		if (dotProduct < min) {
-			min = dotProduct;
-		} else {
-			if (dotProduct > max) {
-				max = dotProduct;
-			}
-		}
-	}
-	return new yVector(min, max);
-}
-
-// Check if polygon A is going to collide with polygon B.
-// The last parameter is the *relative* velocity
-// of the polygons (i.e. velocityA - velocityB)
-function polygonCollision(polygonA, polygonB, velocity) {
-	var result = new polygonCollisionResult();
-	result.intersect = true;
-	result.willIntersect = true;
+	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef;
 	
-	polygonA.setEdges();
-	polygonB.setEdges();
-
-	var edgeCountA = polygonA.edges.length;
-	var edgeCountB = polygonB.edges.length;
-	var minIntervalDistance = Infinity;
-	var translationAxis = new yVector(0, 0);
-	var edge;
-
-	// Loop through all the edges of both polygons
-	for (var edgeIndex = 0; edgeIndex < edgeCountA + edgeCountB; edgeIndex++) {
-		if (edgeIndex < edgeCountA) {
-			edge = polygonA.edges[edgeIndex];
-		} else {
-			edge = polygonB.edges[edgeIndex - edgeCountA];
-		}
-
-		// ===== 1. Find if the polygons are currently intersecting =====
-
-		// Find the axis perpendicular to the current edge
-		var axis = new yVector(-edge.y, edge.y);
-		axis.normalize();
-
-		// Find the projection of the polygon on the current axis
-		var projA = projectPolygon(axis, polygonA, minA, maxA);
-		var projB = projectPolygon(axis, polygonB, minB, maxB);
-		var minA = projA.x;
-		var minB = projB.x;
-		var maxA = projA.y;
-		var maxB = projB.y;
-
-		// Check if the polygon projections are currentlty intersecting
-		if (getIntervalDistance(minA, maxA, minB, maxB) > 0){
-			result.intersect = false;
-		}
-		if(result.intersect){
-			//console.log(Math.round(minA) + " " + Math.round(maxA) + " " + Math.round(minB) + " " + Math.round(maxB) + " " + result.intersect);
-		}
-		
-		// ===== 2. Now find if the polygons *will* intersect =====
-
-		// Project the velocity on the current axis
-		var velocityProjection = axis.dot(velocity);
-
-		// Get the projection of polygon A during the movement
-		if (velocityProjection < 0) {
-			minA += velocityProjection;
-		} else {
-			maxA += velocityProjection;
-		}
-
-		// Do the same test as above for the new projection
-		var intervalDistance = getIntervalDistance(minA, maxA, minB, maxB);
-		if (intervalDistance > 0) {
-			result.willIntersect = false;
-		}
-
-		// If the polygons are not intersecting and won't intersect, exit the loop
-		if (!result.intersect && !result.willIntersect) {
-			break;
-		}
-
-		// Check if the current interval distance is the minimum one. If so store
-		// the interval distance and the current distance.
-		// This will be used to calculate the minimum translation vector
-		intervalDistance = Math.abs(intervalDistance);
-		if (intervalDistance < minIntervalDistance) {
-			minIntervalDistance = intervalDistance;
-			translationAxis = axis;
-
-			var d = polygonA.getAbsoluteCenter().subV(polygonB.getAbsoluteCenter());
-			if (d.dot(translationAxis) < 0) {
-				
-				translationAxis = translationAxis.mulS(-1);
-			}
-		}
-	}
-
-	// The minimum translation vector
-	// can be used to push the polygons appart.
-	if (result.willIntersect) {
-		result.minimumTranslationVector = translationAxis;
-	}
-
-	return result;
-}*/
 
 /**
  * @classdesc The touch events save the state of a touch event. It is used by the input manager.
@@ -1711,11 +594,12 @@ var yTouch = function(){
 	}
 };
 
+
 /**
  * @projectDescription YetiJS game framework
  * 
  * @author Leo Zurbriggen [http://leoz.ch]
- * @version 100812
+ * @version 021112
  */
 
 // Global variables
@@ -1782,18 +666,18 @@ window.addEventListener("load", function(){
 	ctx = canvas.getContext("2d");
 	document.body.appendChild(canvas);
 	
-	input = new yInputManager();
+	input = new yInput();
 	
 	// Create new game instance
 	game = new yGame();
-}, false);
+}, false);
 
 /**
  * @classdesc The gamestate handles all layers, it should be overwritten to be able to get better control over the layers and gamestate-switches.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {yLayer} layers - An array that stores every layer of the gamestate.
+ * @property {yLayer[]} layers - An array that stores every layer of the gamestate.
  */
 var yGameState = function(){
 	var that = this;
@@ -1801,7 +685,7 @@ var yGameState = function(){
 	that.layers = new Array();
 	
 	that.layer1 = new yLayer();
-	that.layer1.enabled = true;
+	that.layer1.active = true;
 	
 	that.layers.push(that.layer1);
 	
@@ -1811,7 +695,9 @@ var yGameState = function(){
 	yGameState.prototype.update = function(){
 		for(var i = 0; i < that.layers.length; i++)
 		{
-		    that.layers[i].update();
+			if(that.layers[i].active){
+				that.layers[i].update();
+			}
 		}
 	}
 
@@ -1821,137 +707,34 @@ var yGameState = function(){
 	yGameState.prototype.draw = function(){
 		for(var i = 0; i < that.layers.length; i++)
 		{
-		    that.layers[i].draw();
+			if(that.layers[i].active){
+				that.layers[i].draw();
+			}
 		}
 	}
-};
+};
+
 
 /**
  * @classdesc A layer handles the game functionality and should be dedicated to one task (i.E. user inferface/menu/actual game/...), it has to be inherited and attached to a specific gamestate.
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @property {Boolean} active - Checks if the layer is active.
+ * @property {yCamera} camera - The active camera.
  */
 var yLayer = function(){
 	var that = this;
-	that.enabled = false;
-	that.entities = [];
-	that.gravity = 3000;
-	
-	var image = new Image();
-	image.src = "test.png";
+	that.active = false;
 	
 	that.camera = new yCamera(new yVector(0.5, 0.5));
-	
-	var ent = new yEntity(image, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(30, 50), 1.2);
-	// ent.physModel.friction = 0.998;
-	
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new SAT.Vector(-30,0), new SAT.Vector(-20,-20), new SAT.Vector(0, -30), new SAT.Vector(20, -20), new SAT.Vector(30, 0), new SAT.Vector(20, 20), new SAT.Vector(0, 30), new SAT.Vector(-20, 20)]);
-	// var circle = new yCircle();
-	
-	ent.physModel.model = polygon1;
-	ent.physModel.cor = 0.005;
-	ent.physModel.friction = 0.97;
-	ent.physModel.acceleration.y = that.gravity;
-	
-	that.entities.push(ent);
-	
-	ent = new yEntity(image, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(400, 30), 0.8);
-	// ent.physModel.friction = 0.998;
-	
-	pol = new SAT.Polygon(new SAT.Vector(0, 0), [new SAT.Vector(-30,0), new SAT.Vector(-20,-20), new SAT.Vector(0, -30), new SAT.Vector(20, -20), new SAT.Vector(30, 0), new SAT.Vector(20, 20), new SAT.Vector(0, 30), new SAT.Vector(-20, 20)]);
-	
-	ent.physModel.model = pol;
-	ent.physModel.cor = 0.005;
-	ent.physModel.acceleration.y = that.gravity;
-	
-	that.entities.push(ent);
-	
-	var height = canvas.width/16*9;
-	// Left
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(-50, -500), new yVector(-1, -500), new yVector(-1, height), new yVector(-50, height)]);
-	ent.physModel.model = polygon1;
-	ent.physModel.friction = 1;
-	that.entities.push(ent);
-
-	// Right
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(canvas.width, -500), new yVector(canvas.width+50, -500), new yVector(canvas.width+50, height), new yVector(canvas.width, height)]);
-	ent.physModel.model = polygon1;
-	ent.physModel.friction = 1;
-	that.entities.push(ent);
-	
-	// Bottom
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = that.ground = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(0, height), new yVector(canvas.width, height), new yVector(canvas.width, height+50), new yVector(0, height+50)]);
-	ent.physModel.model = polygon1;
-	//ent.physModel.friction = 0.2;
-	that.entities.push(ent);
-	
-	// Top
-	ent = new yEntity(null, new yVector(0, 0), that);
-	ent.physModel = new yPhysicsObject(new yVector(0, 0), Infinity);
-	var polygon1 = new SAT.Polygon(new SAT.Vector(0, 0), [new yVector(0, -1), new yVector(0, -50), new yVector(canvas.width, -50), new yVector(canvas.width, -1),]);
-	ent.physModel.model = polygon1;
-	ent.physModel.friction = 1;
-	that.entities.push(ent);
 	
 	/**
 	 * Updates layer
 	 */
 	yLayer.prototype.update = function(){
 		var that = this;
-		if(that.enabled){
-			if(input.isAreaPressed(new yArea(new yVector(0, 0), new yVector(canvas.width/4, canvas.height)))){
-				that.entities[0].physModel.velocity.x -= 5000*delta;
-			}
-			if(input.isAreaPressed(new yArea(new yVector(canvas.width/4, 0), new yVector(canvas.width/2, canvas.height)))){
-				that.entities[0].physModel.velocity.x += 5000*delta;
-			}
-			if(input.isAreaPressed(new yArea(new yVector(canvas.width/2, 0), new yVector(canvas.width, canvas.height)))){
-				if(that.entities[0].physModel.collisions.contains(that.ground)){
-		    		that.entities[0].physModel.velocity.y = 200000;
-		    	}
-			}
-			that.entities[1].physModel.model.setRotation(67.5);
-		    if(input.isDown(input.SPACE)){
-		    	if(that.entities[0].physModel.collisions.contains(that.ground)){
-		    		that.entities[0].physModel.velocity.y = 200000;
-		    	}
-			}
-			
-			var keys = 0;
-		    if(input.isDown(input.LEFT)){
-		    	keys -= 1;
-				that.entities[0].physModel.acceleration.x -= 25000*delta;
-			}
-			if(input.isDown(input.RIGHT)){
-				keys += 1;
-				that.entities[0].physModel.acceleration.x += 25000*delta;
-			}
-			if(that.entities[0].physModel.velocity.x > 600){
-				that.entities[0].physModel.velocity.x = 600;
-			}else if(that.entities[0].physModel.velocity.x < -600){
-				that.entities[0].physModel.velocity.x = -600;
-			}
-			if(keys == 0){
-				that.entities[0].physModel.acceleration.x = 0;
-			}if(keys < 0 && that.entities[0].physModel.acceleration.x > 0){
-				
-			}else if(keys > 0 && that.entities[0].physModel.acceleration.x < 0){
-				
-			}
-			
-			for(var i = 0; i < that.entities.length; i++){
-		    	that.entities[i].update();
-		    }
-		}
+		
 	}
 	
 	/**
@@ -1959,131 +742,127 @@ var yLayer = function(){
 	 */
 	yLayer.prototype.draw = function(){
 		var that = this;
-		if(that.enabled){
-			for(var i = 0; i < that.entities.length; i++){
-		    	that.entities[i].draw(that.camera);
-		    }
-		}
+		
 	}
-};
+};
 
 /**
  * @classdesc The input manager handles key-, mouse- and touch-events, saves the active keystates and provides methods to check for events.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {Int} keyState - An array that stores the active keystate.
- * @property {Int} lastKeyState - An array that stores the last keystate.
- * @property {yTouch} touches - An array that stores 10 touch objects.
- * @property {yTouch} lastTouches - An array that stores the last touch state.
+ * @property {Integer[]} keyState - An array that stores the active keystate.
+ * @property {Integer[]} lastKeyState - An array that stores the last keystate.
+ * @property {yTouch[]} touches - An array that stores 10 touch objects.
+ * @property {yTouch[]} lastTouches - An array that stores the last touch state.
  * @property {yVector} mousePosition - The active mouse position; the position of the last touch gets mapped to this vector to maintain functionality, Default is -1|-1
- * @property {Int} MOUSELEFT - KeyCode: 0
- * @property {Int} MOUSERIGHT - KeyCode: 2
- * @property {Int} MOUSEMIDDLE - KeyCode: 1
- * @property {Int} BACKSPACE - KeyCode: 8
- * @property {Int} TAB - KeyCode: 9
- * @property {Int} ENTER - KeyCode: 13
- * @property {Int} SHIFT - KeyCode: 16
- * @property {Int} CTRL - KeyCode: 17
- * @property {Int} ALT - KeyCode: 18
- * @property {Int} PAUSE - KeyCode: 19
- * @property {Int} CAPS - KeyCode: 20
- * @property {Int} ESCAPE - KeyCode: 27
- * @property {Int} SPACE - KeyCode: 32
- * @property {Int} PAGEUP - KeyCode: 33
- * @property {Int} PAGEDOWN - KeyCode: 34
- * @property {Int} END - KeyCode: 35
- * @property {Int} HOME - KeyCode: 36
- * @property {Int} LEFT - KeyCode: 37
- * @property {Int} UP - KeyCode: 38
- * @property {Int} RIGHT - KeyCode: 39
- * @property {Int} DOWN - KeyCode: 40
- * @property {Int} INSERT - KeyCode: 45
- * @property {Int} DELETE - KeyCode: 46
- * @property {Int} ZERO - KeyCode: 48
- * @property {Int} ONE - KeyCode: 49
- * @property {Int} TWO - KeyCode: 50
- * @property {Int} THREE - KeyCode: 51
- * @property {Int} FOUR - KeyCode: 52
- * @property {Int} FIVE - KeyCode: 53
- * @property {Int} SIX - KeyCode: 54
- * @property {Int} SEVEN - KeyCode: 55
- * @property {Int} EIGHT - KeyCode: 56
- * @property {Int} NINE - KeyCode: 57
- * @property {Int} A - KeyCode: 65
- * @property {Int} B - KeyCode: 66
- * @property {Int} C - KeyCode: 67
- * @property {Int} D - KeyCode: 68
- * @property {Int} E - KeyCode: 69
- * @property {Int} F - KeyCode: 70
- * @property {Int} G - KeyCode: 71
- * @property {Int} H - KeyCode: 72
- * @property {Int} I - KeyCode: 73
- * @property {Int} J - KeyCode: 74
- * @property {Int} K - KeyCode: 75
- * @property {Int} L - KeyCode: 76
- * @property {Int} M - KeyCode: 77
- * @property {Int} N - KeyCode: 78
- * @property {Int} O - KeyCode: 79
- * @property {Int} P - KeyCode: 80
- * @property {Int} Q - KeyCode: 81
- * @property {Int} R - KeyCode: 82
- * @property {Int} S - KeyCode: 83
- * @property {Int} T - KeyCode: 84
- * @property {Int} U - KeyCode: 85
- * @property {Int} V - KeyCode: 86
- * @property {Int} W - KeyCode: 87
- * @property {Int} X - KeyCode: 88
- * @property {Int} Y - KeyCode: 89
- * @property {Int} Z - KeyCode: 90
- * @property {Int} WINDOWsLEFT - KeyCode: 91
- * @property {Int} WINDOWSRIGHT - KeyCode: 92
- * @property {Int} SELECT - KeyCode: 93
- * @property {Int} NUMZERO - KeyCode: 96
- * @property {Int} NUMONE - KeyCode: 97
- * @property {Int} NUMTWO - KeyCode: 98
- * @property {Int} NUMTHREE - KeyCode: 99
- * @property {Int} NUMFOUR - KeyCode: 100
- * @property {Int} NUMFIVE - KeyCode: 101
- * @property {Int} NUMSIX - KeyCode: 102
- * @property {Int} NUMSEVEN - KeyCode: 103
- * @property {Int} NUMEIGHT - KeyCode: 104
- * @property {Int} NUMNINE - KeyCode: 105
- * @property {Int} MULTIPLY - KeyCode: 106
- * @property {Int} ADD - KeyCode: 107
- * @property {Int} SUBTRACT - KeyCode: 109
- * @property {Int} DECIMALPOINT - KeyCode: 110
- * @property {Int} DIVIDE - KeyCode: 111
- * @property {Int} F1 - KeyCode: 112
- * @property {Int} F2 - KeyCode: 113
- * @property {Int} F3 - KeyCode: 114
- * @property {Int} F4 - KeyCode: 115
- * @property {Int} F5 - KeyCode: 116
- * @property {Int} F6 - KeyCode: 117
- * @property {Int} F7 - KeyCode: 118
- * @property {Int} F8 - KeyCode: 119
- * @property {Int} F9 - KeyCode: 120
- * @property {Int} F10 - KeyCode: 121
- * @property {Int} F11 - KeyCode: 122
- * @property {Int} F12 - KeyCode: 123
- * @property {Int} NUMLOCK - KeyCode: 144
- * @property {Int} SCROLLLOCK - KeyCode: 145
- * @property {Int} SEMICOLON - KeyCode: 186
- * @property {Int} EQUALSIGN - KeyCode: 187
- * @property {Int} COMMA - KeyCode: 188
- * @property {Int} DASH - KeyCode: 189
- * @property {Int} PERIOD - KeyCode: 190
- * @property {Int} FORWARDSLASH - KeyCode: 191
- * @property {Int} GRAVEACCENT - KeyCode: 192
- * @property {Int} OPENBRACKET - KeyCode: 219
- * @property {Int} BACKSLASH - KeyCode: 220
- * @property {Int} CLOSEBRACKET - KeyCode: 221
- * @property {Int} SINGLEQUOTE - KeyCode: 222
+ * @property {Integer} MOUSELEFT - KeyCode: 0
+ * @property {Integer} MOUSERIGHT - KeyCode: 2
+ * @property {Integer} MOUSEMIDDLE - KeyCode: 1
+ * @property {Integer} BACKSPACE - KeyCode: 8
+ * @property {Integer} TAB - KeyCode: 9
+ * @property {Integer} ENTER - KeyCode: 13
+ * @property {Integer} SHIFT - KeyCode: 16
+ * @property {Integer} CTRL - KeyCode: 17
+ * @property {Integer} ALT - KeyCode: 18
+ * @property {Integer} PAUSE - KeyCode: 19
+ * @property {Integer} CAPS - KeyCode: 20
+ * @property {Integer} ESCAPE - KeyCode: 27
+ * @property {Integer} SPACE - KeyCode: 32
+ * @property {Integer} PAGEUP - KeyCode: 33
+ * @property {Integer} PAGEDOWN - KeyCode: 34
+ * @property {Integer} END - KeyCode: 35
+ * @property {Integer} HOME - KeyCode: 36
+ * @property {Integer} LEFT - KeyCode: 37
+ * @property {Integer} UP - KeyCode: 38
+ * @property {Integer} RIGHT - KeyCode: 39
+ * @property {Integer} DOWN - KeyCode: 40
+ * @property {Integer} INSERT - KeyCode: 45
+ * @property {Integer} DELETE - KeyCode: 46
+ * @property {Integer} ZERO - KeyCode: 48
+ * @property {Integer} ONE - KeyCode: 49
+ * @property {Integer} TWO - KeyCode: 50
+ * @property {Integer} THREE - KeyCode: 51
+ * @property {Integer} FOUR - KeyCode: 52
+ * @property {Integer} FIVE - KeyCode: 53
+ * @property {Integer} SIX - KeyCode: 54
+ * @property {Integer} SEVEN - KeyCode: 55
+ * @property {Integer} EIGHT - KeyCode: 56
+ * @property {Integer} NINE - KeyCode: 57
+ * @property {Integer} A - KeyCode: 65
+ * @property {Integer} B - KeyCode: 66
+ * @property {Integer} C - KeyCode: 67
+ * @property {Integer} D - KeyCode: 68
+ * @property {Integer} E - KeyCode: 69
+ * @property {Integer} F - KeyCode: 70
+ * @property {Integer} G - KeyCode: 71
+ * @property {Integer} H - KeyCode: 72
+ * @property {Integer} I - KeyCode: 73
+ * @property {Integer} J - KeyCode: 74
+ * @property {Integer} K - KeyCode: 75
+ * @property {Integer} L - KeyCode: 76
+ * @property {Integer} M - KeyCode: 77
+ * @property {Integer} N - KeyCode: 78
+ * @property {Integer} O - KeyCode: 79
+ * @property {Integer} P - KeyCode: 80
+ * @property {Integer} Q - KeyCode: 81
+ * @property {Integer} R - KeyCode: 82
+ * @property {Integer} S - KeyCode: 83
+ * @property {Integer} T - KeyCode: 84
+ * @property {Integer} U - KeyCode: 85
+ * @property {Integer} V - KeyCode: 86
+ * @property {Integer} W - KeyCode: 87
+ * @property {Integer} X - KeyCode: 88
+ * @property {Integer} Y - KeyCode: 89
+ * @property {Integer} Z - KeyCode: 90
+ * @property {Integer} WINDOWsLEFT - KeyCode: 91
+ * @property {Integer} WINDOWSRIGHT - KeyCode: 92
+ * @property {Integer} SELECT - KeyCode: 93
+ * @property {Integer} NUMZERO - KeyCode: 96
+ * @property {Integer} NUMONE - KeyCode: 97
+ * @property {Integer} NUMTWO - KeyCode: 98
+ * @property {Integer} NUMTHREE - KeyCode: 99
+ * @property {Integer} NUMFOUR - KeyCode: 100
+ * @property {Integer} NUMFIVE - KeyCode: 101
+ * @property {Integer} NUMSIX - KeyCode: 102
+ * @property {Integer} NUMSEVEN - KeyCode: 103
+ * @property {Integer} NUMEIGHT - KeyCode: 104
+ * @property {Integer} NUMNINE - KeyCode: 105
+ * @property {Integer} MULTIPLY - KeyCode: 106
+ * @property {Integer} ADD - KeyCode: 107
+ * @property {Integer} SUBTRACT - KeyCode: 109
+ * @property {Integer} DECIMALPOINT - KeyCode: 110
+ * @property {Integer} DIVIDE - KeyCode: 111
+ * @property {Integer} F1 - KeyCode: 112
+ * @property {Integer} F2 - KeyCode: 113
+ * @property {Integer} F3 - KeyCode: 114
+ * @property {Integer} F4 - KeyCode: 115
+ * @property {Integer} F5 - KeyCode: 116
+ * @property {Integer} F6 - KeyCode: 117
+ * @property {Integer} F7 - KeyCode: 118
+ * @property {Integer} F8 - KeyCode: 119
+ * @property {Integer} F9 - KeyCode: 120
+ * @property {Integer} F10 - KeyCode: 121
+ * @property {Integer} F11 - KeyCode: 122
+ * @property {Integer} F12 - KeyCode: 123
+ * @property {Integer} NUMLOCK - KeyCode: 144
+ * @property {Integer} SCROLLLOCK - KeyCode: 145
+ * @property {Integer} SEMICOLON - KeyCode: 186
+ * @property {Integer} EQUALSIGN - KeyCode: 187
+ * @property {Integer} COMMA - KeyCode: 188
+ * @property {Integer} DASH - KeyCode: 189
+ * @property {Integer} PERIOD - KeyCode: 190
+ * @property {Integer} FORWARDSLASH - KeyCode: 191
+ * @property {Integer} GRAVEACCENT - KeyCode: 192
+ * @property {Integer} OPENBRACKET - KeyCode: 219
+ * @property {Integer} BACKSLASH - KeyCode: 220
+ * @property {Integer} CLOSEBRACKET - KeyCode: 221
+ * @property {Integer} SINGLEQUOTE - KeyCode: 222
  * @property {Float} orientationAlpha - The alpha orientation of the device.
  * @property {Float} orientationBeta - The beta orientation of the device.
  * @property {Float} orientationGamma - The gamma orientation of the device.
  */
-var yInputManager = function() {
+var yInput = function() {
 	var that = this;
 
 	that.keyState = [];
@@ -2211,34 +990,34 @@ var yInputManager = function() {
 	that.orientationAlpha = 0;
 
 	/**
-	 * Returns true, if the key with given keyCode is pressed, false otherwise
- 	 * @param {Int} pKeyCode - The keycode
+	 * Returns true, if the key with given keyCode is pressed, false otherwise.
+ 	 * @param {Integer} pKeyCode - The keycode.
 	 */
-	yInputManager.prototype.isDown = function(pKeyCode) {
+	yInput.prototype.isDown = function(pKeyCode) {
 		return that.keyState[pKeyCode];
 	};
 
 	/**
-	 * Returns true, if the key with given keyCode is not pressed, false otherwise
- 	 * @param {Int} pKeyCode - The keycode
+	 * Returns true, if the key with given keyCode is not pressed, false otherwise.
+ 	 * @param {Integer} pKeyCode - The keycode.
 	 */
-	yInputManager.prototype.isUp = function(pKeyCode) {
+	yInput.prototype.isUp = function(pKeyCode) {
 		return !that.keyState[pKeyCode];
 	};
 
 	/**
-	 * Returns true, if the key with given keyCode was just released, false otherwise
- 	 * @param {Int} pKeyCode - The keycode
+	 * Returns true, if the key with given keyCode was just released, false otherwise.
+ 	 * @param {Integer} pKeyCode - The keycode.
 	 */
-	yInputManager.prototype.isReleased = function(pKeyCode) {
+	yInput.prototype.isReleased = function(pKeyCode) {
 		return (!that.keyState[pKeyCode] && that.lastKeyState[pKeyCode]);
 	};
 
 	/**
-	 * Returns true, if the mouse hovers a given area, false otherwise
- 	 * @param {yArea} pArea - The area to check for
+	 * Returns true, if the mouse hovers a given area, false otherwise.
+ 	 * @param {yArea} pArea - The area to check for.
 	 */
-	yInputManager.prototype.isAreaHovered = function(pArea) {
+	yInput.prototype.isAreaHovered = function(pArea) {
 		if (that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -2254,10 +1033,10 @@ var yInputManager = function() {
 	}
 
 	/**
-	 * Returns true, if the mouse is pressed within a given area, false otherwise
- 	 * @param {yArea} pArea - The area to check for
+	 * Returns true, if the mouse is pressed within a given area, false otherwise.
+ 	 * @param {yArea} pArea - The area to check for.
 	 */
-	yInputManager.prototype.isAreaPressed = function(pArea) {
+	yInput.prototype.isAreaPressed = function(pArea) {
 		if (that.isDown(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -2273,10 +1052,10 @@ var yInputManager = function() {
 	}
 
 	/**
-	 * Returns true, if the mouse was just released within a given area, false otherwise
- 	 * @param {yArea} pArea - The area to check for
+	 * Returns true, if the mouse was just released within a given area, false otherwise.
+ 	 * @param {yArea} pArea - The area to check for.
 	 */
-	yInputManager.prototype.isAreaReleased = function(pArea) {
+	yInput.prototype.isAreaReleased = function(pArea) {
 		if (that.isReleased(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
@@ -2291,30 +1070,30 @@ var yInputManager = function() {
 		return false;
 	}
 
-	yInputManager.prototype.onKeydown = function(event) {
+	yInput.prototype.onKeydown = function(event) {
 		that.keyState[event.keyCode] = true;
 	};
 
-	yInputManager.prototype.onKeyup = function(event) {
+	yInput.prototype.onKeyup = function(event) {
 		that.keyState[event.keyCode] = false;
 	};
 
-	yInputManager.prototype.onMouseDown = function(event) {
+	yInput.prototype.onMouseDown = function(event) {
 		that.keyState[event.button] = true;
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onMouseUp = function(event) {
+	yInput.prototype.onMouseUp = function(event) {
 		that.keyState[event.button] = false;
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onMouseMove = function(event) {
+	yInput.prototype.onMouseMove = function(event) {
 		that.mousePosition.x = event.clientX;
 		that.mousePosition.y = event.clientY;
 	};
 
-	yInputManager.prototype.onTouchStart = function(event) {
+	yInput.prototype.onTouchStart = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
 			if (that.touches[id] == null) {
@@ -2328,7 +1107,7 @@ var yInputManager = function() {
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onTouchEnd = function(event) {
+	yInput.prototype.onTouchEnd = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
 			if (that.touches[id] == null) {
@@ -2342,7 +1121,7 @@ var yInputManager = function() {
 		event.preventDefault();
 	};
 
-	yInputManager.prototype.onTouchMove = function(event) {
+	yInput.prototype.onTouchMove = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			that.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
 			that.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
@@ -2357,14 +1136,14 @@ var yInputManager = function() {
 	/**
 	 * Copies the active keystate into the lastKeyState-variable and updates touch objects
 	 */
-	yInputManager.prototype.update = function() {
+	yInput.prototype.update = function() {
 		that.lastKeyState = deepCopy(that.keyState);
 		for (var i = 0; i < that.lastTouches.length; i++) {
 			that.touches[i].update();
 		}
 	}
 
-	yInputManager.prototype.handleOrientation = function(event) {
+	yInput.prototype.handleOrientation = function(event) {
 		that.orientationGamma = event.gamma;
 		// used as x gravity
 		that.orientationBeta = event.beta;
@@ -2385,16 +1164,6 @@ var yInputManager = function() {
 	window.addEventListener('deviceorientation', that.handleOrientation, false);
 };
 
-/**
- * @classdesc 
- * 
- * @author Leo Zurbriggen
- * @constructor
- */
-var ySoundManager = function(){
-	var that = this;
-	
-};
 
 /**
  * @classdesc Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game
@@ -2408,7 +1177,7 @@ var ySoundManager = function(){
  * @property {Image} sprite - The sprite of the entity.
  * @property {yPhsicalObject} physModel - The phyiscal object of the entity.
  * @property {yVector} position - The position of the entity.
- * @property {yParent} parent - The parent layer of the entity.
+ * @property {yLayer} parent - The parent layer of the entity.
  */
 var yEntity = function(pSprite, pPosition, pParent){
 	var that = this;
@@ -2436,17 +1205,19 @@ var yEntity = function(pSprite, pPosition, pParent){
 	
 	/**
 	 * Draws the entity
+	 * @param {yCamera} pCamera - The camera to draw the position relative to.
 	 */
-	yEntity.prototype.draw = function(camera){
+	yEntity.prototype.draw = function(pCamera){
 		var that = this;
 		if(that.sprite != null){
-			ctx.drawImage(that.sprite, camera.position.x + that.position.x - that.sprite.width/2, camera.position.y + that.position.y - that.sprite.height/2);
+			ctx.drawImage(that.sprite, pCamera.position.x + that.position.x - that.sprite.width/2, pCamera.position.y + that.position.y - that.sprite.height/2);
 		}
 		if(that.physModel && debug){
-			that.physModel.draw(camera);
+			that.physModel.draw(pCamera);
 		}
 	}
 };
+
 
 /**
  * @classdesc The camera provides functionality to handle different viewports, scrolling, zooming and so forth.
@@ -2454,6 +1225,7 @@ var yEntity = function(pSprite, pPosition, pParent){
  * @author Leo Zurbriggen
  * @constructor
  * @property {yVector} position - The position of the camera.
+ * @param {yVector} pPosition - The position of the camera.
  */
 var yCamera = function(pPosition){
 	var that = this;
@@ -2501,7 +1273,7 @@ var yCamera = function(pPosition){
 	yCamera.prototype.update = function(){
 		var that = this;
 	}
-};
+};
 
 /**
  * @classdesc The sprite class contains an Image-element.
@@ -2509,83 +1281,247 @@ var yCamera = function(pPosition){
  * @author Leo Zurbriggen
  * @constructor
  * @param {String} pSprite - The path to an image file.
- * @property {Image} sprite - The image; Use sprite.src to set a new path.
+ * @property {Image} sprite - The image.
  */
 var ySprite = function(pSprite){
 	var that = this;
 	
-	this.sprite = new Image();
-	this.sprite.src = pSprite;
-};
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
+};
 
 /**
  * @classdesc The spritesheet contains a sprite with different states of a sprite and is used by the animation class.
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {Integer} pCols - The number of columns of the spritesheet.
+ * @param {Integer} pRows - The number of rows of the spritesheet.
  * @param {String} pSprite - The path to an image file.
+ * @property {Integer} cols - The number of columns of the spritesheet.
+ * @property {Integer} rows - The number of rows of the spritesheet.
+ * @property {String} sprite - The path to an image file.
  */
-var ySpriteSheet = function(){
+var ySpriteSheet = function(pCols, pRows, pSprite){
 	var that = this;
+	that.cols = pCols;
+	that.rows = pRows;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
+	that.frameWidth = that.sprite.width / that.cols;
+	that.frameHeight = that.sprite.height / that.rows;
 	
+	/**
+	 * Returns a vector with the position of the frame with the given ID on the spritesheet in pixels
+	 * @param {Integer} pID - The ID of the tile.
+	 */
+	ySpriteSheet.prototype.getFramePositionByID = function(pID){
+		return new yVector(pID % this.cols * this.frameWidth, Math.floor(pID / this.cols) * this.frameHeight);
+	}
+	
+	/**
+	 * Draws a single frame at a given position
+	 * @param {Integer} pID - The ID of the frame.
+	 * @param {yVector} pPosition - The position to draw the frame.
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	ySpriteSheet.prototype.drawFrame = function(pID, pPosition, pCamera){
+		var framePosition = this.getFramePositionByID(pID);
+		ctx.drawImage(this.sprite, framePosition.x, framePosition.y, this.frameWidth, this.frameHeight, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.frameWidth, this.frameHeight);
+	}
 };
+
 
 /**
  * @classdesc The animation-object saves all the information and provides all methods to play sprite animations
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {ySpriteSheet} pSpriteSheet - The spritesheet.
+ * @param {Integer} pFrameTime - The length in milliseconds a frame should be displayed.
+ * @param {Integer} pFirstFrame - The ID on the spritesheet where the animation should begin.
+ * @param {Integer} pLastFrame - The ID on the spritesheet where the animation should end.
+ * @param {Boolean} pLoop - (optional) Tells, if the animation should loop (Default: false).
+ * @property {ySpriteSheet} spriteSheet - The spritesheet.
+ * @property {Integer} frameTime - The length in milliseconds a frame is displayed.
+ * @property {Integer} firstFrame - The ID on the spritesheet where the animation begins.
+ * @property {Integer} lastFrame - The ID on the spritesheet where the animation ends.
+ * #property {Integer} activeFrame - The ID of the active frame.
+ * @property {Boolean} loop - Tells, if the animation loops.
+ * @property {Boolean} stopped - Tells, if the animation is running.
+ * @property {Integer} lastFrameTime - Used to determine if the next frame should be drawn.
  */
-var yAnimation = function(){
+var yAnimation = function(pSpriteSheet, pFrameTime, pFirstFrame, pLastFrame, pLoop){
 	var that = this;
+	that.spriteSheet = pSpriteSheet;
+	that.frameTime = pFrameTime;
+	that.firstFrame = pFirstFrame;
+	that.lastFrame = pLastFrame;
+	that.activeFrame = that.firstFrame;
+	that.loop = (pLoop ? pLoop : false);
+	that.stopped = false;
+	that.lastFrameTime = Date.now();
 	
-};
+	/**
+	 * Draws the animation
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	yAnimation.prototype.draw = function(pCamera){
+		if(Date.now() - this.lastFrameTime > this.frameTime){
+			this.lastFrameTime = Date.now();
+			if(this.activeFrame+1 > this.lastFrame){
+				if(this.loop){
+					this.activeFrame = this.firstFrame;
+				}else{
+					that.stopped = true;
+				}
+			}else{
+				this.activeFrame++;
+			}
+		}
+		this.spriteSheet.drawFrame(that.activeFrame, (position), pCamera);
+	}
+	
+	/**
+	 * Resets the active frame to the first one and starts the animation again
+	 */
+	yAnimation.prototype.reset = function(){
+		that.activeFrame = that.firstFrame;
+		that.lastFrameTime = Date.now();
+		that.stopped = false;
+	}
+};
+
 
 /**
  * @classdesc The tilemap contains an array with tile positions, a tileset to load the tiles from and functionality to draw them.
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {yTileSet} pTileSet - The tileset used on the map.
+ * @param {Integer} pLayers - The number of layers of the map.
+ * @param {Integer} pWidth - The width of the map.
+ * @param {Integer} pHeight - The height of the map.
+ * @property {yTileSet} tileSet - The tileset used on the map.
+ * @property {Integer[]} map - The map array.
+ * @property {Integer} width - The width of the map.
+ * @property {Integer} height - The height of the map.
  */
-var yTileMap = function(){
+var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	var that = this;
+	that.tileSet = pTileSet;
+	that.map = [];
+	that.width = pWidth;
+	that.height = pHeight;
 	
-};
+	/**
+	 * Initializes an empty map-array
+	 */
+	for(var l = 0; l < pLayers; l++){
+		this.map[l] = [];
+		for(var y = 0; y < this.height; y++){
+			this.map[l][y] = [];
+			for(var x = 0; x < this.width; x++){
+				this.map[l][y][x] = 0;
+			}
+		}
+	}
+	
+	/**
+	 * Draws the whole map depending on camera position
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	yTileMap.prototype.draw = function(pCamera){
+		var tileSet = this.tileSet;
+		for(var l = 0; l < pLayers; l++){
+			for(var y = 0; y < this.height; y++){
+				for(var x = 0; x < this.width; x++){
+					tileSet.drawTile(this.map[l][y][x], new yVector(camera.position.x + x*tileSet.tileSize, camera.position.y + y*tileSet.tileSize), pCamera);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Imports a map from a tmx file (not yet implemented)
+	 * @param {String} pFile - The path to the tmx-map file.
+	 */
+	yTileMap.prototype.importTMX = function(pFile){
+		
+	}
+};
 
 /**
  * @classdesc The tileset contains a sprite and an array to map a number to a tile on the sprite.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {ySprite} pSprite - The path to an image file.
+ * @param {String} pSprite - The path to an image file.
+ * @param {Integer} pTileSize - The tilesize in pixels.
+ * @property {Integer} tileSize - The tilesize in pixels.
+ * @property {Image} sprite - The image of the tileset.
+ * @property {Integer} width - The width of the tileset in tiles.
+ * @property {Integer} height - The height of the tileset in tiles.
  */
-var yTileSet = function(pSprite){
+var yTileSet = function(pSprite, pTileSize){
 	var that = this;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
+	that.tileSize = pTileSize;
+	that.width = that.sprite.width / that.tileSize;
+	that.height = that.sprite.height / that.tileSize;
 	
-};
+	/**
+	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels
+	 * @param {Integer} pID - The ID of the tile.
+	 */
+	yTileSet.prototype.getTilePositionByID = function(pID){
+		return new yVector(pID % this.width * this.tileSize, Math.floor(pID / this.width) * this.tileSize);
+	}
+	
+	/**
+	 * Draws a single tile at a given position
+	 * @param {Integer} pID - The ID of the tile.
+	 * @param {yVector} pPosition - The position to draw the tile.
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	ySpriteSheet.prototype.drawTile = function(pID, pPosition, pCamera){
+		var tilePosition = this.getTilePositionByID(pID);
+		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.tileSize, this.tileSize);
+	}
+	
+	/**
+	 * Draws the tileset at a given position for debugging purposes
+	 * @param {yVector} pPosition - The position to draw the sprite.
+	 */
+	yTileSet.prototype.draw = function(pPosition){
+		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);
+	}
+};
 
 /**
  * @classdesc The timer class is used for countdown purposes and is able to execute a function when time is elapsed.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {Int} pDuration - The duration of the timer in milliseconds.
- * @property {Int} duration - The duration.
- * @property {Int} startTime - The time when the timer started.
- * @property {Int} remainingTime - The remaining time.
+ * @param {Integer} pDuration - The duration of the timer in milliseconds.
+ * @param {Integer} pDuration - The duration of the timer in milliseconds.
+ * @property {Integer} duration - The duration.
+ * @property {Integer} startTime - The time when the timer started.
+ * @property {Integer} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
- * @property {Function} elapsedEvent - The function that should be executed when the timer elapses.
+ * @property {Function} callback - (optional) The function that should be executed when the timer elapses.
  */
-var yTimer = function(pDuration){
+var yTimer = function(pDuration, pCallback){
 	var that = this;
 	that.duration = pDuration;
 	that.startTime = Date.now();
 	that.remainingTime = Date.now();
 	that.paused = true;
 	that.elapsed = false;
-	that.elapseEvent = null;
-	
+	that.callback = (pCallback ? pCallback : null);
+
 	/**
 	 * Updates remaining time and checks if time is up
 	 */
@@ -2595,8 +1531,8 @@ var yTimer = function(pDuration){
 			
 			if(remainingTime <= 0){
 				that.elapsed = true;
-				if(that.elapseEvent){
-					eval(that.elapseEvent);
+				if(that.callback){
+					eval(that.callback);
 				}
 				that.paused = true;
 			}
@@ -2618,24 +1554,41 @@ var yTimer = function(pDuration){
 	}
 };
 
+
 /**
  * @classdesc The sound class should be used to play a short sound file.
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {String} pFileName - The file name of the sound.
+ * @param {Boolean} pFallback - (optional) Tells, if the class should get the file (ogg or mp3) depending on the browser.
  */
-var ySound = function(){
+var ySound = function(pFileName, pFallback){
 	var that = this;
 	
-};
-
-/**
- * @classdesc Contains a music file and provides functionality to play, pause and rewind it.
- * 
- * @author Leo Zurbriggen
- * @constructor
- */
-var yMusic = function(){
-	var that = this;
+	/**
+	 * Loads the audio file that can be played by the browser
+	 */
+	if(pFallback == true){
+		if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
+			this.audio = new Audio(pFileName + ".ogg");
+		}else{
+			this.audio = new Audio(pFileName + ".mp3");
+		}
+	}
 	
+	/**
+	 * Plays the sound
+	 */
+	ySound.prototype.play = function(){
+		this.audio.play();
+	}
+	
+	
+	/**
+	 * Pauses the sound
+	 */
+	ySound.prototype.pause = function(){
+		this.audio.pause();
+	}
 };
