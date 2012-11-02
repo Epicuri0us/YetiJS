@@ -545,7 +545,9 @@ function deepCopy(obj) {
 }
 
 // Aliasing Box2DWeb-components
-var b2yVector = Box2D.Common.Math.b2yVector, 
+var b2Vec2 = Box2D.Common.Math.b2Vec2,
+	yVector = Box2D.Common.Math.b2Vec2,
+	b2yVector = Box2D.Common.Math.b2yVector, 
 	b2AABB = Box2D.Collision.b2AABB, 
 	b2BodyDef = Box2D.Dynamics.b2BodyDef, 
 	b2Body = Box2D.Dynamics.b2Body, 
@@ -556,12 +558,7 @@ var b2yVector = Box2D.Common.Math.b2yVector,
 	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape, 
 	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape, 
 	b2DebugDraw = Box2D.Dynamics.b2DebugDraw, 
-	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
-	yVector = SAT.Vector,
-	yPolygon = SAT.Polygon,
-	yCollisionRespone = SAT.Response,
-	yCircle = SAT.CIRCLE,
-	yBox = SAT.BOX; 
+	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef;
 	
 
 /**
@@ -602,7 +599,7 @@ var yTouch = function(){
  * @projectDescription YetiJS game framework
  * 
  * @author Leo Zurbriggen [http://leoz.ch]
- * @version 100812
+ * @version 021112
  */
 
 // Global variables
@@ -1299,6 +1296,9 @@ var ySprite = function(pSprite){
  * @param {Integer} pCols - The number of columns of the spritesheet.
  * @param {Integer} pRows - The number of rows of the spritesheet.
  * @param {String} pSprite - The path to an image file.
+ * @property {Integer} cols - The number of columns of the spritesheet.
+ * @property {Integer} rows - The number of rows of the spritesheet.
+ * @property {String} sprite - The path to an image file.
  */
 var ySpriteSheet = function(pCols, pRows, pSprite){
 	var that = this;
@@ -1419,14 +1419,15 @@ var yTileSet = function(pSprite, pTileSize){
  * @author Leo Zurbriggen
  * @constructor
  * @param {Int} pDuration - The duration of the timer in milliseconds.
+ * @param {Int} pDuration - The duration of the timer in milliseconds.
  * @property {Int} duration - The duration.
  * @property {Int} startTime - The time when the timer started.
  * @property {Int} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
- * @property {Function} elapsedEvent - The function that should be executed when the timer elapses.
+ * @property {Function} callback (optional) - The function that should be executed when the timer elapses.
  */
-var yTimer = function(pDuration){
+var yTimer = function(pDuration, pCallback){
 	var that = this;
 	that.duration = pDuration;
 	that.startTime = Date.now();
@@ -1434,6 +1435,9 @@ var yTimer = function(pDuration){
 	that.paused = true;
 	that.elapsed = false;
 	that.callback = null;
+	if(pCallback){
+		that.callback = pCallback;
+	}
 	
 	/**
 	 * Updates remaining time and checks if time is up
@@ -1474,17 +1478,20 @@ var yTimer = function(pDuration){
  * @author Leo Zurbriggen
  * @constructor
  * @param {String} pFileName - The file name of the sound.
+ * @param {Boolean} pFallback (optional) - Tells, if the class should get the file (ogg or mp3) depending on the browser.
  */
-var ySound = function(pFileName){
+var ySound = function(pFileName, pFallback){
 	var that = this;
 	
 	/**
 	 * Loads the audio file that can be played by the browser
 	 */
-	if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
-		this.audio = new Audio(pFileName + ".ogg");
-	}else{
-		this.audio = new Audio(pFileName + ".mp3");
+	if(pFallback == true){
+		if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
+			this.audio = new Audio(pFileName + ".ogg");
+		}else{
+			this.audio = new Audio(pFileName + ".mp3");
+		}
 	}
 	
 	/**

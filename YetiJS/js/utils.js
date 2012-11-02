@@ -41,7 +41,9 @@ function deepCopy(obj) {
 }
 
 // Aliasing Box2DWeb-components
-var b2yVector = Box2D.Common.Math.b2yVector, 
+var b2Vec2 = Box2D.Common.Math.b2Vec2,
+	yVector = Box2D.Common.Math.b2Vec2,
+	b2yVector = Box2D.Common.Math.b2yVector, 
 	b2AABB = Box2D.Collision.b2AABB, 
 	b2BodyDef = Box2D.Dynamics.b2BodyDef, 
 	b2Body = Box2D.Dynamics.b2Body, 
@@ -52,10 +54,5 @@ var b2yVector = Box2D.Common.Math.b2yVector,
 	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape, 
 	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape, 
 	b2DebugDraw = Box2D.Dynamics.b2DebugDraw, 
-	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
-	yVector = SAT.Vector,
-	yPolygon = SAT.Polygon,
-	yCollisionRespone = SAT.Response,
-	yCircle = SAT.CIRCLE,
-	yBox = SAT.BOX; 
+	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef;
 	

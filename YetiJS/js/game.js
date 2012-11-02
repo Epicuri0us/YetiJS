@@ -3,7 +3,7 @@
  * @projectDescription YetiJS game framework
  * 
  * @author Leo Zurbriggen [http://leoz.ch]
- * @version 100812
+ * @version 021112
  */
 
 // Global variables

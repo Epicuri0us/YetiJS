@@ -5,14 +5,15 @@
  * @author Leo Zurbriggen
  * @constructor
  * @param {Int} pDuration - The duration of the timer in milliseconds.
+ * @param {Int} pDuration - The duration of the timer in milliseconds.
  * @property {Int} duration - The duration.
  * @property {Int} startTime - The time when the timer started.
  * @property {Int} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
- * @property {Function} elapsedEvent - The function that should be executed when the timer elapses.
+ * @property {Function} callback (optional) - The function that should be executed when the timer elapses.
  */
-var yTimer = function(pDuration){
+var yTimer = function(pDuration, pCallback){
 	var that = this;
 	that.duration = pDuration;
 	that.startTime = Date.now();
@@ -20,6 +21,9 @@ var yTimer = function(pDuration){
 	that.paused = true;
 	that.elapsed = false;
 	that.callback = null;
+	if(pCallback){
+		that.callback = pCallback;
+	}
 	
 	/**
 	 * Updates remaining time and checks if time is up
