@@ -28,6 +28,7 @@ var yTileSet = function(pSprite, pTileSize){
 	
 	/**
 	 * Draws the tileset at a given position
+	 * @param {yVector} pPosition - The position to draw the sprite.
 	 */
 	that.prototype.draw = function(pPosition){
 		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);

@@ -62,17 +62,18 @@ var yPolygon = function(pPosition) {
 
 	/**
 	 * Draws polygon for debugging purposes
+	 * @param {yCamera} pCamera - The camera to draw the position relative to.
 	 */
-	yPolygon.prototype.draw = function(camera) {
+	yPolygon.prototype.draw = function(pCamera) {
 		ctx.beginPath();
 		ctx.lineWidth = this.lineWidth;
 		ctx.strokeStyle = this.strokeStyle;
 		ctx.fillStyle = this.fillStyle;
 		var points = this.getAbsolutePoints();
 		if (points.length > 1) {
-			ctx.moveTo(camera.position.x + points[0].x, camera.position.y + points[0].y);
+			ctx.moveTo(pCamera.position.x + points[0].x, pCamera.position.y + points[0].y);
 			for (var i = 1; i < points.length; i++) {
-				ctx.lineTo(camera.position.x + points[i].x, camera.position.y + points[i].y);
+				ctx.lineTo(pCamera.position.x + points[i].x, pCamera.position.y + points[i].y);
 			}
 		}
 		ctx.closePath();

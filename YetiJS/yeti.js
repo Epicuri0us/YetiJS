@@ -750,113 +750,113 @@ var yLayer = function(){
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {Int[]} keyState - An array that stores the active keystate.
- * @property {Int[]} lastKeyState - An array that stores the last keystate.
+ * @property {Integer[]} keyState - An array that stores the active keystate.
+ * @property {Integer[]} lastKeyState - An array that stores the last keystate.
  * @property {yTouch[]} touches - An array that stores 10 touch objects.
  * @property {yTouch[]} lastTouches - An array that stores the last touch state.
  * @property {yVector} mousePosition - The active mouse position; the position of the last touch gets mapped to this vector to maintain functionality, Default is -1|-1
- * @property {Int} MOUSELEFT - KeyCode: 0
- * @property {Int} MOUSERIGHT - KeyCode: 2
- * @property {Int} MOUSEMIDDLE - KeyCode: 1
- * @property {Int} BACKSPACE - KeyCode: 8
- * @property {Int} TAB - KeyCode: 9
- * @property {Int} ENTER - KeyCode: 13
- * @property {Int} SHIFT - KeyCode: 16
- * @property {Int} CTRL - KeyCode: 17
- * @property {Int} ALT - KeyCode: 18
- * @property {Int} PAUSE - KeyCode: 19
- * @property {Int} CAPS - KeyCode: 20
- * @property {Int} ESCAPE - KeyCode: 27
- * @property {Int} SPACE - KeyCode: 32
- * @property {Int} PAGEUP - KeyCode: 33
- * @property {Int} PAGEDOWN - KeyCode: 34
- * @property {Int} END - KeyCode: 35
- * @property {Int} HOME - KeyCode: 36
- * @property {Int} LEFT - KeyCode: 37
- * @property {Int} UP - KeyCode: 38
- * @property {Int} RIGHT - KeyCode: 39
- * @property {Int} DOWN - KeyCode: 40
- * @property {Int} INSERT - KeyCode: 45
- * @property {Int} DELETE - KeyCode: 46
- * @property {Int} ZERO - KeyCode: 48
- * @property {Int} ONE - KeyCode: 49
- * @property {Int} TWO - KeyCode: 50
- * @property {Int} THREE - KeyCode: 51
- * @property {Int} FOUR - KeyCode: 52
- * @property {Int} FIVE - KeyCode: 53
- * @property {Int} SIX - KeyCode: 54
- * @property {Int} SEVEN - KeyCode: 55
- * @property {Int} EIGHT - KeyCode: 56
- * @property {Int} NINE - KeyCode: 57
- * @property {Int} A - KeyCode: 65
- * @property {Int} B - KeyCode: 66
- * @property {Int} C - KeyCode: 67
- * @property {Int} D - KeyCode: 68
- * @property {Int} E - KeyCode: 69
- * @property {Int} F - KeyCode: 70
- * @property {Int} G - KeyCode: 71
- * @property {Int} H - KeyCode: 72
- * @property {Int} I - KeyCode: 73
- * @property {Int} J - KeyCode: 74
- * @property {Int} K - KeyCode: 75
- * @property {Int} L - KeyCode: 76
- * @property {Int} M - KeyCode: 77
- * @property {Int} N - KeyCode: 78
- * @property {Int} O - KeyCode: 79
- * @property {Int} P - KeyCode: 80
- * @property {Int} Q - KeyCode: 81
- * @property {Int} R - KeyCode: 82
- * @property {Int} S - KeyCode: 83
- * @property {Int} T - KeyCode: 84
- * @property {Int} U - KeyCode: 85
- * @property {Int} V - KeyCode: 86
- * @property {Int} W - KeyCode: 87
- * @property {Int} X - KeyCode: 88
- * @property {Int} Y - KeyCode: 89
- * @property {Int} Z - KeyCode: 90
- * @property {Int} WINDOWsLEFT - KeyCode: 91
- * @property {Int} WINDOWSRIGHT - KeyCode: 92
- * @property {Int} SELECT - KeyCode: 93
- * @property {Int} NUMZERO - KeyCode: 96
- * @property {Int} NUMONE - KeyCode: 97
- * @property {Int} NUMTWO - KeyCode: 98
- * @property {Int} NUMTHREE - KeyCode: 99
- * @property {Int} NUMFOUR - KeyCode: 100
- * @property {Int} NUMFIVE - KeyCode: 101
- * @property {Int} NUMSIX - KeyCode: 102
- * @property {Int} NUMSEVEN - KeyCode: 103
- * @property {Int} NUMEIGHT - KeyCode: 104
- * @property {Int} NUMNINE - KeyCode: 105
- * @property {Int} MULTIPLY - KeyCode: 106
- * @property {Int} ADD - KeyCode: 107
- * @property {Int} SUBTRACT - KeyCode: 109
- * @property {Int} DECIMALPOINT - KeyCode: 110
- * @property {Int} DIVIDE - KeyCode: 111
- * @property {Int} F1 - KeyCode: 112
- * @property {Int} F2 - KeyCode: 113
- * @property {Int} F3 - KeyCode: 114
- * @property {Int} F4 - KeyCode: 115
- * @property {Int} F5 - KeyCode: 116
- * @property {Int} F6 - KeyCode: 117
- * @property {Int} F7 - KeyCode: 118
- * @property {Int} F8 - KeyCode: 119
- * @property {Int} F9 - KeyCode: 120
- * @property {Int} F10 - KeyCode: 121
- * @property {Int} F11 - KeyCode: 122
- * @property {Int} F12 - KeyCode: 123
- * @property {Int} NUMLOCK - KeyCode: 144
- * @property {Int} SCROLLLOCK - KeyCode: 145
- * @property {Int} SEMICOLON - KeyCode: 186
- * @property {Int} EQUALSIGN - KeyCode: 187
- * @property {Int} COMMA - KeyCode: 188
- * @property {Int} DASH - KeyCode: 189
- * @property {Int} PERIOD - KeyCode: 190
- * @property {Int} FORWARDSLASH - KeyCode: 191
- * @property {Int} GRAVEACCENT - KeyCode: 192
- * @property {Int} OPENBRACKET - KeyCode: 219
- * @property {Int} BACKSLASH - KeyCode: 220
- * @property {Int} CLOSEBRACKET - KeyCode: 221
- * @property {Int} SINGLEQUOTE - KeyCode: 222
+ * @property {Integer} MOUSELEFT - KeyCode: 0
+ * @property {Integer} MOUSERIGHT - KeyCode: 2
+ * @property {Integer} MOUSEMIDDLE - KeyCode: 1
+ * @property {Integer} BACKSPACE - KeyCode: 8
+ * @property {Integer} TAB - KeyCode: 9
+ * @property {Integer} ENTER - KeyCode: 13
+ * @property {Integer} SHIFT - KeyCode: 16
+ * @property {Integer} CTRL - KeyCode: 17
+ * @property {Integer} ALT - KeyCode: 18
+ * @property {Integer} PAUSE - KeyCode: 19
+ * @property {Integer} CAPS - KeyCode: 20
+ * @property {Integer} ESCAPE - KeyCode: 27
+ * @property {Integer} SPACE - KeyCode: 32
+ * @property {Integer} PAGEUP - KeyCode: 33
+ * @property {Integer} PAGEDOWN - KeyCode: 34
+ * @property {Integer} END - KeyCode: 35
+ * @property {Integer} HOME - KeyCode: 36
+ * @property {Integer} LEFT - KeyCode: 37
+ * @property {Integer} UP - KeyCode: 38
+ * @property {Integer} RIGHT - KeyCode: 39
+ * @property {Integer} DOWN - KeyCode: 40
+ * @property {Integer} INSERT - KeyCode: 45
+ * @property {Integer} DELETE - KeyCode: 46
+ * @property {Integer} ZERO - KeyCode: 48
+ * @property {Integer} ONE - KeyCode: 49
+ * @property {Integer} TWO - KeyCode: 50
+ * @property {Integer} THREE - KeyCode: 51
+ * @property {Integer} FOUR - KeyCode: 52
+ * @property {Integer} FIVE - KeyCode: 53
+ * @property {Integer} SIX - KeyCode: 54
+ * @property {Integer} SEVEN - KeyCode: 55
+ * @property {Integer} EIGHT - KeyCode: 56
+ * @property {Integer} NINE - KeyCode: 57
+ * @property {Integer} A - KeyCode: 65
+ * @property {Integer} B - KeyCode: 66
+ * @property {Integer} C - KeyCode: 67
+ * @property {Integer} D - KeyCode: 68
+ * @property {Integer} E - KeyCode: 69
+ * @property {Integer} F - KeyCode: 70
+ * @property {Integer} G - KeyCode: 71
+ * @property {Integer} H - KeyCode: 72
+ * @property {Integer} I - KeyCode: 73
+ * @property {Integer} J - KeyCode: 74
+ * @property {Integer} K - KeyCode: 75
+ * @property {Integer} L - KeyCode: 76
+ * @property {Integer} M - KeyCode: 77
+ * @property {Integer} N - KeyCode: 78
+ * @property {Integer} O - KeyCode: 79
+ * @property {Integer} P - KeyCode: 80
+ * @property {Integer} Q - KeyCode: 81
+ * @property {Integer} R - KeyCode: 82
+ * @property {Integer} S - KeyCode: 83
+ * @property {Integer} T - KeyCode: 84
+ * @property {Integer} U - KeyCode: 85
+ * @property {Integer} V - KeyCode: 86
+ * @property {Integer} W - KeyCode: 87
+ * @property {Integer} X - KeyCode: 88
+ * @property {Integer} Y - KeyCode: 89
+ * @property {Integer} Z - KeyCode: 90
+ * @property {Integer} WINDOWsLEFT - KeyCode: 91
+ * @property {Integer} WINDOWSRIGHT - KeyCode: 92
+ * @property {Integer} SELECT - KeyCode: 93
+ * @property {Integer} NUMZERO - KeyCode: 96
+ * @property {Integer} NUMONE - KeyCode: 97
+ * @property {Integer} NUMTWO - KeyCode: 98
+ * @property {Integer} NUMTHREE - KeyCode: 99
+ * @property {Integer} NUMFOUR - KeyCode: 100
+ * @property {Integer} NUMFIVE - KeyCode: 101
+ * @property {Integer} NUMSIX - KeyCode: 102
+ * @property {Integer} NUMSEVEN - KeyCode: 103
+ * @property {Integer} NUMEIGHT - KeyCode: 104
+ * @property {Integer} NUMNINE - KeyCode: 105
+ * @property {Integer} MULTIPLY - KeyCode: 106
+ * @property {Integer} ADD - KeyCode: 107
+ * @property {Integer} SUBTRACT - KeyCode: 109
+ * @property {Integer} DECIMALPOINT - KeyCode: 110
+ * @property {Integer} DIVIDE - KeyCode: 111
+ * @property {Integer} F1 - KeyCode: 112
+ * @property {Integer} F2 - KeyCode: 113
+ * @property {Integer} F3 - KeyCode: 114
+ * @property {Integer} F4 - KeyCode: 115
+ * @property {Integer} F5 - KeyCode: 116
+ * @property {Integer} F6 - KeyCode: 117
+ * @property {Integer} F7 - KeyCode: 118
+ * @property {Integer} F8 - KeyCode: 119
+ * @property {Integer} F9 - KeyCode: 120
+ * @property {Integer} F10 - KeyCode: 121
+ * @property {Integer} F11 - KeyCode: 122
+ * @property {Integer} F12 - KeyCode: 123
+ * @property {Integer} NUMLOCK - KeyCode: 144
+ * @property {Integer} SCROLLLOCK - KeyCode: 145
+ * @property {Integer} SEMICOLON - KeyCode: 186
+ * @property {Integer} EQUALSIGN - KeyCode: 187
+ * @property {Integer} COMMA - KeyCode: 188
+ * @property {Integer} DASH - KeyCode: 189
+ * @property {Integer} PERIOD - KeyCode: 190
+ * @property {Integer} FORWARDSLASH - KeyCode: 191
+ * @property {Integer} GRAVEACCENT - KeyCode: 192
+ * @property {Integer} OPENBRACKET - KeyCode: 219
+ * @property {Integer} BACKSLASH - KeyCode: 220
+ * @property {Integer} CLOSEBRACKET - KeyCode: 221
+ * @property {Integer} SINGLEQUOTE - KeyCode: 222
  * @property {Float} orientationAlpha - The alpha orientation of the device.
  * @property {Float} orientationBeta - The beta orientation of the device.
  * @property {Float} orientationGamma - The gamma orientation of the device.
@@ -989,32 +989,32 @@ var yInput = function() {
 	that.orientationAlpha = 0;
 
 	/**
-	 * Returns true, if the key with given keyCode is pressed, false otherwise
- 	 * @param {Int} pKeyCode - The keycode
+	 * Returns true, if the key with given keyCode is pressed, false otherwise.
+ 	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isDown = function(pKeyCode) {
 		return that.keyState[pKeyCode];
 	};
 
 	/**
-	 * Returns true, if the key with given keyCode is not pressed, false otherwise
- 	 * @param {Int} pKeyCode - The keycode
+	 * Returns true, if the key with given keyCode is not pressed, false otherwise.
+ 	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isUp = function(pKeyCode) {
 		return !that.keyState[pKeyCode];
 	};
 
 	/**
-	 * Returns true, if the key with given keyCode was just released, false otherwise
- 	 * @param {Int} pKeyCode - The keycode
+	 * Returns true, if the key with given keyCode was just released, false otherwise.
+ 	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isReleased = function(pKeyCode) {
 		return (!that.keyState[pKeyCode] && that.lastKeyState[pKeyCode]);
 	};
 
 	/**
-	 * Returns true, if the mouse hovers a given area, false otherwise
- 	 * @param {yArea} pArea - The area to check for
+	 * Returns true, if the mouse hovers a given area, false otherwise.
+ 	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaHovered = function(pArea) {
 		if (that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
@@ -1032,8 +1032,8 @@ var yInput = function() {
 	}
 
 	/**
-	 * Returns true, if the mouse is pressed within a given area, false otherwise
- 	 * @param {yArea} pArea - The area to check for
+	 * Returns true, if the mouse is pressed within a given area, false otherwise.
+ 	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaPressed = function(pArea) {
 		if (that.isDown(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
@@ -1051,8 +1051,8 @@ var yInput = function() {
 	}
 
 	/**
-	 * Returns true, if the mouse was just released within a given area, false otherwise
- 	 * @param {yArea} pArea - The area to check for
+	 * Returns true, if the mouse was just released within a given area, false otherwise.
+ 	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaReleased = function(pArea) {
 		if (that.isReleased(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
@@ -1204,14 +1204,15 @@ var yEntity = function(pSprite, pPosition, pParent){
 	
 	/**
 	 * Draws the entity
+	 * @param {yCamera} pCamera - The camera to draw the position relative to.
 	 */
-	yEntity.prototype.draw = function(camera){
+	yEntity.prototype.draw = function(pCamera){
 		var that = this;
 		if(that.sprite != null){
-			ctx.drawImage(that.sprite, camera.position.x + that.position.x - that.sprite.width/2, camera.position.y + that.position.y - that.sprite.height/2);
+			ctx.drawImage(that.sprite, pCamera.position.x + that.position.x - that.sprite.width/2, pCamera.position.y + that.position.y - that.sprite.height/2);
 		}
 		if(that.physModel && debug){
-			that.physModel.draw(camera);
+			that.physModel.draw(pCamera);
 		}
 	}
 };
@@ -1372,6 +1373,7 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	
 	/**
 	 * Imports a map from a tmx file (not yet implemented)
+	 * @param {String} pFile - The path to the tmx-map file.
 	 */
 	that.prototype.importTMX = function(pFile){
 		
@@ -1407,6 +1409,7 @@ var yTileSet = function(pSprite, pTileSize){
 	
 	/**
 	 * Draws the tileset at a given position
+	 * @param {yVector} pPosition - The position to draw the sprite.
 	 */
 	that.prototype.draw = function(pPosition){
 		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);
@@ -1418,11 +1421,11 @@ var yTileSet = function(pSprite, pTileSize){
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {Int} pDuration - The duration of the timer in milliseconds.
- * @param {Int} pDuration - The duration of the timer in milliseconds.
- * @property {Int} duration - The duration.
- * @property {Int} startTime - The time when the timer started.
- * @property {Int} remainingTime - The remaining time.
+ * @param {Integer} pDuration - The duration of the timer in milliseconds.
+ * @param {Integer} pDuration - The duration of the timer in milliseconds.
+ * @property {Integer} duration - The duration.
+ * @property {Integer} startTime - The time when the timer started.
+ * @property {Integer} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
  * @property {Function} callback (optional) - The function that should be executed when the timer elapses.

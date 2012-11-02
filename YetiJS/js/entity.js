@@ -39,14 +39,15 @@ var yEntity = function(pSprite, pPosition, pParent){
 	
 	/**
 	 * Draws the entity
+	 * @param {yCamera} pCamera - The camera to draw the position relative to.
 	 */
-	yEntity.prototype.draw = function(camera){
+	yEntity.prototype.draw = function(pCamera){
 		var that = this;
 		if(that.sprite != null){
-			ctx.drawImage(that.sprite, camera.position.x + that.position.x - that.sprite.width/2, camera.position.y + that.position.y - that.sprite.height/2);
+			ctx.drawImage(that.sprite, pCamera.position.x + that.position.x - that.sprite.width/2, pCamera.position.y + that.position.y - that.sprite.height/2);
 		}
 		if(that.physModel && debug){
-			that.physModel.draw(camera);
+			that.physModel.draw(pCamera);
 		}
 	}
 };

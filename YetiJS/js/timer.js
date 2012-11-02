@@ -4,11 +4,11 @@
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {Int} pDuration - The duration of the timer in milliseconds.
- * @param {Int} pDuration - The duration of the timer in milliseconds.
- * @property {Int} duration - The duration.
- * @property {Int} startTime - The time when the timer started.
- * @property {Int} remainingTime - The remaining time.
+ * @param {Integer} pDuration - The duration of the timer in milliseconds.
+ * @param {Integer} pDuration - The duration of the timer in milliseconds.
+ * @property {Integer} duration - The duration.
+ * @property {Integer} startTime - The time when the timer started.
+ * @property {Integer} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
  * @property {Function} callback (optional) - The function that should be executed when the timer elapses.

@@ -50,6 +50,7 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	
 	/**
 	 * Imports a map from a tmx file (not yet implemented)
+	 * @param {String} pFile - The path to the tmx-map file.
 	 */
 	that.prototype.importTMX = function(pFile){
 		
