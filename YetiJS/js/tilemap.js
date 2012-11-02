@@ -35,14 +35,14 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	
 	/**
 	 * Draws the whole map depending on camera position
+	 * @param {yCamera} pCamera - The camera.
 	 */
-	that.prototype.draw = function(){
+	yTileMap.prototype.draw = function(pCamera){
+		var tileSet = this.tileSet;
 		for(var l = 0; l < pLayers; l++){
 			for(var y = 0; y < this.height; y++){
 				for(var x = 0; x < this.width; x++){
-					var tileSet = this.tileSet;
-					var tilePosition = tileSet.getTilePositionByID(this.map[l][y][x]);
-					ctx.drawImage(tileSet.sprite, tilePosition.x, tilePosition.y, tileSet.tileSize, tileSet.tileSize, camera.position.x + x*tileSet.tileSize, camera.position.y + y*tileSet.tileSize, tileSet.tileSize, tileSet.tileSize);
+					tileSet.drawTile(this.map[l][y][x], new yVector(camera.position.x + x*tileSet.tileSize, camera.position.y + y*tileSet.tileSize), pCamera);
 				}
 			}
 		}
@@ -52,7 +52,7 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	 * Imports a map from a tmx file (not yet implemented)
 	 * @param {String} pFile - The path to the tmx-map file.
 	 */
-	that.prototype.importTMX = function(pFile){
+	yTileMap.prototype.importTMX = function(pFile){
 		
 	}
 };

@@ -52,9 +52,315 @@
     
     
     
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pSpriteSheet</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="ySpriteSheet.html">ySpriteSheet</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The spritesheet.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pFrameTime</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The length in milliseconds a frame should be displayed.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pFirstFrame</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID on the spritesheet where the animation should begin.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pLastFrame</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID on the spritesheet where the animation should end.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pLoop</code></td>
+            
+            
+            <td class="type">
+            
+                        Boolean
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">(optional) Tells, if the animation should loop (Default: false).</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>spriteSheet</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="ySpriteSheet.html">ySpriteSheet</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The spritesheet.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameTime</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The length in milliseconds a frame is displayed.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>firstFrame</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID on the spritesheet where the animation begins.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>lastFrame</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID on the spritesheet where the animation ends.
+#property {Integer} activeFrame - The ID of the active frame.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>loop</code></td>
+            
+            
+            <td class="type">
+            
+                        Boolean
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Tells, if the animation loops.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stopped</code></td>
+            
+            
+            <td class="type">
+            
+                        Boolean
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Tells, if the animation is running.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>lastFrameTime</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Used to determine if the next frame should be drawn.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
 	
@@ -82,7 +388,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/animation.js, line 8</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/animation.js, line 21</li></ul></dd>
 	
     
     
@@ -118,6 +424,178 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws the animation
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pCamera</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yCamera.html">yCamera</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The camera.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/animation.js, line 36</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Resets the active frame to the first one and starts the animation again
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/animation.js, line 55</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -138,7 +616,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Nov 02 2012 08:56:22 GMT+0100 (MEZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Nov 02 2012 10:48:15 GMT+0100 (MEZ)
 </footer>
 
 <script> sh_highlightDocument(); </script>

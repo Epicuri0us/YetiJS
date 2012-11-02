@@ -5,7 +5,7 @@
  * @author Leo Zurbriggen
  * @constructor
  * @param {String} pFileName - The file name of the sound.
- * @param {Boolean} pFallback (optional) - Tells, if the class should get the file (ogg or mp3) depending on the browser.
+ * @param {Boolean} pFallback - (optional) Tells, if the class should get the file (ogg or mp3) depending on the browser.
  */
 var ySound = function(pFileName, pFallback){
 	var that = this;
@@ -24,7 +24,7 @@ var ySound = function(pFileName, pFallback){
 	/**
 	 * Plays the sound
 	 */
-	that.prototype.play = function(){
+	ySound.prototype.play = function(){
 		this.audio.play();
 	}
 	
@@ -32,7 +32,7 @@ var ySound = function(pFileName, pFallback){
 	/**
 	 * Pauses the sound
 	 */
-	that.prototype.pause = function(){
+	ySound.prototype.pause = function(){
 		this.audio.pause();
 	}
 };

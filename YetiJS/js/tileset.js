@@ -21,16 +21,28 @@ var yTileSet = function(pSprite, pTileSize){
 	
 	/**
 	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels
+	 * @param {Integer} pID - The ID of the tile.
 	 */
-	that.prototype.getTilePositionByID = function(pID){
+	yTileSet.prototype.getTilePositionByID = function(pID){
 		return new yVector(pID % this.width * this.tileSize, Math.floor(pID / this.width) * this.tileSize);
 	}
 	
 	/**
-	 * Draws the tileset at a given position
+	 * Draws a single tile at a given position
+	 * @param {Integer} pID - The ID of the tile.
+	 * @param {yVector} pPosition - The position to draw the tile.
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	ySpriteSheet.prototype.drawTile = function(pID, pPosition, pCamera){
+		var tilePosition = this.getTilePositionByID(pID);
+		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.tileSize, this.tileSize);
+	}
+	
+	/**
+	 * Draws the tileset at a given position for debugging purposes
 	 * @param {yVector} pPosition - The position to draw the sprite.
 	 */
-	that.prototype.draw = function(pPosition){
+	yTileSet.prototype.draw = function(pPosition){
 		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);
 	}
 };

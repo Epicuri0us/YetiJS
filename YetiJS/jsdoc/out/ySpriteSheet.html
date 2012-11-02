@@ -297,6 +297,415 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="drawFrame"><span class="type-signature"></span>drawFrame</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws a single frame at a given position
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pID</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID of the frame.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pPosition</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The position to draw the frame.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pCamera</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yCamera.html">yCamera</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The camera.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/spritesheet.js, line 37</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="drawTile"><span class="type-signature"></span>drawTile</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws a single tile at a given position
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pID</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID of the tile.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pPosition</code></td>
+            
+            
+            <td class="type">
+            
+                        yVector
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The position to draw the tile.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pCamera</code></td>
+            
+            
+            <td class="type">
+            
+                        <a href="yCamera.html">yCamera</a>
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The camera.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/tileset.js, line 36</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getFramePositionByID"><span class="type-signature"></span>getFramePositionByID</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a vector with the position of the frame with the given ID on the spritesheet in pixels
+    </div>
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pID</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The ID of the tile.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/spritesheet.js, line 27</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -317,7 +726,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Nov 02 2012 08:56:22 GMT+0100 (MEZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Nov 02 2012 10:48:15 GMT+0100 (MEZ)
 </footer>
 
 <script> sh_highlightDocument(); </script>

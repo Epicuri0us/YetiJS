@@ -714,6 +714,7 @@ var yGameState = function(){
 	}
 };
 
+
 /**
  * @classdesc A layer handles the game functionality and should be dedicated to one task (i.E. user inferface/menu/actual game/...), it has to be inherited and attached to a specific gamestate.
  * 
@@ -1303,11 +1304,31 @@ var ySprite = function(pSprite){
  */
 var ySpriteSheet = function(pCols, pRows, pSprite){
 	var that = this;
-	this.rows = pRows;
-	this.cols = pCols;
-	this.sprite = new Image();
-	this.sprite.src = pSprite;
+	that.cols = pCols;
+	that.rows = pRows;
+	that.sprite = new Image();
+	that.sprite.src = pSprite;
+	that.frameWidth = that.sprite.width / that.cols;
+	that.frameHeight = that.sprite.height / that.rows;
 	
+	/**
+	 * Returns a vector with the position of the frame with the given ID on the spritesheet in pixels
+	 * @param {Integer} pID - The ID of the tile.
+	 */
+	ySpriteSheet.prototype.getFramePositionByID = function(pID){
+		return new yVector(pID % this.cols * this.frameWidth, Math.floor(pID / this.cols) * this.frameHeight);
+	}
+	
+	/**
+	 * Draws a single frame at a given position
+	 * @param {Integer} pID - The ID of the frame.
+	 * @param {yVector} pPosition - The position to draw the frame.
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	ySpriteSheet.prototype.drawFrame = function(pID, pPosition, pCamera){
+		var framePosition = this.getFramePositionByID(pID);
+		ctx.drawImage(this.sprite, framePosition.x, framePosition.y, this.frameWidth, this.frameHeight, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.frameWidth, this.frameHeight);
+	}
 };
 
 
@@ -1316,11 +1337,61 @@ var ySpriteSheet = function(pCols, pRows, pSprite){
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {ySpriteSheet} pSpriteSheet - The spritesheet.
+ * @param {Integer} pFrameTime - The length in milliseconds a frame should be displayed.
+ * @param {Integer} pFirstFrame - The ID on the spritesheet where the animation should begin.
+ * @param {Integer} pLastFrame - The ID on the spritesheet where the animation should end.
+ * @param {Boolean} pLoop - (optional) Tells, if the animation should loop (Default: false).
+ * @property {ySpriteSheet} spriteSheet - The spritesheet.
+ * @property {Integer} frameTime - The length in milliseconds a frame is displayed.
+ * @property {Integer} firstFrame - The ID on the spritesheet where the animation begins.
+ * @property {Integer} lastFrame - The ID on the spritesheet where the animation ends.
+ * #property {Integer} activeFrame - The ID of the active frame.
+ * @property {Boolean} loop - Tells, if the animation loops.
+ * @property {Boolean} stopped - Tells, if the animation is running.
+ * @property {Integer} lastFrameTime - Used to determine if the next frame should be drawn.
  */
-var yAnimation = function(){
+var yAnimation = function(pSpriteSheet, pFrameTime, pFirstFrame, pLastFrame, pLoop){
 	var that = this;
+	that.spriteSheet = pSpriteSheet;
+	that.frameTime = pFrameTime;
+	that.firstFrame = pFirstFrame;
+	that.lastFrame = pLastFrame;
+	that.activeFrame = that.firstFrame;
+	that.loop = (pLoop ? pLoop : false);
+	that.stopped = false;
+	that.lastFrameTime = Date.now();
 	
+	/**
+	 * Draws the animation
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	yAnimation.prototype.draw = function(pCamera){
+		if(Date.now() - this.lastFrameTime > this.frameTime){
+			this.lastFrameTime = Date.now();
+			if(this.activeFrame+1 > this.lastFrame){
+				if(this.loop){
+					this.activeFrame = this.firstFrame;
+				}else{
+					that.stopped = true;
+				}
+			}else{
+				this.activeFrame++;
+			}
+		}
+		this.spriteSheet.drawFrame(that.activeFrame, (position), pCamera);
+	}
+	
+	/**
+	 * Resets the active frame to the first one and starts the animation again
+	 */
+	yAnimation.prototype.reset = function(){
+		that.activeFrame = that.firstFrame;
+		that.lastFrameTime = Date.now();
+		that.stopped = false;
+	}
 };
+
 
 /**
  * @classdesc The tilemap contains an array with tile positions, a tileset to load the tiles from and functionality to draw them.
@@ -1358,14 +1429,14 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	
 	/**
 	 * Draws the whole map depending on camera position
+	 * @param {yCamera} pCamera - The camera.
 	 */
-	that.prototype.draw = function(){
+	yTileMap.prototype.draw = function(pCamera){
+		var tileSet = this.tileSet;
 		for(var l = 0; l < pLayers; l++){
 			for(var y = 0; y < this.height; y++){
 				for(var x = 0; x < this.width; x++){
-					var tileSet = this.tileSet;
-					var tilePosition = tileSet.getTilePositionByID(this.map[l][y][x]);
-					ctx.drawImage(tileSet.sprite, tilePosition.x, tilePosition.y, tileSet.tileSize, tileSet.tileSize, camera.position.x + x*tileSet.tileSize, camera.position.y + y*tileSet.tileSize, tileSet.tileSize, tileSet.tileSize);
+					tileSet.drawTile(this.map[l][y][x], new yVector(camera.position.x + x*tileSet.tileSize, camera.position.y + y*tileSet.tileSize), pCamera);
 				}
 			}
 		}
@@ -1375,7 +1446,7 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
 	 * Imports a map from a tmx file (not yet implemented)
 	 * @param {String} pFile - The path to the tmx-map file.
 	 */
-	that.prototype.importTMX = function(pFile){
+	yTileMap.prototype.importTMX = function(pFile){
 		
 	}
 };
@@ -1402,16 +1473,28 @@ var yTileSet = function(pSprite, pTileSize){
 	
 	/**
 	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels
+	 * @param {Integer} pID - The ID of the tile.
 	 */
-	that.prototype.getTilePositionByID = function(pID){
+	yTileSet.prototype.getTilePositionByID = function(pID){
 		return new yVector(pID % this.width * this.tileSize, Math.floor(pID / this.width) * this.tileSize);
 	}
 	
 	/**
-	 * Draws the tileset at a given position
+	 * Draws a single tile at a given position
+	 * @param {Integer} pID - The ID of the tile.
+	 * @param {yVector} pPosition - The position to draw the tile.
+	 * @param {yCamera} pCamera - The camera.
+	 */
+	ySpriteSheet.prototype.drawTile = function(pID, pPosition, pCamera){
+		var tilePosition = this.getTilePositionByID(pID);
+		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.tileSize, this.tileSize);
+	}
+	
+	/**
+	 * Draws the tileset at a given position for debugging purposes
 	 * @param {yVector} pPosition - The position to draw the sprite.
 	 */
-	that.prototype.draw = function(pPosition){
+	yTileSet.prototype.draw = function(pPosition){
 		ctx.drawImage(this.sprite, pPosition.x, pPosition.y);
 	}
 };
@@ -1428,7 +1511,7 @@ var yTileSet = function(pSprite, pTileSize){
  * @property {Integer} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
- * @property {Function} callback (optional) - The function that should be executed when the timer elapses.
+ * @property {Function} callback - (optional) The function that should be executed when the timer elapses.
  */
 var yTimer = function(pDuration, pCallback){
 	var that = this;
@@ -1437,11 +1520,8 @@ var yTimer = function(pDuration, pCallback){
 	that.remainingTime = Date.now();
 	that.paused = true;
 	that.elapsed = false;
-	that.callback = null;
-	if(pCallback){
-		that.callback = pCallback;
-	}
-	
+	that.callback = (pCallback ? pCallback : null);
+
 	/**
 	 * Updates remaining time and checks if time is up
 	 */
@@ -1481,7 +1561,7 @@ var yTimer = function(pDuration, pCallback){
  * @author Leo Zurbriggen
  * @constructor
  * @param {String} pFileName - The file name of the sound.
- * @param {Boolean} pFallback (optional) - Tells, if the class should get the file (ogg or mp3) depending on the browser.
+ * @param {Boolean} pFallback - (optional) Tells, if the class should get the file (ogg or mp3) depending on the browser.
  */
 var ySound = function(pFileName, pFallback){
 	var that = this;
@@ -1500,7 +1580,7 @@ var ySound = function(pFileName, pFallback){
 	/**
 	 * Plays the sound
 	 */
-	that.prototype.play = function(){
+	ySound.prototype.play = function(){
 		this.audio.play();
 	}
 	
@@ -1508,7 +1588,7 @@ var ySound = function(pFileName, pFallback){
 	/**
 	 * Pauses the sound
 	 */
-	that.prototype.pause = function(){
+	ySound.prototype.pause = function(){
 		this.audio.pause();
 	}
 };

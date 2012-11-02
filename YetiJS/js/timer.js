@@ -11,7 +11,7 @@
  * @property {Integer} remainingTime - The remaining time.
  * @property {Boolean} paused - Tells, if the timer paused, Default is true;
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
- * @property {Function} callback (optional) - The function that should be executed when the timer elapses.
+ * @property {Function} callback - (optional) The function that should be executed when the timer elapses.
  */
 var yTimer = function(pDuration, pCallback){
 	var that = this;
@@ -20,11 +20,8 @@ var yTimer = function(pDuration, pCallback){
 	that.remainingTime = Date.now();
 	that.paused = true;
 	that.elapsed = false;
-	that.callback = null;
-	if(pCallback){
-		that.callback = pCallback;
-	}
-	
+	that.callback = (pCallback ? pCallback : null);
+
 	/**
 	 * Updates remaining time and checks if time is up
 	 */
