@@ -11,14 +11,14 @@ Dependencies
 YetiJS uses a few libraries and tools:
 
 - Box2DWeb, a JavaScript port of the beautiful Box2D physics library from Erin Catto (http://code.google.com/p/box2dweb/)
-- vector2d, a slightly modified version of Tudor Nita's 2D vector library (http://www.cgrats.com/javascript-2d-vector-library.html)
-- yui-compressor, a tool from yahoo used to compress the final js-file (http://developer.yahoo.com/yui/compressor/)
 - RequestAnimationFrame, a function written by Paul Irish that helps synchronising draw calls with monitor/browser update rate (http://paulirish.com/2011/requestanimationframe-for-smart-animating/)
+- Google Closure Compiler, used to optimize/minify the final script (https://developers.google.com/closure/compiler/)
 
 **Removed:**
 - SAT, a library (Separating Axis Theorem) from Jim Riecken is used as a vary fast way to check if convex polygons collide (https://github.com/jriecken/sat-js)
 (Removed because I focus on desktop browsers rather than mobiles. Collisions should be simulated with Box2D.)
-
+- yui-compressor, a tool from yahoo used to compress the final js-file (http://developer.yahoo.com/yui/compressor/) (Replaced by Google Closure Compiler)
+- vector2d, a slightly modified version of Tudor Nita's 2D vector library (http://www.cgrats.com/javascript-2d-vector-library.html) (Replaced by Box2D's vector class)
 
 Documentation
 ------
@@ -27,3 +27,27 @@ I used JSDoc 3 (https://github.com/jsdoc3/jsdoc) to create a class-documentation
 Start a new YetiJS-project
 ------
 I have put together a project template you just have to download and begin developing.
+As mentioned, there's no learning material right now, I will start making tutorials when the project is ready to work with.
+
+License
+------
+This software is distributed under an extended zLib-License, you will also find it in the license.txt-file.
+
+  Copyright (C) 2012-2013 Leo Zurbriggen http://www.leoz.ch
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+  4. If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
