@@ -20,6 +20,15 @@ YetiJS uses a few libraries and tools:
 - yui-compressor, a tool from yahoo used to compress the final js-file (http://developer.yahoo.com/yui/compressor/) (Replaced by Google Closure Compiler)
 - vector2d, a slightly modified version of Tudor Nita's 2D vector library (http://www.cgrats.com/javascript-2d-vector-library.html) (Replaced by Box2D's vector class)
 
+Development Status
+------
+Not implemented by now:
+- UI (I recommend using jQuery in combination with an html-overlay)
+- Particles (I plan to implement this, but I first have to check for performance issues etc.)
+- Rendering to different canvas (I'm looking for a clean way to implement this)
+- Only Re-render parts of the canvas (Don't know how to achieve that right now)
+- many things that just didn't come to my mind...
+
 Documentation
 ------
 I used JSDoc 3 (https://github.com/jsdoc3/jsdoc) to create a class-documentation similar to javadoc. It will be accessible soon here: http://leoz.ch/yetijs/doc
@@ -32,6 +41,7 @@ As mentioned, there's no learning material right now, I will start making tutori
 License
 ------
 This software is distributed under an extended zLib-License, you will also find it in the license.txt-file.
+Don't forget to take account of the licenses of third-party tools or code you use.
 
 <pre>Copyright (C) 2012-2013 Leo Zurbriggen http://www.leoz.ch
 
