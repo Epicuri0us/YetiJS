@@ -22,11 +22,12 @@ YetiJS uses a few libraries and tools:
 
 Development Status
 ------
-Not implemented by now:
+Not done by now:
 - UI (I recommend using jQuery in combination with an html-overlay)
 - Particles (I plan to implement this, but I first have to check for performance issues etc.)
 - Rendering to different canvas (I'm looking for a clean way to implement this)
 - Only Re-render parts of the canvas (Don't know how to achieve that right now)
+- GC-optimizations/object recycling/...
 - many things that just didn't come to my mind...
 
 Documentation
