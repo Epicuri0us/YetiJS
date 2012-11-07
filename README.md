@@ -33,7 +33,7 @@ License
 ------
 This software is distributed under an extended zLib-License, you will also find it in the license.txt-file.
 
-  Copyright (C) 2012-2013 Leo Zurbriggen http://www.leoz.ch
+  <pre>Copyright (C) 2012-2013 Leo Zurbriggen http://www.leoz.ch
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -50,4 +50,4 @@ This software is distributed under an extended zLib-License, you will also find 
   2. Altered source versions must be plainly marked as such, and must not be
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
-  4. If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
+  4. If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.</pre>
