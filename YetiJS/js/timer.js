@@ -13,28 +13,27 @@
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
  * @property {Function} callback - (optional) The function that should be executed when the timer elapses.
  */
-var yTimer = function(pDuration, pCallback){
-	var that = this;
-	that.duration = pDuration;
-	that.startTime = Date.now();
-	that.remainingTime = Date.now();
-	that.paused = true;
-	that.elapsed = false;
-	that.callback = (pCallback ? pCallback : null);
+function yTimer(pDuration, pCallback){
+	this.duration = pDuration;
+	this.startTime = Date.now();
+	this.remainingTime = Date.now();
+	this.paused = true;
+	this.elapsed = false;
+	this.callback = (pCallback ? pCallback : null);
 
 	/**
 	 * Updates remaining time and checks if time is up
 	 */
 	yTimer.prototype.update = function(){
-		if(!that.paused){
-			that.remainingTime = Date.now() - that.startTime - that.duration;
+		if(!this.paused){
+			this.remainingTime = Date.now() - this.startTime - this.duration;
 			
 			if(remainingTime <= 0){
-				that.elapsed = true;
-				if(that.callback){
-					eval(that.callback);
+				this.elapsed = true;
+				if(this.callback){
+					eval(this.callback);
 				}
-				that.paused = true;
+				this.paused = true;
 			}
 		}
 	}
@@ -43,13 +42,13 @@ var yTimer = function(pDuration, pCallback){
 	 * Starts the timer
 	 */
 	yTimer.prototype.start = function(){
-		that.paused = false;
+		this.paused = false;
 	}
 	
 	/**
 	 * Pauses the timer
 	 */
 	yTimer.prototype.pause = function(){
-		that.paused = true;
+		this.paused = true;
 	}
 };

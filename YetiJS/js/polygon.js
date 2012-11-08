@@ -13,15 +13,14 @@
  * @property {String} strokeStyle - User for drawing the polygon.
  * @property {String} fillStyle - User for drawing the polygon.
  */
-var yPolygon = function(pPosition) {
-	var that = this;
-	that.center = new yVector(0, 0);
-	that.position = pPosition;
-	that.points = [];
-	that.edges = [];
-	that.lineWidth = "1";
-	that.strokeStyle = "rgba(20, 20, 20, 0.7)";
-	that.fillStyle = "rgba(30, 30, 30, 0.5)";
+function yPolygon(pPosition) {
+	this.center = new yVector(0, 0);
+	this.position = pPosition;
+	this.points = [];
+	this.edges = [];
+	this.lineWidth = "1";
+	this.strokeStyle = "rgba(20, 20, 20, 0.7)";
+	this.fillStyle = "rgba(30, 30, 30, 0.5)";
 
 	/**
 	 * Updates polygon

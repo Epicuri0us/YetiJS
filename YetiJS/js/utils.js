@@ -22,6 +22,13 @@ Array.prototype.contains = function(obj) {
     return false;
 }
 
+Function.prototype.extend = function(construct){
+    construct.prototype = new this();
+    construct.prototype._super = construct.prototype.constructor;
+    construct.prototype.constructor = construct;
+    return construct;
+}
+
 function deepCopy(obj) {
 	if (Object.prototype.toString.call(obj) === '[object Array]') {
 		var out = [], i = 0, len = obj.length;

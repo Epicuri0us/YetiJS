@@ -11,13 +11,12 @@
  * @property {Integer} width - The width of the tileset in tiles.
  * @property {Integer} height - The height of the tileset in tiles.
  */
-var yTileSet = function(pSprite, pTileSize){
-	var that = this;
-	that.sprite = new Image();
-	that.sprite.src = pSprite;
-	that.tileSize = pTileSize;
-	that.width = that.sprite.width / that.tileSize;
-	that.height = that.sprite.height / that.tileSize;
+function yTileSet(pSprite, pTileSize){
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
+	this.tileSize = pTileSize;
+	this.width = this.sprite.width / this.tileSize;
+	this.height = this.sprite.height / this.tileSize;
 	
 	/**
 	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels

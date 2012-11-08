@@ -3,29 +3,12 @@
 		<concat destfile="${basedir}\yeti.js" fixlastline="true">
 			<filelist dir="${basedir}">
 				<file name="libs/box2dweb.js" />
-				<file name="libs/vector2d.js" />
 				<file name="js/utils.js" />
-				<file name="js/touch.js" />
-				<file name="js/game.js" />
-				<file name="js/gamestate.js" />
-				<file name="js/layer.js" />
-				<file name="js/input.js" />
-				<file name="js/entity.js" />
-				<file name="js/camera.js" />
-				<file name="js/sprite.js" />
-				<file name="js/spritesheet.js" />
-				<file name="js/animation.js" />
-				<file name="js/tilemap.js" />
-				<file name="js/tileset.js" />
-				<file name="js/timer.js" />
-				<file name="js/sound.js" />
 			</filelist>
+			<fileset dir="js/" includes="*.js" excludes="utils.js" />
 			<filterchain>
 				<deletecharacters chars="ï»¿" />
 			</filterchain>
 		</concat>
-		<java fork="true" jar="${basedir}\tools\yuicompressor.jar" dir="${basedir}" output="${basedir}/yeti.min.js">
-			<arg value="${basedir}/yeti.js" />
-		</java>
 	</target>
 </project>

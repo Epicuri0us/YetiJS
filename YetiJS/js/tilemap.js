@@ -13,12 +13,11 @@
  * @property {Integer} width - The width of the map.
  * @property {Integer} height - The height of the map.
  */
-var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
-	var that = this;
-	that.tileSet = pTileSet;
-	that.map = [];
-	that.width = pWidth;
-	that.height = pHeight;
+function yTileMap(pTileSet, pLayers, pWidth, pHeight){
+	this.tileSet = pTileSet;
+	this.map = [];
+	this.width = pWidth;
+	this.height = pHeight;
 	
 	/**
 	 * Initializes an empty map-array

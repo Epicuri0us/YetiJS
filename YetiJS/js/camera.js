@@ -7,12 +7,11 @@
  * @property {yVector} position - The position of the camera.
  * @param {yVector} pPosition - The position of the camera.
  */
-var yCamera = function(pPosition){
-	var that = this;
-	that.position = pPosition;
+function yCamera(pPosition){
+	this.position = pPosition;
 	
 	var height = canvas.height/(canvas.width/16*9);
-	ctx.scale(1, height);
+	//ctx.scale(1, height);
 	
 	// var width = (canvas.height/9*16);
 	// ctx.scale(1, 1);
@@ -51,6 +50,5 @@ var yCamera = function(pPosition){
 	 * Updates camera
 	 */
 	yCamera.prototype.update = function(){
-		var that = this;
 	}
 };

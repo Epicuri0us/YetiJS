@@ -115,139 +115,137 @@
  * @property {Float} orientationBeta - The beta orientation of the device.
  * @property {Float} orientationGamma - The gamma orientation of the device.
  */
-var yInput = function() {
-	var that = this;
+function yInput() {
+	this.keyState = [];
+	this.lastKeyState = [];
 
-	that.keyState = [];
-	that.lastKeyState = [];
-
-	that.touches = [];
-	that.lastTouches = [];
+	this.touches = [];
+	this.lastTouches = [];
 
 	for (var i = 0; i < 10; i++) {
-		that.touches[i] = new yTouch();
+		this.touches[i] = new yTouch();
 	}
 
-	that.mousePosition = new yVector(-1, -1);
+	this.mousePosition = new yVector(-1, -1);
 
 	for (var i = 0; i < 300; i++) {
-		that.keyState[i] = false;
-		that.lastKeyState[i] = false;
+		this.keyState[i] = false;
+		this.lastKeyState[i] = false;
 	}
 
-	that.MOUSELEFT = 0;
-	that.MOUSERIGHT = 2;
-	that.MOUSEMIDDLE = 1;
-	that.BACKSPACE = 8;
-	that.TAB = 9;
-	that.ENTER = 13;
-	that.SHIFT = 16;
-	that.CTRL = 17;
-	that.ALT = 18;
-	that.PAUSE = 19;
-	that.CAPS = 20;
-	that.ESCAPE = 27;
-	that.SPACE = 32;
-	that.PAGEUP = 33;
-	that.PAGEDOWN = 34;
-	that.END = 35;
-	that.HOME = 36;
-	that.LEFT = 37;
-	that.UP = 38;
-	that.RIGHT = 39;
-	that.DOWN = 40;
-	that.INSERT = 45;
-	that.DELETE = 46;
-	that.ZERO = 48;
-	that.ONE = 49;
-	that.TWO = 50;
-	that.THREE = 51;
-	that.FOUR = 52;
-	that.FIVE = 53;
-	that.SIX = 54;
-	that.SEVEN = 55;
-	that.EIGHT = 56;
-	that.NINE = 57;
-	that.A = 65;
-	that.B = 66;
-	that.C = 67;
-	that.D = 68;
-	that.E = 69;
-	that.F = 70;
-	that.G = 71;
-	that.H = 72;
-	that.I = 73;
-	that.J = 74;
-	that.K = 75;
-	that.L = 76;
-	that.M = 77;
-	that.N = 78;
-	that.O = 79;
-	that.P = 80;
-	that.Q = 81;
-	that.R = 82;
-	that.S = 83;
-	that.T = 84;
-	that.U = 85;
-	that.V = 86;
-	that.W = 87;
-	that.X = 88;
-	that.Y = 89;
-	that.Z = 90;
-	that.WINDOWsLEFT = 91;
-	that.WINDOWSRIGHT = 92;
-	that.SELECT = 93;
-	that.NUMZERO = 96;
-	that.NUMONE = 97;
-	that.NUMTWO = 98;
-	that.NUMTHREE = 99;
-	that.NUMFOUR = 100;
-	that.NUMFIVE = 101;
-	that.NUMSIX = 102;
-	that.NUMSEVEN = 103;
-	that.NUMEIGHT = 104;
-	that.NUMNINE = 105;
-	that.MULTIPLY = 106;
-	that.ADD = 107;
-	that.SUBTRACT = 109;
-	that.DECIMALPOINT = 110;
-	that.DIVIDE = 111;
-	that.F1 = 112;
-	that.F2 = 113;
-	that.F3 = 114;
-	that.F4 = 115;
-	that.F5 = 116;
-	that.F6 = 117;
-	that.F7 = 118;
-	that.F8 = 119;
-	that.F9 = 120;
-	that.F10 = 121;
-	that.F11 = 122;
-	that.F12 = 123;
-	that.NUMLOCK = 144;
-	that.SCROLLLOCK = 145;
-	that.SEMICOLON = 186;
-	that.EQUALSIGN = 187;
-	that.COMMA = 188;
-	that.DASH = 189;
-	that.PERIOD = 190;
-	that.FORWARDSLASH = 191;
-	that.GRAVEACCENT = 192;
-	that.OPENBRACKET = 219;
-	that.BACKSLASH = 220;
-	that.CLOSEBRACKET = 221;
-	that.SINGLEQUOTE = 222;
+	this.MOUSELEFT = 0;
+	this.MOUSERIGHT = 2;
+	this.MOUSEMIDDLE = 1;
+	this.BACKSPACE = 8;
+	this.TAB = 9;
+	this.ENTER = 13;
+	this.SHIFT = 16;
+	this.CTRL = 17;
+	this.ALT = 18;
+	this.PAUSE = 19;
+	this.CAPS = 20;
+	this.ESCAPE = 27;
+	this.SPACE = 32;
+	this.PAGEUP = 33;
+	this.PAGEDOWN = 34;
+	this.END = 35;
+	this.HOME = 36;
+	this.LEFT = 37;
+	this.UP = 38;
+	this.RIGHT = 39;
+	this.DOWN = 40;
+	this.INSERT = 45;
+	this.DELETE = 46;
+	this.ZERO = 48;
+	this.ONE = 49;
+	this.TWO = 50;
+	this.THREE = 51;
+	this.FOUR = 52;
+	this.FIVE = 53;
+	this.SIX = 54;
+	this.SEVEN = 55;
+	this.EIGHT = 56;
+	this.NINE = 57;
+	this.A = 65;
+	this.B = 66;
+	this.C = 67;
+	this.D = 68;
+	this.E = 69;
+	this.F = 70;
+	this.G = 71;
+	this.H = 72;
+	this.I = 73;
+	this.J = 74;
+	this.K = 75;
+	this.L = 76;
+	this.M = 77;
+	this.N = 78;
+	this.O = 79;
+	this.P = 80;
+	this.Q = 81;
+	this.R = 82;
+	this.S = 83;
+	this.T = 84;
+	this.U = 85;
+	this.V = 86;
+	this.W = 87;
+	this.X = 88;
+	this.Y = 89;
+	this.Z = 90;
+	this.WINDOWsLEFT = 91;
+	this.WINDOWSRIGHT = 92;
+	this.SELECT = 93;
+	this.NUMZERO = 96;
+	this.NUMONE = 97;
+	this.NUMTWO = 98;
+	this.NUMTHREE = 99;
+	this.NUMFOUR = 100;
+	this.NUMFIVE = 101;
+	this.NUMSIX = 102;
+	this.NUMSEVEN = 103;
+	this.NUMEIGHT = 104;
+	this.NUMNINE = 105;
+	this.MULTIPLY = 106;
+	this.ADD = 107;
+	this.SUBTRACT = 109;
+	this.DECIMALPOINT = 110;
+	this.DIVIDE = 111;
+	this.F1 = 112;
+	this.F2 = 113;
+	this.F3 = 114;
+	this.F4 = 115;
+	this.F5 = 116;
+	this.F6 = 117;
+	this.F7 = 118;
+	this.F8 = 119;
+	this.F9 = 120;
+	this.F10 = 121;
+	this.F11 = 122;
+	this.F12 = 123;
+	this.NUMLOCK = 144;
+	this.SCROLLLOCK = 145;
+	this.SEMICOLON = 186;
+	this.EQUALSIGN = 187;
+	this.COMMA = 188;
+	this.DASH = 189;
+	this.PERIOD = 190;
+	this.FORWARDSLASH = 191;
+	this.GRAVEACCENT = 192;
+	this.OPENBRACKET = 219;
+	this.BACKSLASH = 220;
+	this.CLOSEBRACKET = 221;
+	this.SINGLEQUOTE = 222;
 
-	that.orientationGamma = 0;
-	that.orientationBeta = 0;
-	that.orientationAlpha = 0;
+	this.orientationGamma = 0;
+	this.orientationBeta = 0;
+	this.orientationAlpha = 0;
 
 	/**
 	 * Returns true, if the key with given keyCode is pressed, false otherwise.
  	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isDown = function(pKeyCode) {
-		return that.keyState[pKeyCode];
+		return this.keyState[pKeyCode];
 	};
 
 	/**
@@ -255,7 +253,7 @@ var yInput = function() {
  	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isUp = function(pKeyCode) {
-		return !that.keyState[pKeyCode];
+		return !this.keyState[pKeyCode];
 	};
 
 	/**
@@ -263,7 +261,7 @@ var yInput = function() {
  	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isReleased = function(pKeyCode) {
-		return (!that.keyState[pKeyCode] && that.lastKeyState[pKeyCode]);
+		return (!this.keyState[pKeyCode] && this.lastKeyState[pKeyCode]);
 	};
 
 	/**
@@ -271,13 +269,13 @@ var yInput = function() {
  	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaHovered = function(pArea) {
-		if (that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
+		if (this.mousePosition.x > pArea.upperBound.x && this.mousePosition.y > pArea.upperBound.y && this.mousePosition.x < pArea.lowerBound.x && this.mousePosition.y < pArea.lowerBound.y) {
 			return true;
 		}
-		for (var i = 0; i < that.touches.length; i++) {
-			var touch = that.touches[i];
+		for (var i = 0; i < this.touches.length; i++) {
+			var touch = this.touches[i];
 			if (touch.isTouched) {
-				if (touch.position.x > pArea.topleft.x && touch.position.y > pArea.topleft.y && touch.position.x < pArea.botright.x && touch.position.y < pArea.botright.y) {
+				if (touch.position.x > pArea.upperBound.x && touch.position.y > pArea.upperBound.y && touch.position.x < pArea.lowerBound.x && touch.position.y < pArea.lowerBound.y) {
 					return true;
 				}
 			}
@@ -290,13 +288,13 @@ var yInput = function() {
  	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaPressed = function(pArea) {
-		if (that.isDown(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
+		if (this.isDown(this.MOUSELEFT) && this.mousePosition.x > pArea.upperBound.x && this.mousePosition.y > pArea.upperBound.y && this.mousePosition.x < pArea.lowerBound.x && this.mousePosition.y < pArea.lowerBound.y) {
 			return true;
 		}
-		for (var i = 0; i < that.touches.length; i++) {
-			var touch = that.touches[i];
+		for (var i = 0; i < this.touches.length; i++) {
+			var touch = this.touches[i];
 			if (touch && touch.isTouched) {
-				if (touch.position.x > pArea.topleft.x && touch.position.y > pArea.topleft.y && touch.position.x < pArea.botright.x && touch.position.y < pArea.botright.y) {
+				if (touch.position.x > pArea.upperBound.x && touch.position.y > pArea.upperBound.y && touch.position.x < pArea.lowerBound.x && touch.position.y < pArea.lowerBound.y) {
 					return true;
 				}
 			}
@@ -309,11 +307,11 @@ var yInput = function() {
  	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaReleased = function(pArea) {
-		if (that.isReleased(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
+		if (this.isReleased(this.MOUSELEFT) && this.mousePosition.x > pArea.topleft.x && this.mousePosition.y > pArea.topleft.y && this.mousePosition.x < pArea.botright.x && this.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
-		for (var i = 0; i < that.touches.length; i++) {
-			var touch = that.touches[i];
+		for (var i = 0; i < this.touches.length; i++) {
+			var touch = this.touches[i];
 			if (touch.wasTouched && !touch.isTouched) {
 				if (touch.position.x > pArea.topleft.x && touch.position.y > pArea.topleft.y && touch.position.x < pArea.botright.x && touch.position.y < pArea.botright.y) {
 					return true;
@@ -324,37 +322,37 @@ var yInput = function() {
 	}
 
 	yInput.prototype.onKeydown = function(event) {
-		that.keyState[event.keyCode] = true;
+		this.keyState[event.keyCode] = true;
 	};
 
 	yInput.prototype.onKeyup = function(event) {
-		that.keyState[event.keyCode] = false;
+		this.keyState[event.keyCode] = false;
 	};
 
 	yInput.prototype.onMouseDown = function(event) {
-		that.keyState[event.button] = true;
+		this.keyState[event.button] = true;
 		event.preventDefault();
 	};
 
 	yInput.prototype.onMouseUp = function(event) {
-		that.keyState[event.button] = false;
+		this.keyState[event.button] = false;
 		event.preventDefault();
 	};
 
 	yInput.prototype.onMouseMove = function(event) {
-		that.mousePosition.x = event.clientX;
-		that.mousePosition.y = event.clientY;
+		this.mousePosition.x = event.clientX;
+		this.mousePosition.y = event.clientY;
 	};
 
 	yInput.prototype.onTouchStart = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
-			if (that.touches[id] == null) {
-				that.touches[id] = new yTouch();
+			if (this.touches[id] == null) {
+				this.touches[id] = new yTouch();
 			}
-			that.touches[id].isTouched = true;
+			this.touches[id].isTouched = true;
 			if (i == 0) {
-				that.keyState[that.MOUSELEFT] = true;
+				this.keyState[this.MOUSELEFT] = true;
 			}
 		}
 		event.preventDefault();
@@ -363,12 +361,12 @@ var yInput = function() {
 	yInput.prototype.onTouchEnd = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
-			if (that.touches[id] == null) {
-				that.touches[id] = new yTouch();
+			if (this.touches[id] == null) {
+				this.touches[id] = new yTouch();
 			}
-			that.touches[id].isTouched = false;
+			this.touches[id].isTouched = false;
 			if (i == 0) {
-				that.keyState[that.MOUSELEFT] = false;
+				this.keyState[this.MOUSELEFT] = false;
 			}
 		}
 		event.preventDefault();
@@ -376,11 +374,11 @@ var yInput = function() {
 
 	yInput.prototype.onTouchMove = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
-			that.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
-			that.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
+			this.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
+			this.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
 			if (i == 0) {
-				that.mousePosition.x = event.changedTouches[i].pageX;
-				that.mousePosition.y = event.changedTouches[i].pageY;
+				this.mousePosition.x = event.changedTouches[i].pageX;
+				this.mousePosition.y = event.changedTouches[i].pageY;
 			}
 		}
 		event.preventDefault();
@@ -390,29 +388,29 @@ var yInput = function() {
 	 * Copies the active keystate into the lastKeyState-variable and updates touch objects
 	 */
 	yInput.prototype.update = function() {
-		that.lastKeyState = deepCopy(that.keyState);
-		for (var i = 0; i < that.lastTouches.length; i++) {
-			that.touches[i].update();
+		this.lastKeyState = deepCopy(this.keyState);
+		for (var i = 0; i < this.lastTouches.length; i++) {
+			this.touches[i].update();
 		}
 	}
 
 	yInput.prototype.handleOrientation = function(event) {
-		that.orientationGamma = event.gamma;
+		this.orientationGamma = event.gamma;
 		// used as x gravity
-		that.orientationBeta = event.beta;
+		this.orientationBeta = event.beta;
 		// used as y gravity
-		that.orientationAlpha = event.alpha;
+		this.orientationAlpha = event.alpha;
 	}
 
-	window.addEventListener('keyup', that.onKeyup, false);
-	window.addEventListener('keydown', that.onKeydown, false);
-	canvas.addEventListener("touchstart", that.onTouchStart, true);
-	canvas.addEventListener("touchmove", that.onTouchMove, true);
-	canvas.addEventListener("touchend", that.onTouchEnd, true);
-	canvas.addEventListener("touchleave", that.onTouchEnd, true);
-	canvas.addEventListener("touchcancel", that.onTouchEnd, true);
-	canvas.addEventListener("mousedown", that.onMouseDown, true);
-	canvas.addEventListener("mousemove", that.onMouseMove, true);
-	canvas.addEventListener("mouseup", that.onMouseUp, true);
-	window.addEventListener('deviceorientation', that.handleOrientation, false);
+	window.addEventListener('keyup', this.onKeyup, false);
+	window.addEventListener('keydown', this.onKeydown, false);
+	canvas.addEventListener("touchstart", this.onTouchStart, true);
+	canvas.addEventListener("touchmove", this.onTouchMove, true);
+	canvas.addEventListener("touchend", this.onTouchEnd, true);
+	canvas.addEventListener("touchleave", this.onTouchEnd, true);
+	canvas.addEventListener("touchcancel", this.onTouchEnd, true);
+	canvas.addEventListener("mousedown", this.onMouseDown, true);
+	canvas.addEventListener("mousemove", this.onMouseMove, true);
+	canvas.addEventListener("mouseup", this.onMouseUp, true);
+	window.addEventListener('deviceorientation', this.handleOrientation, false);
 };

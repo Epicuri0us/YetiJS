@@ -10,24 +10,23 @@
  * @property {yVector} lastPosition - The position of the touch last frame.
  * @property {Boolean} wasMoved - Tells, if the position of the touch changed from last frame.
  */
-var yTouch = function(){
-	var that = this;
-	that.isTouched = false;
-	that.wasTouched = false;
-	that.position = new yVector(-1, -1);
-	that.lastPosition = new yVector(-1, -1);
-	that.wasMoved = false;
+function yTouch(){
+	this.isTouched = false;
+	this.wasTouched = false;
+	this.position = new yVector(-1, -1);
+	this.lastPosition = new yVector(-1, -1);
+	this.wasMoved = false;
 	
 	/**
 	 * Updates attributes
 	 */
 	yTouch.prototype.update = function(){
-		that.wasTouched = that.isTouched;
-		that.lastPosition = deepCopy(that.position);
-		if(that.position.x != that.lastPosition.x || that.position.y != that.lastPosition.y){
-			that.wasMoved = true;
+		this.wasTouched = this.isTouched;
+		this.lastPosition = deepCopy(this.position);
+		if(this.position.x != this.lastPosition.x || this.position.y != this.lastPosition.y){
+			this.wasMoved = true;
 		}else{
-			that.wasMoved = false;
+			this.wasMoved = false;
 		}
 	}
 };

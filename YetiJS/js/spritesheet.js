@@ -11,14 +11,13 @@
  * @property {Integer} rows - The number of rows of the spritesheet.
  * @property {String} sprite - The path to an image file.
  */
-var ySpriteSheet = function(pCols, pRows, pSprite){
-	var that = this;
-	that.cols = pCols;
-	that.rows = pRows;
-	that.sprite = new Image();
-	that.sprite.src = pSprite;
-	that.frameWidth = that.sprite.width / that.cols;
-	that.frameHeight = that.sprite.height / that.rows;
+function ySpriteSheet(pCols, pRows, pSprite){
+	this.cols = pCols;
+	this.rows = pRows;
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
+	this.frameWidth = this.sprite.width / this.cols;
+	this.frameHeight = this.sprite.height / this.rows;
 	
 	/**
 	 * Returns a vector with the position of the frame with the given ID on the spritesheet in pixels

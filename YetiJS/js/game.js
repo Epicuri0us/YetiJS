@@ -12,21 +12,31 @@ var canvas;
 var ctx;
 var delta = 0;
 var input;
-var debug = true;
-
 /**
  * @classDesc The main game class contains the main loop, creates the canvas, updates the delta time, the input manager and calls the gamestate's update and draw methods.
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {yGameState} pGameState - The initial gamestate.
+ * @param {Boolean} pDebug - (optional) Tells if you're in debug mode.
  * @property {yGameState} gameState - The active gamestate.
+ * @property {Boolean} debugging - If in debug mode.
  */
 
-var yGame = function(){
-	var that = this;
+function yGame(pGameState, pDebug){
+	this.gameState = pGameState;
+	this.debugging = (pDebug == true ? true : false);
+	
 	var lastFrame = Date.now();
 	
-	that.gameState = new yGameState();
+	/**
+	 * Add the canvas
+	 * @param {yVector} pDimensions - The width and height of the Canvas; If null: window-height/width.
+	 * @param {Element} pParent - (optional) The parent html-Element to add the canvas to, Default: window.
+	 */
+	yGame.prototype.addCanvas = function(pDimensions, pParent){
+		
+	}
 	
 	/**
 	 * Main update method
@@ -37,7 +47,7 @@ var yGame = function(){
 		delta = (now - lastFrame)/1000;
 		lastFrame = now;
 		
-		that.gameState.update();
+		this.gameState.update();
 		
 		input.update();
 	}
@@ -47,19 +57,19 @@ var yGame = function(){
 	 */
 	yGame.prototype.draw = function(){
 		ctx.fillStyle = "rgb(255, 255, 255)";
-		ctx.fillRect(0, 0, canvas.width, (canvas.width/16*9));
+		ctx.fillRect(0, 0, canvas.width, canvas.height);  //(canvas.width/16*9)
 		
 		// Draw next frame when Browser is ready
-		requestAnimFrame(that.draw);
+		requestAnimFrame(this.draw);
 		
-		that.gameState.draw();
+		this.gameState.draw();
 	}
 	
 	// Begin updateing the game logic
-	setInterval(that.update, 1);
+	setInterval(this.update, 1);
 
 	// Begin drawing the game graphics
-	window.requestAnimFrame(that.draw);
+	window.requestAnimFrame(this.draw);
 }
 
 // Create canvas and add it to the dom when loading is completed
@@ -72,6 +82,8 @@ window.addEventListener("load", function(){
 	
 	input = new yInput();
 	
-	// Create new game instance
-	game = new yGame();
+	// Fires the ready-event
+	var event = new CustomEvent("YetiJSReady", { cancelable: false });  
+	window.dispatchEvent(event);  
+	
 }, false);

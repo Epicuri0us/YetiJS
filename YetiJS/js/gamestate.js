@@ -6,24 +6,16 @@
  * @constructor
  * @property {yLayer[]} layers - An array that stores every layer of the gamestate.
  */
-var yGameState = function(){
-	var that = this;
-	
-	that.layers = new Array();
-	
-	that.layer1 = new yLayer();
-	that.layer1.active = true;
-	
-	that.layers.push(that.layer1);
+function yGameState(){
+	this.layers = [];
 	
 	/**
 	 * Updates game state
 	 */
 	yGameState.prototype.update = function(){
-		for(var i = 0; i < that.layers.length; i++)
-		{
-			if(that.layers[i].active){
-				that.layers[i].update();
+		for(var i = 0; i < this.layers.length; i++){
+			if(this.layers[i].active){
+				this.layers[i].update();
 			}
 		}
 	}
@@ -32,10 +24,9 @@ var yGameState = function(){
 	 * Draws game state
 	 */
 	yGameState.prototype.draw = function(){
-		for(var i = 0; i < that.layers.length; i++)
-		{
-			if(that.layers[i].active){
-				that.layers[i].draw();
+		for(var i = 0; i < this.layers.length; i++){
+			if(this.layers[i].active){
+				this.layers[i].draw();
 			}
 		}
 	}
