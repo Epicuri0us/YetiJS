@@ -446,64 +446,6 @@ K.moveTo(G.position.x*y,G.position.y*y);K.lineTo((G.position.x+this.m_xformScale
 
 
 /*
-       Common vector2 operations
-       Ugly as hell but no GC headaches
-       Author: Tudor Nita | cgrats.com
-       Version: 0.6 
-
-*/
-/* vector 2D structure */
-var Vec2 = function(x_,y_) {
-    this.x = x_;
-    this.y = y_;
-    
-    this.mulS = function(value)  { return new Vec2(this.x*value,this.y*value);}
-    /* vector * vector */
-    this.mulV = function(v)     { return new Vec2(this.x*v.x,this.y*v.y);}
-    /* vector / scalar */
-    this.divS = function(value)  { return new Vec2(this.x/value,this.y/value);}
-    /* vector + scalar */
-    this.addS = function(value)  { return new Vec2(this.x+value,this.y+value);}
-    /* vector + vector */
-    this.addV  = function(v)    { return new Vec2(this.x+v.x,this.y+v.y);}
-    /* vector - scalar */
-    this.subS = function(value)  { return new Vec2(this.x-value,this.y-value);}
-    /* vector - vector */
-    this.subV = function(v)    { return new Vec2(this.x-v.x,this.y-v.y);}
-    /*  vector absolute */
-    this.abs = function()          { return new Vec2(Math.abs(this.x),Math.abs(this.y));}
-    /* dot product */
-    this.dot = function(v)      { return (this.x*v.x+this.y*v.y);}
-    /* vector length */
-    this.length = function()       { return Math.sqrt(this.dot(this));}
-    /* distance between vectors */
-    this.dist = function(v)     { return (v.subV(this)).length();}
-    /* vector length, squared */
-    this.lengthSqr = function()    { return this.dot(this);}
-    /* 
-        vector linear interpolation 
-        interpolate between two vectors.
-        value should be in 0.0f - 1.0f space ( just to skip a clamp operation )
-    */
-    this.lerp = function(targetV2, v1,v2, value) {  
-        targetV2.x = v1.x+(v2.x-v1.x)*value;
-        targetV2.y = v1.y+(v2.y-v1.y)*value;
-    }
-    /* normalize a vector */
-    this.normalize = function() {
-        var vlen = this.length();
-        return new Vec2(this.x/vlen, this.y/vlen);
-    }
-}
-
-function yArea(Vec1, Vec2){
-	var that = this;
-	that.topleft = Vec1;
-	that.botright = Vec2;
-}
-
-
-/*
  Execute the given function when the browser is ready to draw the next frame
 
  Author: Paul Irish
@@ -524,6 +466,13 @@ Array.prototype.contains = function(obj) {
         }
     }
     return false;
+}
+
+Function.prototype.extend = function(construct){
+    construct.prototype = new this();
+    construct.prototype._super = construct.prototype.constructor;
+    construct.prototype.constructor = construct;
+    return construct;
 }
 
 function deepCopy(obj) {
@@ -562,35 +511,173 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
 	
 
 /**
- * @classdesc The touch events save the state of a touch event. It is used by the input manager.
+ * @classdesc The animation-object saves all the information and provides all methods to play sprite animations
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {Boolean} isTouched - Tells, if the touch is active.
- * @property {Boolean} wasTouched - Tells, if the touch was active last frame.
- * @property {yVector} position - The position of the touch.
- * @property {yVector} lastPosition - The position of the touch last frame.
- * @property {Boolean} wasMoved - Tells, if the position of the touch changed from last frame.
+ * @param {ySpriteSheet} pSpriteSheet - The spritesheet.
+ * @param {Integer} pFrameTime - The length in milliseconds a frame should be displayed.
+ * @param {Integer} pFirstFrame - The ID on the spritesheet where the animation should begin.
+ * @param {Integer} pLastFrame - The ID on the spritesheet where the animation should end.
+ * @param {Boolean} pLoop - (optional) Tells, if the animation should loop (Default: false).
+ * @property {ySpriteSheet} spriteSheet - The spritesheet.
+ * @property {Integer} frameTime - The length in milliseconds a frame is displayed.
+ * @property {Integer} firstFrame - The ID on the spritesheet where the animation begins.
+ * @property {Integer} lastFrame - The ID on the spritesheet where the animation ends.
+ * @property {Integer} activeFrame - The ID of the active frame.
+ * @property {Boolean} loop - Tells, if the animation loops.
+ * @property {Boolean} stopped - Tells, if the animation is running.
+ * @property {Integer} lastFrameTime - Used to determine if the next frame should be drawn.
  */
-var yTouch = function(){
-	var that = this;
-	that.isTouched = false;
-	that.wasTouched = false;
-	that.position = new yVector(-1, -1);
-	that.lastPosition = new yVector(-1, -1);
-	that.wasMoved = false;
+function yAnimation(pSpriteSheet, pFrameTime, pFirstFrame, pLastFrame, pLoop){
+	this.spriteSheet = pSpriteSheet;
+	this.frameTime = pFrameTime;
+	this.firstFrame = pFirstFrame;
+	this.lastFrame = pLastFrame;
+	this.activeFrame = this.firstFrame;
+	this.loop = (pLoop ? pLoop : false);
+	this.stopped = false;
+	this.lastFrameTime = Date.now();
 	
 	/**
-	 * Updates attributes
+	 * Draws the animation
+	 * @param {yCamera} pCamera - The camera.
 	 */
-	yTouch.prototype.update = function(){
-		that.wasTouched = that.isTouched;
-		that.lastPosition = deepCopy(that.position);
-		if(that.position.x != that.lastPosition.x || that.position.y != that.lastPosition.y){
-			that.wasMoved = true;
-		}else{
-			that.wasMoved = false;
+	yAnimation.prototype.draw = function(pPosition, pCamera){
+		if(Date.now() - this.lastFrameTime > this.frameTime){
+			this.lastFrameTime = Date.now();
+			if(this.activeFrame+1 > this.lastFrame){
+				if(this.loop){
+					this.activeFrame = this.firstFrame;
+				}else{
+					this.stopped = true;
+				}
+			}else{
+				this.activeFrame++;
+			}
 		}
+		this.spriteSheet.drawFrame(this.activeFrame, pPosition, pCamera);
+	}
+	
+	/**
+	 * Resets the active frame to the first one and starts the animation again
+	 */
+	yAnimation.prototype.reset = function(){
+		this.activeFrame = this.firstFrame;
+		this.lastFrameTime = Date.now();
+		this.stopped = false;
+	}
+};
+
+
+/**
+ * @classdesc The camera provides functionality to handle different viewports, scrolling, zooming and so forth.
+ * 
+ * @author Leo Zurbriggen
+ * @constructor
+ * @property {yVector} position - The position of the camera.
+ * @param {yVector} pPosition - The position of the camera.
+ */
+function yCamera(pPosition){
+	this.position = pPosition;
+	
+	var height = canvas.height/(canvas.width/16*9);
+	//ctx.scale(1, height);
+	
+	// var width = (canvas.height/9*16);
+	// ctx.scale(1, 1);
+	
+	// var classes = [];
+	// for(var i in window){
+		// if (window.hasOwnProperty(i) && typeof window[i] === 'function'){
+			// if(!i.constructor.toString().match("/\[native code\]/") && i.match("^y")){
+				// classes.push(i);
+			// }
+		// }
+	// }
+	// for(var o = 0; o < classes.length; ){
+		// o++;
+		// if(o != 5 && o != 4 && o != 3){
+			// var classs = classes[i];
+		// var entity = new window[classes[o]];
+		// console.log(classes[o]);
+		// }
+		
+		//entity = classes[i].prototype;
+		// for(var m in entity){
+			// console.log(window[i]+ ": " +m);
+			// if (typeof entity[m] != "function") {
+		        // console.log(window[classes[i]]+ ": " +m);
+		    // }
+		// }
+	// }
+	
+	
+	//ctx.translate(0, 0);
+	
+	
+	
+	/**
+	 * Updates camera
+	 */
+	yCamera.prototype.update = function(){
+	}
+};
+
+/**
+ * @classdesc Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game
+ * 
+ * @author Leo Zurbriggen
+ * @constructor
+ * @desc Creates a new entity from following parameters:
+ * @param {Image} pSprite - The sprite of the entity.
+ * @param {yVector} pPosition - The position of the entity.
+ * @param {yLayer} pLayer - The parent layer of the entity.
+ * @property {Image} sprite - The sprite of the entity.
+ * @property {yPhsicalObject} physModel - The phyiscal object of the entity.
+ * @property {yVector} position - The position of the entity.
+ * @property {Double} rotation - The rotation of the entity.
+ * @property {yLayer} layer - The parent layer of the entity.
+ */
+function yEntity(pSprite, pPosition, pLayer){
+	this.sprite = pSprite;
+	this.physModel = null;
+	this.position = pPosition;
+	this.rotation = 0;
+	this.layer = pLayer;
+
+	/** 
+	 * Updates the entity
+	 */
+	yEntity.prototype.update = function(){
+		if(this.physModel){
+			var position = this.physModel.GetBody().GetPosition();
+			this.position.x = position.x;
+			this.position.y = position.y;
+			this.rotation = this.physModel.GetBody().GetRotation();
+		}
+	}
+	
+	/**
+	 * Draws the entity
+	 */
+	yEntity.prototype.draw = function(){
+		var camera = this.layer.camera;
+		if(this.sprite != null){
+			ctx.save();
+			ctx.translate(camera.position.x + this.position.x, camera.position.y + this.position.y);
+      		ctx.rotate(this.rotation);
+			ctx.drawImage(this.sprite, -this.sprite.width/2, -this.sprite.height/2);
+			ctx.restore();
+		}
+	}
+	
+	/**
+	 * Adds a physics object to the entity and the physics world of the layer
+	 */
+	yEntity.prototype.addPhysModel = function(pBody, pFixture){
+		pBody.position.Set(this.position.x, this.position.y);
+		this.physModel = this.layer.physWorld.CreateBody(pBody).CreateFixture(pFixture);
 	}
 };
 
@@ -608,21 +695,31 @@ var canvas;
 var ctx;
 var delta = 0;
 var input;
-var debug = true;
-
 /**
  * @classDesc The main game class contains the main loop, creates the canvas, updates the delta time, the input manager and calls the gamestate's update and draw methods.
  * 
  * @author Leo Zurbriggen
  * @constructor
+ * @param {yGameState} pGameState - The initial gamestate.
+ * @param {Boolean} pDebug - (optional) Tells if you're in debug mode.
  * @property {yGameState} gameState - The active gamestate.
+ * @property {Boolean} debugging - If in debug mode.
  */
 
-var yGame = function(){
-	var that = this;
+function yGame(pGameState, pDebug){
+	this.gameState = pGameState;
+	this.debugging = (pDebug == true ? true : false);
+	
 	var lastFrame = Date.now();
 	
-	that.gameState = new yGameState();
+	/**
+	 * Add the canvas
+	 * @param {yVector} pDimensions - The width and height of the Canvas; If null: window-height/width.
+	 * @param {Element} pParent - (optional) The parent html-Element to add the canvas to, Default: window.
+	 */
+	yGame.prototype.addCanvas = function(pDimensions, pParent){
+		
+	}
 	
 	/**
 	 * Main update method
@@ -633,7 +730,7 @@ var yGame = function(){
 		delta = (now - lastFrame)/1000;
 		lastFrame = now;
 		
-		that.gameState.update();
+		this.gameState.update();
 		
 		input.update();
 	}
@@ -643,19 +740,19 @@ var yGame = function(){
 	 */
 	yGame.prototype.draw = function(){
 		ctx.fillStyle = "rgb(255, 255, 255)";
-		ctx.fillRect(0, 0, canvas.width, (canvas.width/16*9));
+		ctx.fillRect(0, 0, canvas.width, canvas.height);  //(canvas.width/16*9)
 		
 		// Draw next frame when Browser is ready
-		requestAnimFrame(that.draw);
+		requestAnimFrame(this.draw);
 		
-		that.gameState.draw();
+		this.gameState.draw();
 	}
 	
 	// Begin updateing the game logic
-	setInterval(that.update, 1);
+	setInterval(this.update, 1);
 
 	// Begin drawing the game graphics
-	window.requestAnimFrame(that.draw);
+	window.requestAnimFrame(this.draw);
 }
 
 // Create canvas and add it to the dom when loading is completed
@@ -668,8 +765,10 @@ window.addEventListener("load", function(){
 	
 	input = new yInput();
 	
-	// Create new game instance
-	game = new yGame();
+	// Fires the ready-event
+	var event = new CustomEvent("YetiJSReady", { cancelable: false });  
+	window.dispatchEvent(event);  
+	
 }, false);
 
 /**
@@ -679,24 +778,16 @@ window.addEventListener("load", function(){
  * @constructor
  * @property {yLayer[]} layers - An array that stores every layer of the gamestate.
  */
-var yGameState = function(){
-	var that = this;
-	
-	that.layers = new Array();
-	
-	that.layer1 = new yLayer();
-	that.layer1.active = true;
-	
-	that.layers.push(that.layer1);
+function yGameState(){
+	this.layers = [];
 	
 	/**
 	 * Updates game state
 	 */
 	yGameState.prototype.update = function(){
-		for(var i = 0; i < that.layers.length; i++)
-		{
-			if(that.layers[i].active){
-				that.layers[i].update();
+		for(var i = 0; i < this.layers.length; i++){
+			if(this.layers[i].active){
+				this.layers[i].update();
 			}
 		}
 	}
@@ -705,46 +796,14 @@ var yGameState = function(){
 	 * Draws game state
 	 */
 	yGameState.prototype.draw = function(){
-		for(var i = 0; i < that.layers.length; i++)
-		{
-			if(that.layers[i].active){
-				that.layers[i].draw();
+		for(var i = 0; i < this.layers.length; i++){
+			if(this.layers[i].active){
+				this.layers[i].draw();
 			}
 		}
 	}
 };
 
-
-/**
- * @classdesc A layer handles the game functionality and should be dedicated to one task (i.E. user inferface/menu/actual game/...), it has to be inherited and attached to a specific gamestate.
- * 
- * @author Leo Zurbriggen
- * @constructor
- * @property {Boolean} active - Checks if the layer is active.
- * @property {yCamera} camera - The active camera.
- */
-var yLayer = function(){
-	var that = this;
-	that.active = false;
-	
-	that.camera = new yCamera(new yVector(0.5, 0.5));
-	
-	/**
-	 * Updates layer
-	 */
-	yLayer.prototype.update = function(){
-		var that = this;
-		
-	}
-	
-	/**
-	 * Draws layer
-	 */
-	yLayer.prototype.draw = function(){
-		var that = this;
-		
-	}
-};
 
 /**
  * @classdesc The input manager handles key-, mouse- and touch-events, saves the active keystates and provides methods to check for events.
@@ -862,139 +921,137 @@ var yLayer = function(){
  * @property {Float} orientationBeta - The beta orientation of the device.
  * @property {Float} orientationGamma - The gamma orientation of the device.
  */
-var yInput = function() {
-	var that = this;
+function yInput() {
+	this.keyState = [];
+	this.lastKeyState = [];
 
-	that.keyState = [];
-	that.lastKeyState = [];
-
-	that.touches = [];
-	that.lastTouches = [];
+	this.touches = [];
+	this.lastTouches = [];
 
 	for (var i = 0; i < 10; i++) {
-		that.touches[i] = new yTouch();
+		this.touches[i] = new yTouch();
 	}
 
-	that.mousePosition = new yVector(-1, -1);
+	this.mousePosition = new yVector(-1, -1);
 
 	for (var i = 0; i < 300; i++) {
-		that.keyState[i] = false;
-		that.lastKeyState[i] = false;
+		this.keyState[i] = false;
+		this.lastKeyState[i] = false;
 	}
 
-	that.MOUSELEFT = 0;
-	that.MOUSERIGHT = 2;
-	that.MOUSEMIDDLE = 1;
-	that.BACKSPACE = 8;
-	that.TAB = 9;
-	that.ENTER = 13;
-	that.SHIFT = 16;
-	that.CTRL = 17;
-	that.ALT = 18;
-	that.PAUSE = 19;
-	that.CAPS = 20;
-	that.ESCAPE = 27;
-	that.SPACE = 32;
-	that.PAGEUP = 33;
-	that.PAGEDOWN = 34;
-	that.END = 35;
-	that.HOME = 36;
-	that.LEFT = 37;
-	that.UP = 38;
-	that.RIGHT = 39;
-	that.DOWN = 40;
-	that.INSERT = 45;
-	that.DELETE = 46;
-	that.ZERO = 48;
-	that.ONE = 49;
-	that.TWO = 50;
-	that.THREE = 51;
-	that.FOUR = 52;
-	that.FIVE = 53;
-	that.SIX = 54;
-	that.SEVEN = 55;
-	that.EIGHT = 56;
-	that.NINE = 57;
-	that.A = 65;
-	that.B = 66;
-	that.C = 67;
-	that.D = 68;
-	that.E = 69;
-	that.F = 70;
-	that.G = 71;
-	that.H = 72;
-	that.I = 73;
-	that.J = 74;
-	that.K = 75;
-	that.L = 76;
-	that.M = 77;
-	that.N = 78;
-	that.O = 79;
-	that.P = 80;
-	that.Q = 81;
-	that.R = 82;
-	that.S = 83;
-	that.T = 84;
-	that.U = 85;
-	that.V = 86;
-	that.W = 87;
-	that.X = 88;
-	that.Y = 89;
-	that.Z = 90;
-	that.WINDOWsLEFT = 91;
-	that.WINDOWSRIGHT = 92;
-	that.SELECT = 93;
-	that.NUMZERO = 96;
-	that.NUMONE = 97;
-	that.NUMTWO = 98;
-	that.NUMTHREE = 99;
-	that.NUMFOUR = 100;
-	that.NUMFIVE = 101;
-	that.NUMSIX = 102;
-	that.NUMSEVEN = 103;
-	that.NUMEIGHT = 104;
-	that.NUMNINE = 105;
-	that.MULTIPLY = 106;
-	that.ADD = 107;
-	that.SUBTRACT = 109;
-	that.DECIMALPOINT = 110;
-	that.DIVIDE = 111;
-	that.F1 = 112;
-	that.F2 = 113;
-	that.F3 = 114;
-	that.F4 = 115;
-	that.F5 = 116;
-	that.F6 = 117;
-	that.F7 = 118;
-	that.F8 = 119;
-	that.F9 = 120;
-	that.F10 = 121;
-	that.F11 = 122;
-	that.F12 = 123;
-	that.NUMLOCK = 144;
-	that.SCROLLLOCK = 145;
-	that.SEMICOLON = 186;
-	that.EQUALSIGN = 187;
-	that.COMMA = 188;
-	that.DASH = 189;
-	that.PERIOD = 190;
-	that.FORWARDSLASH = 191;
-	that.GRAVEACCENT = 192;
-	that.OPENBRACKET = 219;
-	that.BACKSLASH = 220;
-	that.CLOSEBRACKET = 221;
-	that.SINGLEQUOTE = 222;
+	this.MOUSELEFT = 0;
+	this.MOUSERIGHT = 2;
+	this.MOUSEMIDDLE = 1;
+	this.BACKSPACE = 8;
+	this.TAB = 9;
+	this.ENTER = 13;
+	this.SHIFT = 16;
+	this.CTRL = 17;
+	this.ALT = 18;
+	this.PAUSE = 19;
+	this.CAPS = 20;
+	this.ESCAPE = 27;
+	this.SPACE = 32;
+	this.PAGEUP = 33;
+	this.PAGEDOWN = 34;
+	this.END = 35;
+	this.HOME = 36;
+	this.LEFT = 37;
+	this.UP = 38;
+	this.RIGHT = 39;
+	this.DOWN = 40;
+	this.INSERT = 45;
+	this.DELETE = 46;
+	this.ZERO = 48;
+	this.ONE = 49;
+	this.TWO = 50;
+	this.THREE = 51;
+	this.FOUR = 52;
+	this.FIVE = 53;
+	this.SIX = 54;
+	this.SEVEN = 55;
+	this.EIGHT = 56;
+	this.NINE = 57;
+	this.A = 65;
+	this.B = 66;
+	this.C = 67;
+	this.D = 68;
+	this.E = 69;
+	this.F = 70;
+	this.G = 71;
+	this.H = 72;
+	this.I = 73;
+	this.J = 74;
+	this.K = 75;
+	this.L = 76;
+	this.M = 77;
+	this.N = 78;
+	this.O = 79;
+	this.P = 80;
+	this.Q = 81;
+	this.R = 82;
+	this.S = 83;
+	this.T = 84;
+	this.U = 85;
+	this.V = 86;
+	this.W = 87;
+	this.X = 88;
+	this.Y = 89;
+	this.Z = 90;
+	this.WINDOWsLEFT = 91;
+	this.WINDOWSRIGHT = 92;
+	this.SELECT = 93;
+	this.NUMZERO = 96;
+	this.NUMONE = 97;
+	this.NUMTWO = 98;
+	this.NUMTHREE = 99;
+	this.NUMFOUR = 100;
+	this.NUMFIVE = 101;
+	this.NUMSIX = 102;
+	this.NUMSEVEN = 103;
+	this.NUMEIGHT = 104;
+	this.NUMNINE = 105;
+	this.MULTIPLY = 106;
+	this.ADD = 107;
+	this.SUBTRACT = 109;
+	this.DECIMALPOINT = 110;
+	this.DIVIDE = 111;
+	this.F1 = 112;
+	this.F2 = 113;
+	this.F3 = 114;
+	this.F4 = 115;
+	this.F5 = 116;
+	this.F6 = 117;
+	this.F7 = 118;
+	this.F8 = 119;
+	this.F9 = 120;
+	this.F10 = 121;
+	this.F11 = 122;
+	this.F12 = 123;
+	this.NUMLOCK = 144;
+	this.SCROLLLOCK = 145;
+	this.SEMICOLON = 186;
+	this.EQUALSIGN = 187;
+	this.COMMA = 188;
+	this.DASH = 189;
+	this.PERIOD = 190;
+	this.FORWARDSLASH = 191;
+	this.GRAVEACCENT = 192;
+	this.OPENBRACKET = 219;
+	this.BACKSLASH = 220;
+	this.CLOSEBRACKET = 221;
+	this.SINGLEQUOTE = 222;
 
-	that.orientationGamma = 0;
-	that.orientationBeta = 0;
-	that.orientationAlpha = 0;
+	this.orientationGamma = 0;
+	this.orientationBeta = 0;
+	this.orientationAlpha = 0;
 
 	/**
 	 * Returns true, if the key with given keyCode is pressed, false otherwise.
  	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isDown = function(pKeyCode) {
-		return that.keyState[pKeyCode];
+		return this.keyState[pKeyCode];
 	};
 
 	/**
@@ -1002,7 +1059,7 @@ var yInput = function() {
  	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isUp = function(pKeyCode) {
-		return !that.keyState[pKeyCode];
+		return !this.keyState[pKeyCode];
 	};
 
 	/**
@@ -1010,7 +1067,7 @@ var yInput = function() {
  	 * @param {Integer} pKeyCode - The keycode.
 	 */
 	yInput.prototype.isReleased = function(pKeyCode) {
-		return (!that.keyState[pKeyCode] && that.lastKeyState[pKeyCode]);
+		return (!this.keyState[pKeyCode] && this.lastKeyState[pKeyCode]);
 	};
 
 	/**
@@ -1018,13 +1075,13 @@ var yInput = function() {
  	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaHovered = function(pArea) {
-		if (that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
+		if (this.mousePosition.x > pArea.upperBound.x && this.mousePosition.y > pArea.upperBound.y && this.mousePosition.x < pArea.lowerBound.x && this.mousePosition.y < pArea.lowerBound.y) {
 			return true;
 		}
-		for (var i = 0; i < that.touches.length; i++) {
-			var touch = that.touches[i];
+		for (var i = 0; i < this.touches.length; i++) {
+			var touch = this.touches[i];
 			if (touch.isTouched) {
-				if (touch.position.x > pArea.topleft.x && touch.position.y > pArea.topleft.y && touch.position.x < pArea.botright.x && touch.position.y < pArea.botright.y) {
+				if (touch.position.x > pArea.upperBound.x && touch.position.y > pArea.upperBound.y && touch.position.x < pArea.lowerBound.x && touch.position.y < pArea.lowerBound.y) {
 					return true;
 				}
 			}
@@ -1037,13 +1094,13 @@ var yInput = function() {
  	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaPressed = function(pArea) {
-		if (that.isDown(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
+		if (this.isDown(this.MOUSELEFT) && this.mousePosition.x > pArea.upperBound.x && this.mousePosition.y > pArea.upperBound.y && this.mousePosition.x < pArea.lowerBound.x && this.mousePosition.y < pArea.lowerBound.y) {
 			return true;
 		}
-		for (var i = 0; i < that.touches.length; i++) {
-			var touch = that.touches[i];
+		for (var i = 0; i < this.touches.length; i++) {
+			var touch = this.touches[i];
 			if (touch && touch.isTouched) {
-				if (touch.position.x > pArea.topleft.x && touch.position.y > pArea.topleft.y && touch.position.x < pArea.botright.x && touch.position.y < pArea.botright.y) {
+				if (touch.position.x > pArea.upperBound.x && touch.position.y > pArea.upperBound.y && touch.position.x < pArea.lowerBound.x && touch.position.y < pArea.lowerBound.y) {
 					return true;
 				}
 			}
@@ -1056,11 +1113,11 @@ var yInput = function() {
  	 * @param {yArea} pArea - The area to check for.
 	 */
 	yInput.prototype.isAreaReleased = function(pArea) {
-		if (that.isReleased(that.MOUSELEFT) && that.mousePosition.x > pArea.topleft.x && that.mousePosition.y > pArea.topleft.y && that.mousePosition.x < pArea.botright.x && that.mousePosition.y < pArea.botright.y) {
+		if (this.isReleased(this.MOUSELEFT) && this.mousePosition.x > pArea.topleft.x && this.mousePosition.y > pArea.topleft.y && this.mousePosition.x < pArea.botright.x && this.mousePosition.y < pArea.botright.y) {
 			return true;
 		}
-		for (var i = 0; i < that.touches.length; i++) {
-			var touch = that.touches[i];
+		for (var i = 0; i < this.touches.length; i++) {
+			var touch = this.touches[i];
 			if (touch.wasTouched && !touch.isTouched) {
 				if (touch.position.x > pArea.topleft.x && touch.position.y > pArea.topleft.y && touch.position.x < pArea.botright.x && touch.position.y < pArea.botright.y) {
 					return true;
@@ -1071,37 +1128,37 @@ var yInput = function() {
 	}
 
 	yInput.prototype.onKeydown = function(event) {
-		that.keyState[event.keyCode] = true;
+		this.keyState[event.keyCode] = true;
 	};
 
 	yInput.prototype.onKeyup = function(event) {
-		that.keyState[event.keyCode] = false;
+		this.keyState[event.keyCode] = false;
 	};
 
 	yInput.prototype.onMouseDown = function(event) {
-		that.keyState[event.button] = true;
+		this.keyState[event.button] = true;
 		event.preventDefault();
 	};
 
 	yInput.prototype.onMouseUp = function(event) {
-		that.keyState[event.button] = false;
+		this.keyState[event.button] = false;
 		event.preventDefault();
 	};
 
 	yInput.prototype.onMouseMove = function(event) {
-		that.mousePosition.x = event.clientX;
-		that.mousePosition.y = event.clientY;
+		this.mousePosition.x = event.clientX;
+		this.mousePosition.y = event.clientY;
 	};
 
 	yInput.prototype.onTouchStart = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
-			if (that.touches[id] == null) {
-				that.touches[id] = new yTouch();
+			if (this.touches[id] == null) {
+				this.touches[id] = new yTouch();
 			}
-			that.touches[id].isTouched = true;
+			this.touches[id].isTouched = true;
 			if (i == 0) {
-				that.keyState[that.MOUSELEFT] = true;
+				this.keyState[this.MOUSELEFT] = true;
 			}
 		}
 		event.preventDefault();
@@ -1110,12 +1167,12 @@ var yInput = function() {
 	yInput.prototype.onTouchEnd = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
 			var id = event.changedTouches[i].identifier;
-			if (that.touches[id] == null) {
-				that.touches[id] = new yTouch();
+			if (this.touches[id] == null) {
+				this.touches[id] = new yTouch();
 			}
-			that.touches[id].isTouched = false;
+			this.touches[id].isTouched = false;
 			if (i == 0) {
-				that.keyState[that.MOUSELEFT] = false;
+				this.keyState[this.MOUSELEFT] = false;
 			}
 		}
 		event.preventDefault();
@@ -1123,11 +1180,11 @@ var yInput = function() {
 
 	yInput.prototype.onTouchMove = function(event) {
 		for (var i = 0; i < event.changedTouches.length; i++) {
-			that.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
-			that.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
+			this.touches[event.changedTouches[i].identifier].position.x = event.changedTouches[i].pageX;
+			this.touches[event.changedTouches[i].identifier].position.y = event.changedTouches[i].pageY;
 			if (i == 0) {
-				that.mousePosition.x = event.changedTouches[i].pageX;
-				that.mousePosition.y = event.changedTouches[i].pageY;
+				this.mousePosition.x = event.changedTouches[i].pageX;
+				this.mousePosition.y = event.changedTouches[i].pageY;
 			}
 		}
 		event.preventDefault();
@@ -1137,141 +1194,295 @@ var yInput = function() {
 	 * Copies the active keystate into the lastKeyState-variable and updates touch objects
 	 */
 	yInput.prototype.update = function() {
-		that.lastKeyState = deepCopy(that.keyState);
-		for (var i = 0; i < that.lastTouches.length; i++) {
-			that.touches[i].update();
+		this.lastKeyState = deepCopy(this.keyState);
+		for (var i = 0; i < this.lastTouches.length; i++) {
+			this.touches[i].update();
 		}
 	}
 
 	yInput.prototype.handleOrientation = function(event) {
-		that.orientationGamma = event.gamma;
+		this.orientationGamma = event.gamma;
 		// used as x gravity
-		that.orientationBeta = event.beta;
+		this.orientationBeta = event.beta;
 		// used as y gravity
-		that.orientationAlpha = event.alpha;
+		this.orientationAlpha = event.alpha;
 	}
 
-	window.addEventListener('keyup', that.onKeyup, false);
-	window.addEventListener('keydown', that.onKeydown, false);
-	canvas.addEventListener("touchstart", that.onTouchStart, true);
-	canvas.addEventListener("touchmove", that.onTouchMove, true);
-	canvas.addEventListener("touchend", that.onTouchEnd, true);
-	canvas.addEventListener("touchleave", that.onTouchEnd, true);
-	canvas.addEventListener("touchcancel", that.onTouchEnd, true);
-	canvas.addEventListener("mousedown", that.onMouseDown, true);
-	canvas.addEventListener("mousemove", that.onMouseMove, true);
-	canvas.addEventListener("mouseup", that.onMouseUp, true);
-	window.addEventListener('deviceorientation', that.handleOrientation, false);
+	window.addEventListener('keyup', this.onKeyup, false);
+	window.addEventListener('keydown', this.onKeydown, false);
+	canvas.addEventListener("touchstart", this.onTouchStart, true);
+	canvas.addEventListener("touchmove", this.onTouchMove, true);
+	canvas.addEventListener("touchend", this.onTouchEnd, true);
+	canvas.addEventListener("touchleave", this.onTouchEnd, true);
+	canvas.addEventListener("touchcancel", this.onTouchEnd, true);
+	canvas.addEventListener("mousedown", this.onMouseDown, true);
+	canvas.addEventListener("mousemove", this.onMouseMove, true);
+	canvas.addEventListener("mouseup", this.onMouseUp, true);
+	window.addEventListener('deviceorientation', this.handleOrientation, false);
 };
 
 
 /**
- * @classdesc Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game
+ * @classdesc A layer handles the game functionality and should be dedicated to one task (i.E. user inferface/menu/actual game/...), it has to be inherited and attached to a specific gamestate.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @desc Creates a new entity from following parameters:
- * @param {Image} pSprite - The sprite of the entity.
- * @param {yVector} pPosition - The position of the entity.
- * @param {yLayer} pParent - The parent layer of the entity.
- * @property {Image} sprite - The sprite of the entity.
- * @property {yPhsicalObject} physModel - The phyiscal object of the entity.
- * @property {yVector} position - The position of the entity.
- * @property {yLayer} parent - The parent layer of the entity.
+ * @param {Boolean} pInactive - (optional) Tells that the layer is inactive.
+ * @property {Boolean} active - Checks if the layer is active.
+ * @property {yCamera} camera - The active camera.
  */
-var yEntity = function(pSprite, pPosition, pParent){
-	var that = this;
-	that.sprite = pSprite;
-	that.physModel = null;
-	that.position = pPosition;
-	that.parent = pParent;
-
-	/** 
-	 * Updates the entity
+function yLayer(pInactive){
+	this.active = (pInactive == true ? false : true);
+	this.camera = new yCamera(new yVector(0.5, 0.5));
+	this.physWorld = null;
+	this.physDelta = 0;
+	this.entities = [];
+	
+	/**
+	 * Updates layer
 	 */
-	yEntity.prototype.update = function(){
-		var that = this;
-		if(that.physModel){
-			for(var i = 0; i < that.parent.entities.length; i++){
-				if(that.physModel != that.parent.entities[i].physModel){
-					that.physModel.checkCollision(that.parent.entities[i].physModel);
-				}
-			}
-			that.position.x = that.physModel.position.x;
-			that.position.y = that.physModel.position.y;
-			that.physModel.update();
+	yLayer.prototype.update = function(){
+		for(var i = 0; i < this.entities.length; i++){
+			this.entities[i].update();
+		}
+		this.updatePhysics();
+	}
+	
+	/**
+	 * Draws layer
+	 */
+	yLayer.prototype.draw = function(){
+		for(var i = 0; i < this.entities.length; i++){
+			this.entities[i].draw();
 		}
 	}
 	
 	/**
-	 * Draws the entity
+	 * Updates the physics world
+	 */
+	yLayer.prototype.updatePhysics = function(){
+		if(this.physWorld){
+			this.physDelta += delta;
+			if(this.physDelta > 1/60){
+				this.physDelta = 0;
+				this.physWorld.Step(1/60, 8, 3);
+				this.physWorld.ClearForces();
+			}
+		}
+	}
+};
+
+/**
+ * @classdesc The yObjectPool is a generic object pool used to minimize garbage creation on runtime.
+ * 
+ * @author Leo Zurbriggen
+ * @constructor
+ * @param {Class} pObjectClass - The class of the objects in the pool.
+ * @param {Integer} pSize - The initial size of the pool.
+ * @param {Parameters} arguments - (optional) Any arguments that are needed to create an object of the class.
+ * @property {Class} objectClass - The class of the objects in the pool.
+ * @property {Object[]} freeObjects - The array containing all free objects at the time.
+ * @property {Object[]} activeObjects - The array containing all objects that are in use at the time.
+ */
+function yObjectPool(pObjectClass, pSize){
+	this.objectClass = pObjectClass;
+	this.freeObjects = [];
+	this.activeObjects = [];
+	
+	for(var i = 0; i < pSize; i++){
+		if(arguments.length > 2){
+			this.freeObjects[i] = new this.objectClass.apply(arguments.split(2)[1]);
+		}else{
+			this.freeObjects[i] = new this.objectClass.call();
+		}
+	}
+	
+	/**
+	 * Gets a free item out off the pool and adds it to the active ones, creates a new one if there are no free objects.
+	 * @param {Parameters} arguments - (optional) Any arguments that are needed to create an object of the class.
+	 */
+	yObjectPool.prototype.get = function(){
+		if(this.freeObjects.length > 0){			
+			var newObject = this.pop(freeObjects);
+			
+			if(arguments.length > 0){
+				newObject.apply(newObject, arguments);
+			}else{
+				newObject.call(newObject);
+			}
+			this.push(this.activeObjects, newObject);
+			return newObject;
+		}else{
+			var newObject;
+			if(arguments.length > 0){
+				newObject = new this.objectClass.apply(arguments);
+			}else{
+				newObject = new this.objectClass.call();
+			}
+			this.push(this.activeObjects, newObject);
+			return newObject;
+		}
+	}
+	
+	/**
+	 * Frees an object by adding it back to free objects and removing it from the active ones.
+ 	 * @param {Object} pObject - The object to free.
+	 */
+	yObjectPool.prototype.free = function(pObject){
+		this.push(this.freeObjects, pObject);
+		this.slice(this.activeObjects, this.activeObjects.indexOf(pObject));
+	}
+	
+	/**
+	 * Gets the last item and removes it from the array
+ 	 * @param {Object[]} pArray - The array to get the last item from.
+	 */
+	yObjectPool.prototype.pop = function(pArray){
+		var popObject = pArray[pArray.length-1];
+		this.slice(pArray, pArray.length-1);
+		return popObject;
+	}
+	
+	/**
+	 * Deletes an index out of the array.
+	 * @param {Object[]} pArray - The array.
+	 * @param {Object} pIndex - The index.
+	 */
+	yObjectPool.prototype.slice = function(pArray, pIndex){
+		for (var i = pIndex, length = pArray.length - 1; i < length; i++){
+			pArray[i] = pArray[i + 1];
+		}
+		pArray.length = length;
+	}
+	
+	/**
+	 * Adds an object at the end of an array.
+	 * @param {Object[]} pArray - The array.
+	 * @param {Object} pObject - The object to push.
+	 */
+	yObjectPool.prototype.push = function(pArray, pObject){
+		pArray[pArray.length] = pObject;
+	}
+}
+
+/**
+ * @classdesc 
+ * 
+ * @author Leo Zurbriggen
+ * @constructor
+ * @param {yVector} pPosition - The position of the polygon.
+ * @property {yVector} center - The center of the polygon, used for rotating operations etc.
+ * @property {yVector} position - The position of the polygon.
+ * @property {yVector[]} points - The position of the polygon.
+ * @property {yVector[]} edges - The position of the polygon.
+ * @property {String} lineWidth - User for drawing the polygon.
+ * @property {String} strokeStyle - User for drawing the polygon.
+ * @property {String} fillStyle - User for drawing the polygon.
+ */
+function yPolygon(pPosition) {
+	this.center = new yVector(0, 0);
+	this.position = pPosition;
+	this.points = [];
+	this.edges = [];
+	this.lineWidth = "1";
+	this.strokeStyle = "rgba(20, 20, 20, 0.7)";
+	this.fillStyle = "rgba(30, 30, 30, 0.5)";
+
+	/**
+	 * Updates polygon
+	 */
+	yPolygon.prototype.update = function() {
+
+	}
+	
+	/**
+	 * Returns absolute positions of points
+	 */
+	yPolygon.prototype.getAbsoluteCenter = function() {
+		return new yVector(this.position.x + this.center.x, this.position.y + this.center.y);
+	}
+
+	/**
+	 * Returns absolute positions of points
+	 */
+	yPolygon.prototype.getAbsolutePoints = function() {
+		var points = [];
+		if (this.points.length > 1) {
+			for (var i = 0; i < this.points.length; i++) {
+				points[i] = new yVector(this.position.x + this.points[i].x, this.position.y + this.points[i].y);
+			}
+		}
+		return points;
+	}
+	
+	/**
+	 * Returns absolute positions of points
+	 */
+	yPolygon.prototype.setEdges = function() {
+		var edges = []
+		for (var i = 1; i < this.points.length; i++) {
+			this.edges[i-1] = new yVector(this.position.x + (this.points[i].x), this.position.y + (this.points[i].y));
+		}
+	}
+
+	/**
+	 * Draws polygon for debugging purposes
 	 * @param {yCamera} pCamera - The camera to draw the position relative to.
 	 */
-	yEntity.prototype.draw = function(pCamera){
-		var that = this;
-		if(that.sprite != null){
-			ctx.drawImage(that.sprite, pCamera.position.x + that.position.x - that.sprite.width/2, pCamera.position.y + that.position.y - that.sprite.height/2);
+	yPolygon.prototype.draw = function(pCamera) {
+		ctx.beginPath();
+		ctx.lineWidth = this.lineWidth;
+		ctx.strokeStyle = this.strokeStyle;
+		ctx.fillStyle = this.fillStyle;
+		var points = this.getAbsolutePoints();
+		if (points.length > 1) {
+			ctx.moveTo(pCamera.position.x + points[0].x, pCamera.position.y + points[0].y);
+			for (var i = 1; i < points.length; i++) {
+				ctx.lineTo(pCamera.position.x + points[i].x, pCamera.position.y + points[i].y);
+			}
 		}
-		if(that.physModel && debug){
-			that.physModel.draw(pCamera);
-		}
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
 	}
-};
+
+}
 
 
 /**
- * @classdesc The camera provides functionality to handle different viewports, scrolling, zooming and so forth.
+ * @classdesc The sound class should be used to play a short sound file.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @property {yVector} position - The position of the camera.
- * @param {yVector} pPosition - The position of the camera.
+ * @param {String} pFileName - The file name of the sound.
+ * @param {Boolean} pFallback - (optional) Tells, if the class should get the file (ogg or mp3) depending on the browser.
  */
-var yCamera = function(pPosition){
-	var that = this;
-	that.position = pPosition;
+function ySound(pFileName, pFallback){
 	
-	var height = canvas.height/(canvas.width/16*9);
-	ctx.scale(1, height);
+	/**
+	 * Loads the audio file that can be played by the browser
+	 */
+	if(pFallback == true){
+		if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
+			this.audio = new Audio(pFileName + ".ogg");
+		}else{
+			this.audio = new Audio(pFileName + ".mp3");
+		}
+	}
 	
-	// var width = (canvas.height/9*16);
-	// ctx.scale(1, 1);
-	
-	// var classes = [];
-	// for(var i in window){
-		// if (window.hasOwnProperty(i) && typeof window[i] === 'function'){
-			// if(!i.constructor.toString().match("/\[native code\]/") && i.match("^y")){
-				// classes.push(i);
-			// }
-		// }
-	// }
-	// for(var o = 0; o < classes.length; ){
-		// o++;
-		// if(o != 5 && o != 4 && o != 3){
-			// var classs = classes[i];
-		// var entity = new window[classes[o]];
-		// console.log(classes[o]);
-		// }
-		
-		//entity = classes[i].prototype;
-		// for(var m in entity){
-			// console.log(window[i]+ ": " +m);
-			// if (typeof entity[m] != "function") {
-		        // console.log(window[classes[i]]+ ": " +m);
-		    // }
-		// }
-	// }
-	
-	
-	//ctx.translate(0, 0);
-	
+	/**
+	 * Plays the sound
+	 */
+	ySound.prototype.play = function(){
+		this.audio.play();
+	}
 	
 	
 	/**
-	 * Updates camera
+	 * Pauses the sound
 	 */
-	yCamera.prototype.update = function(){
-		var that = this;
+	ySound.prototype.pause = function(){
+		this.audio.pause();
 	}
 };
 
@@ -1283,11 +1494,9 @@ var yCamera = function(pPosition){
  * @param {String} pSprite - The path to an image file.
  * @property {Image} sprite - The image.
  */
-var ySprite = function(pSprite){
-	var that = this;
-	
-	that.sprite = new Image();
-	that.sprite.src = pSprite;
+function ySprite(pSprite){
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
 };
 
 /**
@@ -1302,14 +1511,13 @@ var ySprite = function(pSprite){
  * @property {Integer} rows - The number of rows of the spritesheet.
  * @property {String} sprite - The path to an image file.
  */
-var ySpriteSheet = function(pCols, pRows, pSprite){
-	var that = this;
-	that.cols = pCols;
-	that.rows = pRows;
-	that.sprite = new Image();
-	that.sprite.src = pSprite;
-	that.frameWidth = that.sprite.width / that.cols;
-	that.frameHeight = that.sprite.height / that.rows;
+function ySpriteSheet(pCols, pRows, pSprite){
+	this.cols = pCols;
+	this.rows = pRows;
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
+	this.frameWidth = this.sprite.width / this.cols;
+	this.frameHeight = this.sprite.height / this.rows;
 	
 	/**
 	 * Returns a vector with the position of the frame with the given ID on the spritesheet in pixels
@@ -1333,67 +1541,6 @@ var ySpriteSheet = function(pCols, pRows, pSprite){
 
 
 /**
- * @classdesc The animation-object saves all the information and provides all methods to play sprite animations
- * 
- * @author Leo Zurbriggen
- * @constructor
- * @param {ySpriteSheet} pSpriteSheet - The spritesheet.
- * @param {Integer} pFrameTime - The length in milliseconds a frame should be displayed.
- * @param {Integer} pFirstFrame - The ID on the spritesheet where the animation should begin.
- * @param {Integer} pLastFrame - The ID on the spritesheet where the animation should end.
- * @param {Boolean} pLoop - (optional) Tells, if the animation should loop (Default: false).
- * @property {ySpriteSheet} spriteSheet - The spritesheet.
- * @property {Integer} frameTime - The length in milliseconds a frame is displayed.
- * @property {Integer} firstFrame - The ID on the spritesheet where the animation begins.
- * @property {Integer} lastFrame - The ID on the spritesheet where the animation ends.
- * #property {Integer} activeFrame - The ID of the active frame.
- * @property {Boolean} loop - Tells, if the animation loops.
- * @property {Boolean} stopped - Tells, if the animation is running.
- * @property {Integer} lastFrameTime - Used to determine if the next frame should be drawn.
- */
-var yAnimation = function(pSpriteSheet, pFrameTime, pFirstFrame, pLastFrame, pLoop){
-	var that = this;
-	that.spriteSheet = pSpriteSheet;
-	that.frameTime = pFrameTime;
-	that.firstFrame = pFirstFrame;
-	that.lastFrame = pLastFrame;
-	that.activeFrame = that.firstFrame;
-	that.loop = (pLoop ? pLoop : false);
-	that.stopped = false;
-	that.lastFrameTime = Date.now();
-	
-	/**
-	 * Draws the animation
-	 * @param {yCamera} pCamera - The camera.
-	 */
-	yAnimation.prototype.draw = function(pCamera){
-		if(Date.now() - this.lastFrameTime > this.frameTime){
-			this.lastFrameTime = Date.now();
-			if(this.activeFrame+1 > this.lastFrame){
-				if(this.loop){
-					this.activeFrame = this.firstFrame;
-				}else{
-					that.stopped = true;
-				}
-			}else{
-				this.activeFrame++;
-			}
-		}
-		this.spriteSheet.drawFrame(that.activeFrame, (position), pCamera);
-	}
-	
-	/**
-	 * Resets the active frame to the first one and starts the animation again
-	 */
-	yAnimation.prototype.reset = function(){
-		that.activeFrame = that.firstFrame;
-		that.lastFrameTime = Date.now();
-		that.stopped = false;
-	}
-};
-
-
-/**
  * @classdesc The tilemap contains an array with tile positions, a tileset to load the tiles from and functionality to draw them.
  * 
  * @author Leo Zurbriggen
@@ -1407,12 +1554,11 @@ var yAnimation = function(pSpriteSheet, pFrameTime, pFirstFrame, pLastFrame, pLo
  * @property {Integer} width - The width of the map.
  * @property {Integer} height - The height of the map.
  */
-var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
-	var that = this;
-	that.tileSet = pTileSet;
-	that.map = [];
-	that.width = pWidth;
-	that.height = pHeight;
+function yTileMap(pTileSet, pLayers, pWidth, pHeight){
+	this.tileSet = pTileSet;
+	this.map = [];
+	this.width = pWidth;
+	this.height = pHeight;
 	
 	/**
 	 * Initializes an empty map-array
@@ -1463,13 +1609,12 @@ var yTileMap = function(pTileSet, pLayers, pWidth, pHeight){
  * @property {Integer} width - The width of the tileset in tiles.
  * @property {Integer} height - The height of the tileset in tiles.
  */
-var yTileSet = function(pSprite, pTileSize){
-	var that = this;
-	that.sprite = new Image();
-	that.sprite.src = pSprite;
-	that.tileSize = pTileSize;
-	that.width = that.sprite.width / that.tileSize;
-	that.height = that.sprite.height / that.tileSize;
+function yTileSet(pSprite, pTileSize){
+	this.sprite = new Image();
+	this.sprite.src = pSprite;
+	this.tileSize = pTileSize;
+	this.width = this.sprite.width / this.tileSize;
+	this.height = this.sprite.height / this.tileSize;
 	
 	/**
 	 * Returns a vector with the position of the tile with the given ID on the tileset in pixels
@@ -1513,28 +1658,27 @@ var yTileSet = function(pSprite, pTileSize){
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
  * @property {Function} callback - (optional) The function that should be executed when the timer elapses.
  */
-var yTimer = function(pDuration, pCallback){
-	var that = this;
-	that.duration = pDuration;
-	that.startTime = Date.now();
-	that.remainingTime = Date.now();
-	that.paused = true;
-	that.elapsed = false;
-	that.callback = (pCallback ? pCallback : null);
+function yTimer(pDuration, pCallback){
+	this.duration = pDuration;
+	this.startTime = Date.now();
+	this.remainingTime = Date.now();
+	this.paused = true;
+	this.elapsed = false;
+	this.callback = (pCallback ? pCallback : null);
 
 	/**
 	 * Updates remaining time and checks if time is up
 	 */
 	yTimer.prototype.update = function(){
-		if(!that.paused){
-			that.remainingTime = Date.now() - that.startTime - that.duration;
+		if(!this.paused){
+			this.remainingTime = Date.now() - this.startTime - this.duration;
 			
 			if(remainingTime <= 0){
-				that.elapsed = true;
-				if(that.callback){
-					eval(that.callback);
+				this.elapsed = true;
+				if(this.callback){
+					eval(this.callback);
 				}
-				that.paused = true;
+				this.paused = true;
 			}
 		}
 	}
@@ -1543,54 +1687,51 @@ var yTimer = function(pDuration, pCallback){
 	 * Starts the timer
 	 */
 	yTimer.prototype.start = function(){
-		that.paused = false;
+		this.paused = false;
 	}
 	
 	/**
 	 * Pauses the timer
 	 */
 	yTimer.prototype.pause = function(){
-		that.paused = true;
+		this.paused = true;
 	}
 };
 
 
 /**
- * @classdesc The sound class should be used to play a short sound file.
+ * @classdesc The touch events save the state of a touch event. It is used by the input manager.
  * 
  * @author Leo Zurbriggen
  * @constructor
- * @param {String} pFileName - The file name of the sound.
- * @param {Boolean} pFallback - (optional) Tells, if the class should get the file (ogg or mp3) depending on the browser.
+ * @property {Boolean} isTouched - Tells, if the touch is active.
+ * @property {Boolean} wasTouched - Tells, if the touch was active last frame.
+ * @property {yVector} position - The position of the touch.
+ * @property {yVector} lastPosition - The position of the touch last frame.
+ * @property {Boolean} wasMoved - Tells, if the position of the touch changed from last frame.
  */
-var ySound = function(pFileName, pFallback){
-	var that = this;
+function yTouch(){
+	this.isTouched = false;
+	this.wasTouched = false;
+	this.position = new yVector(-1, -1);
+	this.lastPosition = new yVector(-1, -1);
+	this.wasMoved = false;
 	
 	/**
-	 * Loads the audio file that can be played by the browser
+	 * Updates attributes
 	 */
-	if(pFallback == true){
-		if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
-			this.audio = new Audio(pFileName + ".ogg");
+	yTouch.prototype.update = function(){
+		this.wasTouched = this.isTouched;
+		this.lastPosition = deepCopy(this.position);
+		if(this.position.x != this.lastPosition.x || this.position.y != this.lastPosition.y){
+			this.wasMoved = true;
 		}else{
-			this.audio = new Audio(pFileName + ".mp3");
+			this.wasMoved = false;
 		}
-	}
-	
-	/**
-	 * Plays the sound
-	 */
-	ySound.prototype.play = function(){
-		this.audio.play();
-	}
-	
-	
-	/**
-	 * Pauses the sound
-	 */
-	ySound.prototype.pause = function(){
-		this.audio.pause();
 	}
 };
 
 
+window.addEventListener("YetiJSReady", function(){
+game = new yGame(new yGameState());
+});
