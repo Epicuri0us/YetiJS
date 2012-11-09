@@ -1,5 +1,7 @@
 
 /**
+ * @class yCamera
+ * @augments Class
  * @classdesc The camera provides functionality to handle different viewports, scrolling, zooming and so forth.
  * 
  * @author Leo Zurbriggen
@@ -7,11 +9,13 @@
  * @property {yVector} position - The position of the camera.
  * @param {yVector} pPosition - The position of the camera.
  */
-function yCamera(pPosition){
-	this.position = pPosition;
-	
-	var height = canvas.height/(canvas.width/16*9);
-	//ctx.scale(1, height);
+var yCamera = Class.extend({
+	init: function(pPosition){
+		this.position = pPosition;
+		
+		var height = canvas.height/(canvas.width/16*9);
+		
+		//ctx.scale(1, height);
 	
 	// var width = (canvas.height/9*16);
 	// ctx.scale(1, 1);
@@ -43,12 +47,12 @@ function yCamera(pPosition){
 	
 	
 	//ctx.translate(0, 0);
-	
-	
+	},
 	
 	/**
 	 * Updates camera
+	 * @memberof yCamera
 	 */
-	yCamera.prototype.update = function(){
+	update: function(){
 	}
-};
+});

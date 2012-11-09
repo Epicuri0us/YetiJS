@@ -1,5 +1,7 @@
 
 /**
+ * @class yTouch
+ * @augments Class
  * @classdesc The touch events save the state of a touch event. It is used by the input manager.
  * 
  * @author Leo Zurbriggen
@@ -10,17 +12,20 @@
  * @property {yVector} lastPosition - The position of the touch last frame.
  * @property {Boolean} wasMoved - Tells, if the position of the touch changed from last frame.
  */
-function yTouch(){
-	this.isTouched = false;
-	this.wasTouched = false;
-	this.position = new yVector(-1, -1);
-	this.lastPosition = new yVector(-1, -1);
-	this.wasMoved = false;
+var yTouch = Class.extend({
+	init: function(){
+		this.isTouched = false;
+		this.wasTouched = false;
+		this.position = new yVector(-1, -1);
+		this.lastPosition = new yVector(-1, -1);
+		this.wasMoved = false;
+	},
 	
 	/**
 	 * Updates attributes
+	 * @memberof yTouch
 	 */
-	yTouch.prototype.update = function(){
+	update: function(){
 		this.wasTouched = this.isTouched;
 		this.lastPosition = deepCopy(this.position);
 		if(this.position.x != this.lastPosition.x || this.position.y != this.lastPosition.y){
@@ -29,4 +34,4 @@ function yTouch(){
 			this.wasMoved = false;
 		}
 	}
-};
+});

@@ -14,6 +14,12 @@
 </head>
 
 <body>
+<header class="main">
+<h1>Yeti<span class="bold">JS</span> <span class="small">Documentation</span></h1>
+</header>
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Class.html">Class</a></li><li><a href="yAnimation.html">yAnimation</a></li><li><a href="yCamera.html">yCamera</a></li><li><a href="yEntity.html">yEntity</a></li><li><a href="yGame.html">yGame</a></li><li><a href="yGameState.html">yGameState</a></li><li><a href="yInput.html">yInput</a></li><li><a href="yLayer.html">yLayer</a></li><li><a href="yObjectPool.html">yObjectPool</a></li><li><a href="yPolygon.html">yPolygon</a></li><li><a href="ySound.html">ySound</a></li><li><a href="ySprite.html">ySprite</a></li><li><a href="ySpriteSheet.html">ySpriteSheet</a></li><li><a href="yTileMap.html">yTileMap</a></li><li><a href="yTileSet.html">yTileSet</a></li><li><a href="yTimer.html">yTimer</a></li><li><a href="yTouch.html">yTouch</a></li></ul><h3>Global</h3><ul><li><a href="global.html#game">game</a></li></ul>
+</nav>
 
 <div id="main">
     
@@ -168,6 +174,69 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>physWorld</code></td>
+            
+            
+            <td class="type">
+            
+                        b2World
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The physics world.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>physDelta</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Delta to calculate when to simulate the next physics step.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>entities</code></td>
+            
+            
+            <td class="type">
+            
+                        yEntity[]
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The active camera.</td>
+        </tr>
+	
+	
 	</tbody>
 </table></dl>
         
@@ -198,7 +267,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/layer.js, line 11</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/layer.js, line 16</li></ul></dd>
 	
     
     
@@ -221,6 +290,12 @@
     
     </div>
     
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="Class.html">Class</a></li>
+        </ul>
     
     
     
@@ -239,7 +314,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="draw"><span class="type-signature"></span>draw</h4>
+    <h4 class="name" id="draw"><span class="type-signature">&lt;static> </span>draw</h4>
     
     
 </dt>
@@ -248,128 +323,6 @@
     
     <div class="description">
         Draws layer
-    </div>
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/layer.js, line 31</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="update"><span class="type-signature"></span>update</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Updates layer
-    </div>
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/layer.js, line 21</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updatePhysics"><span class="type-signature"></span>updatePhysics</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Updates the physics world
     </div>
     
     
@@ -419,6 +372,128 @@
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature">&lt;static> </span>update</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates layer
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/layer.js, line 29</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updatePhysics"><span class="type-signature">&lt;static> </span>updatePhysics</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Updates the physics world
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>../js/layer.js, line 50</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -434,14 +509,10 @@
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="yAnimation.html">yAnimation</a></li><li><a href="yCamera.html">yCamera</a></li><li><a href="yEntity.html">yEntity</a></li><li><a href="yGame.html">yGame</a></li><li><a href="yGameState.html">yGameState</a></li><li><a href="yInput.html">yInput</a></li><li><a href="yLayer.html">yLayer</a></li><li><a href="yObjectPool.html">yObjectPool</a></li><li><a href="yPolygon.html">yPolygon</a></li><li><a href="ySound.html">ySound</a></li><li><a href="ySprite.html">ySprite</a></li><li><a href="ySpriteSheet.html">ySpriteSheet</a></li><li><a href="yTileMap.html">yTileMap</a></li><li><a href="yTileSet.html">yTileSet</a></li><li><a href="yTimer.html">yTimer</a></li><li><a href="yTouch.html">yTouch</a></li></ul><h3>Global</h3><ul><li><a href="global.html#game">game</a></li></ul>
-</nav>
 
-<br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Thu Nov 08 2012 16:31:16 GMT+0100 (MEZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Nov 09 2012 16:15:21 GMT+0100 (MEZ)
 </footer>
 
 <script> sh_highlightDocument(); </script>

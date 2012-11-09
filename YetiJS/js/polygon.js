@@ -1,5 +1,7 @@
 
 /**
+ * @class yPolygon
+ * @augments Class
  * @classdesc 
  * 
  * @author Leo Zurbriggen
@@ -13,33 +15,38 @@
  * @property {String} strokeStyle - User for drawing the polygon.
  * @property {String} fillStyle - User for drawing the polygon.
  */
-function yPolygon(pPosition) {
-	this.center = new yVector(0, 0);
-	this.position = pPosition;
-	this.points = [];
-	this.edges = [];
-	this.lineWidth = "1";
-	this.strokeStyle = "rgba(20, 20, 20, 0.7)";
-	this.fillStyle = "rgba(30, 30, 30, 0.5)";
-
+var yPolygon = Class.extend({
+	init: function(pPosition){
+		this.center = new yVector(0, 0);
+		this.position = pPosition;
+		this.points = [];
+		this.edges = [];
+		this.lineWidth = "1";
+		this.strokeStyle = "rgba(20, 20, 20, 0.7)";
+		this.fillStyle = "rgba(30, 30, 30, 0.5)";
+	},
+	
 	/**
 	 * Updates polygon
+	 * @memberof yPolygon
 	 */
-	yPolygon.prototype.update = function() {
+	update: function() {
 
-	}
+	},
 	
 	/**
 	 * Returns absolute positions of points
+	 * @memberof yPolygon
 	 */
-	yPolygon.prototype.getAbsoluteCenter = function() {
+	getAbsoluteCenter: function() {
 		return new yVector(this.position.x + this.center.x, this.position.y + this.center.y);
-	}
+	},
 
 	/**
 	 * Returns absolute positions of points
+	 * @memberof yPolygon
 	 */
-	yPolygon.prototype.getAbsolutePoints = function() {
+	getAbsolutePoints: function() {
 		var points = [];
 		if (this.points.length > 1) {
 			for (var i = 0; i < this.points.length; i++) {
@@ -47,23 +54,25 @@ function yPolygon(pPosition) {
 			}
 		}
 		return points;
-	}
+	},
 	
 	/**
 	 * Returns absolute positions of points
+	 * @memberof yPolygon
 	 */
-	yPolygon.prototype.setEdges = function() {
+	setEdges: function() {
 		var edges = []
 		for (var i = 1; i < this.points.length; i++) {
 			this.edges[i-1] = new yVector(this.position.x + (this.points[i].x), this.position.y + (this.points[i].y));
 		}
-	}
+	},
 
 	/**
 	 * Draws polygon for debugging purposes
+	 * @memberof yPolygon
 	 * @param {yCamera} pCamera - The camera to draw the position relative to.
 	 */
-	yPolygon.prototype.draw = function(pCamera) {
+	draw: function(pCamera) {
 		ctx.beginPath();
 		ctx.lineWidth = this.lineWidth;
 		ctx.strokeStyle = this.strokeStyle;
@@ -79,5 +88,4 @@ function yPolygon(pPosition) {
 		ctx.fill();
 		ctx.stroke();
 	}
-
-}
+});

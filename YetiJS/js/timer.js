@@ -1,5 +1,7 @@
 
 /**
+ * @class yTimer
+ * @augments Class
  * @classdesc The timer class is used for countdown purposes and is able to execute a function when time is elapsed.
  * 
  * @author Leo Zurbriggen
@@ -13,18 +15,21 @@
  * @property {Boolean} elapsed - Tells, if the timer elapsed.
  * @property {Function} callback - (optional) The function that should be executed when the timer elapses.
  */
-function yTimer(pDuration, pCallback){
-	this.duration = pDuration;
-	this.startTime = Date.now();
-	this.remainingTime = Date.now();
-	this.paused = true;
-	this.elapsed = false;
-	this.callback = (pCallback ? pCallback : null);
-
+var yTimer = Class.extend({
+	init: function(pDuration, pCallback){
+		this.duration = pDuration;
+		this.startTime = Date.now();
+		this.remainingTime = Date.now();
+		this.paused = true;
+		this.elapsed = false;
+		this.callback = (pCallback ? pCallback : null);
+	},
+	
 	/**
-	 * Updates remaining time and checks if time is up
+	 * Updates remaining time and checks if time is up.
+	 * @memberof yTimer
 	 */
-	yTimer.prototype.update = function(){
+	update: function(){
 		if(!this.paused){
 			this.remainingTime = Date.now() - this.startTime - this.duration;
 			
@@ -36,19 +41,21 @@ function yTimer(pDuration, pCallback){
 				this.paused = true;
 			}
 		}
-	}
+	},
 	
 	/**
-	 * Starts the timer
+	 * Starts the timer.
+	 * @memberof yTimer
 	 */
-	yTimer.prototype.start = function(){
+	start: function(){
 		this.paused = false;
-	}
+	},
 	
 	/**
-	 * Pauses the timer
+	 * Pauses the timer.
+	 * @memberof yTimer
 	 */
-	yTimer.prototype.pause = function(){
+	pause: function(){
 		this.paused = true;
 	}
-};
+});

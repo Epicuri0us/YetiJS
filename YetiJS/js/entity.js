@@ -1,5 +1,7 @@
 
 /**
+ * @class yEntity
+ * @augments Class
  * @classdesc Objects inherited from the yEntity class represent a specific, normally visible on the screen, object in the game
  * 
  * @author Leo Zurbriggen
@@ -14,29 +16,33 @@
  * @property {Double} rotation - The rotation of the entity.
  * @property {yLayer} layer - The parent layer of the entity.
  */
-function yEntity(pSprite, pPosition, pLayer){
-	this.sprite = pSprite;
-	this.physModel = null;
-	this.position = pPosition;
-	this.rotation = 0;
-	this.layer = pLayer;
+var yEntity = Class.extend({
+	init: function(pSprite, pPosition, pLayer){
+		this.sprite = pSprite;
+		this.physModel = null;
+		this.position = pPosition;
+		this.rotation = 0;
+		this.layer = pLayer;
+	},
 
 	/** 
 	 * Updates the entity
+	 * @memberof yEntity
 	 */
-	yEntity.prototype.update = function(){
+	update: function(){
 		if(this.physModel){
 			var position = this.physModel.GetBody().GetPosition();
 			this.position.x = position.x;
 			this.position.y = position.y;
-			this.rotation = this.physModel.GetBody().GetRotation();
+			this.rotation = this.physModel.GetBody().GetAngle();
 		}
-	}
+	},
 	
 	/**
 	 * Draws the entity
+	 * @memberof yEntity
 	 */
-	yEntity.prototype.draw = function(){
+	draw: function(){
 		var camera = this.layer.camera;
 		if(this.sprite != null){
 			ctx.save();
@@ -45,13 +51,14 @@ function yEntity(pSprite, pPosition, pLayer){
 			ctx.drawImage(this.sprite, -this.sprite.width/2, -this.sprite.height/2);
 			ctx.restore();
 		}
-	}
+	},
 	
 	/**
 	 * Adds a physics object to the entity and the physics world of the layer
+	 * @memberof yEntity
 	 */
-	yEntity.prototype.addPhysModel = function(pBody, pFixture){
+	addPhysModel: function(pBody, pFixture){
 		pBody.position.Set(this.position.x, this.position.y);
 		this.physModel = this.layer.physWorld.CreateBody(pBody).CreateFixture(pFixture);
 	}
-};
+});

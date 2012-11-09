@@ -1,5 +1,7 @@
 
 /**
+ * @class yTileMap
+ * @augments Class
  * @classdesc The tilemap contains an array with tile positions, a tileset to load the tiles from and functionality to draw them.
  * 
  * @author Leo Zurbriggen
@@ -13,30 +15,32 @@
  * @property {Integer} width - The width of the map.
  * @property {Integer} height - The height of the map.
  */
-function yTileMap(pTileSet, pLayers, pWidth, pHeight){
-	this.tileSet = pTileSet;
-	this.map = [];
-	this.width = pWidth;
-	this.height = pHeight;
-	
-	/**
-	 * Initializes an empty map-array
-	 */
-	for(var l = 0; l < pLayers; l++){
-		this.map[l] = [];
-		for(var y = 0; y < this.height; y++){
-			this.map[l][y] = [];
-			for(var x = 0; x < this.width; x++){
-				this.map[l][y][x] = 0;
+var yTileMap = Class.extend({
+	init: function(pTileSet, pLayers, pWidth, pHeight){
+		this.tileSet = pTileSet;
+		this.map = [];
+		this.width = pWidth;
+		this.height = pHeight;
+		
+		// Initializes an empty map-array
+		for(var l = 0; l < pLayers; l++){
+			this.map[l] = [];
+			for(var y = 0; y < this.height; y++){
+				this.map[l][y] = [];
+				for(var x = 0; x < this.width; x++){
+					this.map[l][y][x] = 0;
+				}
 			}
 		}
-	}
+	},
+	
 	
 	/**
-	 * Draws the whole map depending on camera position
+	 * Draws the whole map depending on camera position.
+	 * @memberof yTileMap
 	 * @param {yCamera} pCamera - The camera.
 	 */
-	yTileMap.prototype.draw = function(pCamera){
+	draw: function(pCamera){
 		var tileSet = this.tileSet;
 		for(var l = 0; l < pLayers; l++){
 			for(var y = 0; y < this.height; y++){
@@ -45,13 +49,14 @@ function yTileMap(pTileSet, pLayers, pWidth, pHeight){
 				}
 			}
 		}
-	}
+	},
 	
 	/**
-	 * Imports a map from a tmx file (not yet implemented)
+	 * Imports a map from a tmx file (not yet implemented).
+	 * @memberof yTileMap
 	 * @param {String} pFile - The path to the tmx-map file.
 	 */
-	yTileMap.prototype.importTMX = function(pFile){
+	importTMX: function(pFile){
 		
 	}
-};
+});
