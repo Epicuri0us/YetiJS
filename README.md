@@ -13,6 +13,7 @@ YetiJS uses a few libraries and tools:
 - Box2DWeb, a JavaScript port of the beautiful Box2D physics library from Erin Catto (http://code.google.com/p/box2dweb/)
 - RequestAnimationFrame, a function written by Paul Irish that helps synchronising draw calls with monitor/browser update rate (http://paulirish.com/2011/requestanimationframe-for-smart-animating/)
 - Google Closure Compiler, used to optimize/minify the final script (https://developers.google.com/closure/compiler/)
+- John Resig's simple javascript inheritance (http://ejohn.org/blog/simple-javascript-inheritance/)
 
 **Removed:**
 - SAT, a library (Separating Axis Theorem) from Jim Riecken is used as a vary fast way to check if convex polygons collide (https://github.com/jriecken/sat-js)
