@@ -50,10 +50,10 @@ var yLayer = Class.extend({
 	updatePhysics: function(){
 		if(this.physWorld){
 			this.physDelta += delta;
-			if(this.physDelta > 1/60){
+			if(this.physDelta > 1/30){
 				this.physDelta = 0;
+				this.physWorld.Step(1/30, 1, 1);
 				this.physWorld.ClearForces();
-				this.physWorld.Step(1/60, 6, 2);
 			}
 		}
 	}

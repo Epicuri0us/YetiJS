@@ -3,9 +3,9 @@
 		<concat destfile="${basedir}\yeti.js" fixlastline="true">
 			<filelist dir="${basedir}">
 				<file name="libs/box2dweb.js" />
-				<file name="js/utils.js" />
+				<file name="js/Utils.js" />
 			</filelist>
-			<fileset dir="js/" includes="*.js" excludes="utils.js" />
+			<fileset dir="js/" includes="*.js" excludes="Utils.js" />
 			<filterchain>
 				<deletecharacters chars="ï»¿" />
 			</filterchain>

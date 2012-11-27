@@ -3,7 +3,7 @@
  * @projectDescription YetiJS game framework
  * 
  * @author Leo Zurbriggen [http://leoz.ch]
- * @version 021112
+ * @version 131112
  */
 
 // Global variables
@@ -12,6 +12,7 @@ var canvas;
 var ctx;
 var delta = 0;
 var input;
+var assetManager;
 
 /**
  * @class yGame
@@ -28,14 +29,26 @@ var input;
  */
 
 var yGame = Class.extend({
-	init: function(pGameState, pDebug){
+	init: function(pGameState, pResolutionX, pResolutionY, pDebug){
 		this.gameState = pGameState;
 		this.debugging = (pDebug == true ? true : false);
 		this.lastFrame = Date.now();
 		
+		this.resolution = new yVector(pResolutionX, pResolutionY);
+		this.scalingModes = {
+			ASPECTRATIO: 0,
+			NOSCALING: 1,
+			STRETCH: 2
+		};
+		this.scalingMode = this.scalingModes.STRETCH;
+		
 		// Begin updateing the game logic
 		var self = this;
 		setInterval(function(){self.update()}, 1);
+	
+		// Set viewport initial an when window gets resized
+		this.setScaling();
+		window.addEventListener("resize", function(){self.setScaling()}, false);
 	
 		// Begin drawing the game graphics
 		window.requestAnimFrame(function(){self.draw()});
@@ -48,8 +61,45 @@ var yGame = Class.extend({
 	 * @param {yVector} pDimensions - The width and height of the Canvas; If null: window-height/width.
 	 * @param {Element} pParent - (optional) The parent html-Element to add the canvas to, Default: window.
 	 */
-	addCanvas: function(pDimensions, pParent){
-		
+	setScaling: function(){
+		var windowWidth = window.innerWidth;
+		var windowHeight = window.innerHeight;
+
+		if(this.scalingMode == this.scalingModes.ASPECTRATIO){
+			var scaleToFitX = windowWidth / this.resolution.x;
+			var scaleToFitY = windowHeight / this.resolution.y;
+			 
+			var currentScreenRatio = windowWidth / windowHeight;
+			var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+			 
+			if(currentScreenRatio >= 1.77 && currentScreenRatio <= 1.79){
+			    canvas.width = this.resolution.x;
+			    canvas.height = this.resolution.y;
+			    canvas.style.width = windowWidth + "px";
+				canvas.style.height = windowHeight + "px";
+			}else{
+			    canvas.width = this.resolution.x;
+			    canvas.height = this.resolution.y;
+			    canvas.style.width = this.resolution.x * optimalRatio + "px";
+				canvas.style.height = this.resolution.y * optimalRatio + "px";
+			}
+			
+			canvas.style.marginTop = ((windowHeight-parseInt(canvas.style.height))/2)+"px";
+			canvas.style.marginLeft = ((windowWidth-parseInt(canvas.style.width))/2)+"px";
+		}else if(this.scalingMode == this.scalingModes.NOSCALING){
+			canvas.width = this.resolution.x;
+			canvas.height = this.resolution.y;
+			canvas.style.width = this.resolution.x + "px";
+			canvas.style.height = this.resolution.y + "px";
+			
+			canvas.style.marginTop = ((windowHeight-parseInt(canvas.style.height))/2)+"px";
+			canvas.style.marginLeft = ((windowWidth-parseInt(canvas.style.width))/2)+"px";
+		}else if(this.scalingMode == this.scalingModes.STRETCH){
+			canvas.width = this.resolution.x;
+			canvas.height = this.resolution.y;
+			canvas.style.width = windowWidth + "px";
+			canvas.style.height = windowHeight + "px";
+		}
 	},
 	
 	/**
@@ -100,6 +150,7 @@ window.addEventListener("load", function(){
 	document.body.appendChild(canvas);
 	
 	input = new yInput();
+	assetManager = new yAssetManager();
 	
 	// Fires the ready-event
 	var event = document.createEvent("Event");

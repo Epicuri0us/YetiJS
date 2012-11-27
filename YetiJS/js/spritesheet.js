@@ -17,8 +17,7 @@ var ySpriteSheet = Class.extend({
 	init: function(pCols, pRows, pSprite){
 		this.cols = pCols;
 		this.rows = pRows;
-		this.sprite = new Image();
-		this.sprite.src = pSprite;
+		this.sprite = pSprite;
 		this.frameWidth = this.sprite.width / this.cols;
 		this.frameHeight = this.sprite.height / this.rows;
 	},
@@ -41,6 +40,6 @@ var ySpriteSheet = Class.extend({
 	 */
 	drawFrame: function(pID, pPosition, pCamera){
 		var framePosition = this.getFramePositionByID(pID);
-		ctx.drawImage(this.sprite, framePosition.x, framePosition.y, this.frameWidth, this.frameHeight, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.frameWidth, this.frameHeight);
+		ctx.drawImage(this.sprite, framePosition.x, framePosition.y, this.frameWidth, this.frameHeight, (pCamera.position.x + pPosition.x)*pCamera.scale, (pCamera.position.y + pPosition.y)*pCamera.scale, this.frameWidth*pCamera.scale, this.frameHeight*pCamera.scale);
 	}
 });

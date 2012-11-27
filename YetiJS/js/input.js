@@ -243,8 +243,9 @@ var yInput = Class.extend({
 		this.orientationBeta = 0;
 		this.orientationAlpha = 0;
 		
-		window.addEventListener('keyup', this.onKeyup, false);
-		window.addEventListener('keydown', this.onKeydown, false);
+		var that = this;
+		window.addEventListener('keyup', this.onKeyUp, false);
+		window.addEventListener('keydown', this.onKeyDown, false);
 		canvas.addEventListener("touchstart", this.onTouchStart, true);
 		canvas.addEventListener("touchmove", this.onTouchMove, true);
 		canvas.addEventListener("touchend", this.onTouchEnd, true);
@@ -253,7 +254,7 @@ var yInput = Class.extend({
 		canvas.addEventListener("mousedown", this.onMouseDown, true);
 		canvas.addEventListener("mousemove", this.onMouseMove, true);
 		canvas.addEventListener("mouseup", this.onMouseUp, true);
-		window.addEventListener('deviceorientation', this.handleOrientation, false);
+		window.addEventListener('deviceorientation', this.handleOrientation, true);
 	},
 
 	/**
@@ -411,7 +412,10 @@ var yInput = Class.extend({
 	 * @memberof yInput
 	 */
 	update: function() {
-		this.lastKeyState = deepCopy(this.keyState);
+		for(var i = 0; i < this.keyState.length; i++){
+			this.lastKeyState[i] = this.keyState[i];
+		}
+		//this.lastKeyState = deepCopy(this.keyState);
 		for (var i = 0; i < this.lastTouches.length; i++) {
 			this.touches[i].update();
 		}

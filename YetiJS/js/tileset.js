@@ -15,8 +15,7 @@
  */
 var yTileSet = Class.extend({
 	init: function(pSprite, pTileSize){
-		this.sprite = new Image();
-		this.sprite.src = pSprite;
+		this.sprite = pSprite;
 		this.tileSize = pTileSize;
 		this.width = this.sprite.width / this.tileSize;
 		this.height = this.sprite.height / this.tileSize;
@@ -40,7 +39,7 @@ var yTileSet = Class.extend({
 	 */
 	drawTile: function(pID, pPosition, pCamera){
 		var tilePosition = this.getTilePositionByID(pID);
-		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.tileSize, this.tileSize);
+		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, (pCamera.position.x + pPosition.x)*pCamera.scale, (pCamera.position.y + pPosition.y)*pCamera.scale, this.tileSize*pCamera.scale, this.tileSize*pCamera.scale);
 	},
 	
 	/**

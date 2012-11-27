@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: yObjectPool</title>
+    <title>JSDoc: Class: yAssetManager</title>
     
     <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -23,7 +23,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: yObjectPool</h1>
+    <h1 class="page-title">Class: yAssetManager</h1>
     
     
 
@@ -33,10 +33,10 @@
     
 <header>
     <h2>
-    yObjectPool
+    yAssetManager
     </h2>
     
-        <div class="class-description">The yObjectPool is a generic object pool used to minimize garbage creation on runtime.</div>
+        <div class="class-description">The asset manager is able to load different assets and cache them</div>
     
 </header>  
 
@@ -47,7 +47,7 @@
     
         
 <dt>
-    <h4 class="name" id="yObjectPool"><span class="type-signature"></span>new yObjectPool</h4>
+    <h4 class="name" id="yAssetManager"><span class="type-signature"></span>new yAssetManager</h4>
     
     
 </dt>
@@ -57,94 +57,6 @@
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>pObjectClass</code></td>
-            
-            
-            <td class="type">
-            
-                        <a href="Class.html">Class</a>
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The class of the objects in the pool.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>pSize</code></td>
-            
-            
-            <td class="type">
-            
-                        Integer
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The initial size of the pool.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>arguments</code></td>
-            
-            
-            <td class="type">
-            
-                        Parameters
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">(optional) Any arguments that are needed to create an object of the class.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -177,28 +89,7 @@
 	
         <tr>
             
-                <td class="name"><code>objectClass</code></td>
-            
-            
-            <td class="type">
-            
-                        <a href="Class.html">Class</a>
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The class of the objects in the pool.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>freeObjects</code></td>
+                <td class="name"><code>loadQueue</code></td>
             
             
             <td class="type">
@@ -212,14 +103,14 @@
             
             
             
-            <td class="description last">The array containing all free objects at the time.</td>
+            <td class="description last">The queue array of files to load.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>activeObjects</code></td>
+                <td class="name"><code>cache</code></td>
             
             
             <td class="type">
@@ -233,7 +124,70 @@
             
             
             
-            <td class="description last">The array containing all objects that are in use at the time.</td>
+            <td class="description last">The array of cached assets.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>progress</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The count of assets loaded.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>IMAGE</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">0.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>SOUND</code></td>
+            
+            
+            <td class="type">
+            
+                        Integer
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">1.</td>
         </tr>
 	
 	
@@ -267,7 +221,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/ObjectPool.js, line 16</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/AssetManager.js, line 2</li></ul></dd>
 	
     
     
@@ -314,7 +268,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="free"><span class="type-signature">&lt;static> </span>free</h4>
+    <h4 class="name" id="clearCache"><span class="type-signature">&lt;static> </span>clearCache</h4>
     
     
 </dt>
@@ -322,58 +276,12 @@
     
     
     <div class="description">
-        Frees an object by adding it back to free objects and removing it from the active ones.
+        Clears the cache array
     </div>
     
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>pObject</code></td>
-            
-            
-            <td class="type">
-            
-                        Object
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The object to free.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -398,7 +306,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/ObjectPool.js, line 65</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/AssetManager.js, line 53</li></ul></dd>
 	
     
     
@@ -421,7 +329,7 @@
         
             
 <dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get</h4>
+    <h4 class="name" id="getAsset"><span class="type-signature">&lt;static> </span>getAsset</h4>
     
     
 </dt>
@@ -429,7 +337,7 @@
     
     
     <div class="description">
-        Gets a free item out off the pool and adds it to the active ones, creates a new one if there are no free objects.
+        Returns the asset
     </div>
     
     
@@ -461,12 +369,12 @@
 	
         <tr>
             
-                <td class="name"><code>arguments</code></td>
+                <td class="name"><code>pPath</code></td>
             
             
             <td class="type">
             
-                        Parameters
+                        String
                         
                     
             </td>
@@ -475,7 +383,7 @@
             
             
             
-            <td class="description last">(optional) Any arguments that are needed to create an object of the class.</td>
+            <td class="description last">The path you loaded the asset from.</td>
         </tr>
 	
 	
@@ -505,7 +413,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/ObjectPool.js, line 37</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/AssetManager.js, line 29</li></ul></dd>
 	
     
     
@@ -528,7 +436,7 @@
         
             
 <dt>
-    <h4 class="name" id="pop"><span class="type-signature">&lt;static> </span>pop</h4>
+    <h4 class="name" id="loadAssets"><span class="type-signature">&lt;static> </span>loadAssets</h4>
     
     
 </dt>
@@ -536,7 +444,7 @@
     
     
     <div class="description">
-        Gets the last item and removes it from the array.
+        Loads all queued assets and stores them in the cache
     </div>
     
     
@@ -568,12 +476,12 @@
 	
         <tr>
             
-                <td class="name"><code>pArray</code></td>
+                <td class="name"><code>pCallback</code></td>
             
             
             <td class="type">
             
-                        Object[]
+                        Function
                         
                     
             </td>
@@ -582,7 +490,7 @@
             
             
             
-            <td class="description last">The array to get the last item from.</td>
+            <td class="description last">The function to call when all assets are loaded.</td>
         </tr>
 	
 	
@@ -612,7 +520,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/ObjectPool.js, line 75</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/AssetManager.js, line 62</li></ul></dd>
 	
     
     
@@ -635,7 +543,7 @@
         
             
 <dt>
-    <h4 class="name" id="push"><span class="type-signature">&lt;static> </span>push</h4>
+    <h4 class="name" id="queueAsset"><span class="type-signature">&lt;static> </span>queueAsset</h4>
     
     
 </dt>
@@ -643,7 +551,7 @@
     
     
     <div class="description">
-        Adds an object at the end of an array.
+        Returns the asset
     </div>
     
     
@@ -675,12 +583,12 @@
 	
         <tr>
             
-                <td class="name"><code>pArray</code></td>
+                <td class="name"><code>pPath</code></td>
             
             
             <td class="type">
             
-                        Object[]
+                        String
                         
                     
             </td>
@@ -689,19 +597,19 @@
             
             
             
-            <td class="description last">The array.</td>
+            <td class="description last">The path to load the asset from.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>pObject</code></td>
+                <td class="name"><code>pType</code></td>
             
             
             <td class="type">
             
-                        Object
+                        Integer
                         
                     
             </td>
@@ -710,7 +618,28 @@
             
             
             
-            <td class="description last">The object to push.</td>
+            <td class="description last">The type of the asset.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pFallback</code></td>
+            
+            
+            <td class="type">
+            
+                        Boolean
+                        
+                    
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">(Optional) Tells, if the sound file has a fallback file (ogg- AND mp3-file is available), in this case, don't add the extension to the file path.</td>
         </tr>
 	
 	
@@ -740,135 +669,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/ObjectPool.js, line 100</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="slice"><span class="type-signature">&lt;static> </span>slice</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Deletes an index out of the array.
-    </div>
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>pArray</code></td>
-            
-            
-            <td class="type">
-            
-                        Object[]
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The array.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>pIndex</code></td>
-            
-            
-            <td class="type">
-            
-                        Object
-                        
-                    
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The index.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>../js/ObjectPool.js, line 87</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>../js/AssetManager.js, line 40</li></ul></dd>
 	
     
     
@@ -906,7 +707,7 @@
 
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Tue Nov 27 2012 14:21:55 GMT+0100 (MEZ)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Tue Nov 27 2012 14:21:54 GMT+0100 (MEZ)
 </footer>
 
 <script> sh_highlightDocument(); </script>

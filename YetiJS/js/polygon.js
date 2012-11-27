@@ -21,7 +21,7 @@ var yPolygon = Class.extend({
 		this.position = pPosition;
 		this.points = [];
 		this.edges = [];
-		this.lineWidth = "1";
+		this.lineWidth = "5";
 		this.strokeStyle = "rgba(20, 20, 20, 0.7)";
 		this.fillStyle = "rgba(30, 30, 30, 0.5)";
 	},
@@ -78,14 +78,17 @@ var yPolygon = Class.extend({
 		ctx.strokeStyle = this.strokeStyle;
 		ctx.fillStyle = this.fillStyle;
 		var points = this.getAbsolutePoints();
+		var cscale = pCamera.scale;
+		//pCamera.scale = 10;
 		if (points.length > 1) {
-			ctx.moveTo(pCamera.position.x + points[0].x, pCamera.position.y + points[0].y);
+			ctx.moveTo((pCamera.position.x + points[0].x)*pCamera.scale, (pCamera.position.y + points[0].y)*pCamera.scale);
 			for (var i = 1; i < points.length; i++) {
-				ctx.lineTo(pCamera.position.x + points[i].x, pCamera.position.y + points[i].y);
+				ctx.lineTo((pCamera.position.x + points[i].x)*pCamera.scale, (pCamera.position.y + points[i].y)*pCamera.scale);
 			}
 		}
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
+		pCamera.scale = cscale;
 	}
 });
