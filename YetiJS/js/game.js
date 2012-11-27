@@ -22,6 +22,8 @@ var assetManager;
  * @author Leo Zurbriggen
  * @constructor
  * @param {yGameState} pGameState - The initial gamestate.
+ * @param {Integer} pResolutionX - The horizontal resolution.
+ * @param {Integer} pResolutionY - The vertical resolution.
  * @param {Boolean} pDebug - (optional) Tells if you're in debug mode.
  * @property {yGameState} gameState - The active gamestate.
  * @property {Boolean} debugging - If in debug mode.
