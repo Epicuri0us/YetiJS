@@ -12,10 +12,10 @@
 			</filelist>
 			<string>});</string>
 		</concat>
-		<jscomp debug="false" output="${basedir}/game.min.js">
+		<!--<jscomp debug="false" output="${basedir}/game.min.js">
 			<sources dir="${basedir}">
 				<file name="game.js" />
 			</sources>
-		</jscomp>
+		</jscomp>-->
 	</target>
 </project>
