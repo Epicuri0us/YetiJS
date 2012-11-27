@@ -12,6 +12,7 @@
 			</filelist>
 			<string>});</string>
 		</concat>
+		<!-- Use this to build the minified/compiled js file game.min.js, ignore the building warnings -->
 		<!--<jscomp debug="false" output="${basedir}/game.min.js">
 			<sources dir="${basedir}">
 				<file name="game.js" />
