@@ -1,18 +1,18 @@
 <project name="Game" default="concatenate">
-	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${basedir}\tools\compiler.jar" />
-	<target name="concatenate" description="Concatenate all js files">
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${basedir}\tools\compiler\compiler.jar" />
+	<target name="concatenate" description="Concatenate all source files">
 		<concat destfile="${basedir}\game.js" fixlastline="true">
 			<filelist dir="${basedir}">
 				<file name="libs/yeti.js" />
 			</filelist>
 			<string>window.addEventListener("YetiJSReady", function(){</string>
-			<fileset dir="src/" includes="*.js" excludes="game.js" />
+			<fileset dir="src/" includes="*.js" excludes="Main.js" />
 			<filelist dir="${basedir}">
-				<file name="src/game.js" />
+				<file name="src/Main.js" />
 			</filelist>
 			<string>});</string>
 		</concat>
-		<jscomp  debug="false" output="${basedir}/game.min.js">
+		<jscomp debug="false" output="${basedir}/game.min.js">
 			<sources dir="${basedir}">
 				<file name="game.js" />
 			</sources>

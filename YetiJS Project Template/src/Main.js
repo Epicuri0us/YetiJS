@@ -1,0 +1,1 @@
+game = new yGame(new yGameState(), 1024, 600, true);

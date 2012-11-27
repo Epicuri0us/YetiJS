@@ -563,13 +563,145 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
 	b2Body = Box2D.Dynamics.b2Body, 
 	b2FixtureDef = Box2D.Dynamics.b2FixtureDef, 
 	b2Fixture = Box2D.Dynamics.b2Fixture, 
-	b2World = Box2D.Dynamics.b2World, 
+	b2World = Box2D.Dynamics.b2World,
 	b2MassData = Box2D.Collision.Shapes.b2MassData, 
 	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape, 
 	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape, 
 	b2DebugDraw = Box2D.Dynamics.b2DebugDraw, 
-	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef;
+	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
+	b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef,
+	b2DistanceJointDef = Box2D.Dynamics.Joints.b2DistanceJointDef,
+	b2PrismaticJointDef =  Box2D.Dynamics.Joints.b2PrismaticJointDef,
+	b2PulleyJointDef =  Box2D.Dynamics.Joints.b2PulleyJointDef,
+	b2GearJointDef =  Box2D.Dynamics.Joints.b2GearJointDef,
+	b2LineJointDef =  Box2D.Dynamics.Joints.b2LineJointDef,
+	b2WeldJointDef =  Box2D.Dynamics.Joints.b2WeldJointDef;
+	
+
+/**
+ * @class yAssetManager
+ * @augments Class
+ * @classdesc The asset manager is able to load different assets and cache them
+ * 
+ * @author Leo Zurbriggen
+ * @property {Object[]} loadQueue - The queue array of files to load.
+ * @property {Object[]} cache - The array of cached assets.
+ * @property {Integer} progress - The count of assets loaded.
+ * @property {Integer} IMAGE - 0.
+ * @property {Integer} SOUND - 1.
+ */
+var yAssetManager = Class.extend({
+	init: function(){
+		this.loadQueue = [];
+		this.cache = [];
+		this.progress = 0;
+		
+		this.IMAGE = 0;
+		this.SOUND = 1;
+	},
 	
+	/**
+	 * Returns the asset
+	 * @memberOf yAssetManager
+	 * @param {String} pPath - The path you loaded the asset from.
+	 */
+	getAsset: function(pPath){
+		return this.cache[pPath];
+	},
+	
+	/**
+	 * Returns the asset
+	 * @memberOf yAssetManager
+	 * @param {String} pPath - The path to load the asset from.
+	 * @param {Integer} pType - The type of the asset.
+	 * @param {Boolean} pFallback - (Optional) Tells, if the sound file has a fallback file (ogg- AND mp3-file is available), in this case, don't add the extension to the file path.
+	 */
+	queueAsset: function(pPath, pType, pFallback){
+		if(pType == this.SOUND && pFallback){
+			this.loadQueue.push({path: pPath, type: pType, fallback: pFallback});
+		}else{
+			this.loadQueue.push({path: pPath, type: pType});
+		}
+		
+	},
+	
+	/**
+	 * Clears the cache array
+	 * @memberOf yAssetManager
+	 */
+	clearCache: function(){
+		this.cache = [];
+	},
+	
+	/**
+	 * Loads all queued assets and stores them in the cache
+	 * @memberOf yAssetManager
+	 * @param {Function} pCallback - The function to call when all assets are loaded.
+	 */
+	loadAssets: function(pCallback){
+		this.progress = 0;
+		
+		if(this.loadQueue.length == 0){
+        	pCallback();
+        }
+		
+		// Load image files
+		for(var i = 0; i < this.loadQueue.length; i++){
+			var asset = this.loadQueue[i];
+
+			if(asset.type == this.IMAGE){
+				var img = new Image();
+		        var that = this;
+		        img.addEventListener("load", function() {
+		            console.log("Info: " + this.src + " loaded.");
+		            that.progress++;
+		            if(that.progress = that.loadQueue.length){
+		            	pCallback();
+		            }
+		        }, false);
+		        img.addEventListener("error", function() {
+		            console.log("Error: " + this.src + " could not be loaded.");
+		            that.progress++;
+		            if(that.progress = that.loadQueue.length){
+		            	pCallback();
+		            }
+		        }, false);
+		        img.src = asset.path;
+		        this.cache[asset.path] = img;
+			}else if(asset.type == this.SOUND){
+				var sound = new Audio();
+				if(asset.fallback){
+					if(sound.canPlayType("audio/ogg; codecs=vorbis")){
+						sound.src = asset.path + ".ogg";
+					}else{
+						sound.src = asset.path + ".mp3";
+					}
+				}else{
+					sound.src = asset.path;
+				}
+				
+		        var that = this;
+		        sound.addEventListener("load", function() {
+		            console.log("Info: " + this.src + " loaded.");
+		            that.progress++;
+		            if(that.progress = that.loadQueue.length){
+		            	pCallback();
+		            }
+		        }, false);
+		        sound.addEventListener("error", function() {
+		            console.log("Error: " + this.src + " could not be loaded.");
+		            that.progress++;
+		            if(that.progress = that.loadQueue.length){
+		            	pCallback();
+		            }
+		        }, false);
+		        sound.src = path;
+		        this.cache[asset.path] = sound;
+			}
+		}
+		this.loadQueue = [];
+	}
+});
 
 /**
  * @class yAnimation
@@ -640,58 +772,29 @@ var yAnimation = Class.extend({
 /**
  * @class yCamera
  * @augments Class
- * @classdesc The camera provides functionality to handle different viewports, scrolling, zooming and so forth.
+ * @classdesc The camera provides functionality to handle scrolling, zooming etc.
  * 
  * @author Leo Zurbriggen
  * @constructor
  * @property {yVector} position - The position of the camera.
+ * @property {Integer} scale - The scale of the camera.
  * @param {yVector} pPosition - The position of the camera.
  */
 var yCamera = Class.extend({
 	init: function(pPosition){
 		this.position = pPosition;
-		
-		var height = canvas.height/(canvas.width/16*9);
-		
-		//ctx.scale(1, height);
-	
-	// var width = (canvas.height/9*16);
-	// ctx.scale(1, 1);
-	
-	// var classes = [];
-	// for(var i in window){
-		// if (window.hasOwnProperty(i) && typeof window[i] === 'function'){
-			// if(!i.constructor.toString().match("/\[native code\]/") && i.match("^y")){
-				// classes.push(i);
-			// }
-		// }
-	// }
-	// for(var o = 0; o < classes.length; ){
-		// o++;
-		// if(o != 5 && o != 4 && o != 3){
-			// var classs = classes[i];
-		// var entity = new window[classes[o]];
-		// console.log(classes[o]);
-		// }
-		
-		//entity = classes[i].prototype;
-		// for(var m in entity){
-			// console.log(window[i]+ ": " +m);
-			// if (typeof entity[m] != "function") {
-		        // console.log(window[classes[i]]+ ": " +m);
-		    // }
-		// }
-	// }
-	
-	
-	//ctx.translate(0, 0);
+		this.scale = 1;
 	},
 	
 	/**
-	 * Updates camera
+	 * Scales to a specific value but still maintains the center of the camera
 	 * @memberof yCamera
+	 * @param {Integer} pScale - The scale.
 	 */
-	update: function(){
+	scaleTo: function(pScale){
+		this.scale = pScale;
+		this.position.x = this.position.x+game.resolution.x/2*(this.scale);
+		this.position.y = this.position.y+game.resolution.y/2*(this.scale);
 	}
 });
 
@@ -706,7 +809,8 @@ var yCamera = Class.extend({
  * @param {Image} pSprite - The sprite of the entity.
  * @param {yVector} pPosition - The position of the entity.
  * @param {yLayer} pLayer - The parent layer of the entity.
- * @property {Image} sprite - The sprite of the entity.
+ * @property {Image} sprite - The sprite of the entity, will be drawn if the animation is null.
+ * @property {yAnimation} animation - The animation of the entity, if it is null, the sprite will be drawn.
  * @property {yPhsicalObject} physModel - The phyiscal object of the entity.
  * @property {yVector} position - The position of the entity.
  * @property {Double} rotation - The rotation of the entity.
@@ -719,6 +823,7 @@ var yEntity = Class.extend({
 		this.position = pPosition;
 		this.rotation = 0;
 		this.layer = pLayer;
+		this.animation = null;
 	},
 
 	/** 
@@ -727,10 +832,10 @@ var yEntity = Class.extend({
 	 */
 	update: function(){
 		if(this.physModel){
-			var position = this.physModel.GetBody().GetPosition();
-			this.position.x = position.x;
-			this.position.y = position.y;
-			this.rotation = this.physModel.GetBody().GetAngle();
+			var position = this.physModel.GetPosition();
+			this.position.x = position.x*this.layer.physWorld.drawScale;
+			this.position.y = position.y*this.layer.physWorld.drawScale;
+			this.rotation = this.physModel.GetAngle();
 		}
 	},
 	
@@ -740,11 +845,17 @@ var yEntity = Class.extend({
 	 */
 	draw: function(){
 		var camera = this.layer.camera;
-		if(this.sprite != null){
+		if(this.animation){
 			ctx.save();
-			ctx.translate(camera.position.x + this.position.x, camera.position.y + this.position.y);
+			ctx.translate((camera.position.x + this.position.x)*camera.scale, (camera.position.y + this.position.y)*camera.scale);
+			ctx.rotate(this.rotation);
+			this.animation.draw(new yVector(-this.animation.spriteSheet.frameWidth*camera.scale/2, -this.animation.spriteSheet.frameHeight*camera.scale/2), camera);
+			ctx.restore();
+		}else if(this.sprite){
+			ctx.save();
+			ctx.translate((camera.position.x + this.position.x)*camera.scale, (camera.position.y + this.position.y)*camera.scale);
       		ctx.rotate(this.rotation);
-			ctx.drawImage(this.sprite, -this.sprite.width/2, -this.sprite.height/2);
+			ctx.drawImage(this.sprite, -this.sprite.width*camera.scale/2, -this.sprite.height*camera.scale/2, this.sprite.width*camera.scale, this.sprite.height*camera.scale);
 			ctx.restore();
 		}
 	},
@@ -752,10 +863,11 @@ var yEntity = Class.extend({
 	/**
 	 * Adds a physics object to the entity and the physics world of the layer
 	 * @memberof yEntity
+	 * @param {b2BodyDef} pBodyDev - The physical body definition.
 	 */
-	addPhysModel: function(pBody, pFixture){
-		pBody.position.Set(this.position.x, this.position.y);
-		this.physModel = this.layer.physWorld.CreateBody(pBody).CreateFixture(pFixture);
+	addPhysModel: function(pBodyDef){
+		pBodyDef.position.Set(this.position.x, this.position.y);
+		this.physModel = this.layer.physWorld.CreateBody(pBodyDef);
 	}
 });
 
@@ -764,7 +876,7 @@ var yEntity = Class.extend({
  * @projectDescription YetiJS game framework
  * 
  * @author Leo Zurbriggen [http://leoz.ch]
- * @version 021112
+ * @version 131112
  */
 
 // Global variables
@@ -773,6 +885,7 @@ var canvas;
 var ctx;
 var delta = 0;
 var input;
+var assetManager;
 
 /**
  * @class yGame
@@ -782,21 +895,36 @@ var input;
  * @author Leo Zurbriggen
  * @constructor
  * @param {yGameState} pGameState - The initial gamestate.
+ * @param {Integer} pResolutionX - The horizontal resolution.
+ * @param {Integer} pResolutionY - The vertical resolution.
  * @param {Boolean} pDebug - (optional) Tells if you're in debug mode.
  * @property {yGameState} gameState - The active gamestate.
  * @property {Boolean} debugging - If in debug mode.
  * @property {Integer} lastFrame - The time of the last frame.
+ * @property {yVector} resolution - The resolution of the canvas.
+ * @property {Object} scalingMode - The scaling mode, SCALETOFIT, CENTER or STRETCH, default: STRETCH.
  */
 
 var yGame = Class.extend({
-	init: function(pGameState, pDebug){
+	init: function(pGameState, pResolutionX, pResolutionY, pDebug){
 		this.gameState = pGameState;
 		this.debugging = (pDebug == true ? true : false);
 		this.lastFrame = Date.now();
 		
+		this.resolution = new yVector(pResolutionX, pResolutionY);
+		this.scalingModes = {
+			SCALETOFIT: 0,
+			CENTER: 1,
+			STRETCH: 2
+		};
+		
 		// Begin updateing the game logic
 		var self = this;
 		setInterval(function(){self.update()}, 1);
+	
+		// Set viewport initial an when window gets resized
+		this.setScaling(this.scalingModes.STRETCH);
+		window.addEventListener("resize", function(){self.setScaling()}, false);
 	
 		// Begin drawing the game graphics
 		window.requestAnimFrame(function(){self.draw()});
@@ -804,13 +932,52 @@ var yGame = Class.extend({
 	},
 	
 	/**
-	 * Add the canvas
+	 * Sets the scaling mode to a specific value
 	 * @memberof yGame
-	 * @param {yVector} pDimensions - The width and height of the Canvas; If null: window-height/width.
-	 * @param {Element} pParent - (optional) The parent html-Element to add the canvas to, Default: window.
+	 * @param {Integer} pScalingMode - (optional) The scaling mode.
 	 */
-	addCanvas: function(pDimensions, pParent){
-		
+	setScaling: function(pScalingMode){
+		if(pScalingMode){
+			this.scalingMode = pScalingMode;
+		}
+		var windowWidth = window.innerWidth;
+		var windowHeight = window.innerHeight;
+
+		if(this.scalingMode == this.scalingModes.SCALETOFIT){
+			var scaleToFitX = windowWidth / this.resolution.x;
+			var scaleToFitY = windowHeight / this.resolution.y;
+			 
+			var currentScreenRatio = windowWidth / windowHeight;
+			var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+			 
+			if(currentScreenRatio >= 1.77 && currentScreenRatio <= 1.79){
+			    canvas.width = this.resolution.x;
+			    canvas.height = this.resolution.y;
+			    canvas.style.width = windowWidth + "px";
+				canvas.style.height = windowHeight + "px";
+			}else{
+			    canvas.width = this.resolution.x;
+			    canvas.height = this.resolution.y;
+			    canvas.style.width = this.resolution.x * optimalRatio + "px";
+				canvas.style.height = this.resolution.y * optimalRatio + "px";
+			}
+			
+			canvas.style.marginTop = ((windowHeight-parseInt(canvas.style.height))/2)+"px";
+			canvas.style.marginLeft = ((windowWidth-parseInt(canvas.style.width))/2)+"px";
+		}else if(this.scalingMode == this.scalingModes.CENTER){
+			canvas.width = this.resolution.x;
+			canvas.height = this.resolution.y;
+			canvas.style.width = this.resolution.x + "px";
+			canvas.style.height = this.resolution.y + "px";
+			
+			canvas.style.marginTop = ((windowHeight-parseInt(canvas.style.height))/2)+"px";
+			canvas.style.marginLeft = ((windowWidth-parseInt(canvas.style.width))/2)+"px";
+		}else if(this.scalingMode == this.scalingModes.STRETCH){
+			canvas.width = this.resolution.x;
+			canvas.height = this.resolution.y;
+			canvas.style.width = windowWidth + "px";
+			canvas.style.height = windowHeight + "px";
+		}
 	},
 	
 	/**
@@ -861,6 +1028,7 @@ window.addEventListener("load", function(){
 	document.body.appendChild(canvas);
 	
 	input = new yInput();
+	assetManager = new yAssetManager();
 	
 	// Fires the ready-event
 	var event = document.createEvent("Event");
@@ -1154,8 +1322,9 @@ var yInput = Class.extend({
 		this.orientationBeta = 0;
 		this.orientationAlpha = 0;
 		
-		window.addEventListener('keyup', this.onKeyup, false);
-		window.addEventListener('keydown', this.onKeydown, false);
+		var that = this;
+		window.addEventListener('keyup', this.onKeyUp, false);
+		window.addEventListener('keydown', this.onKeyDown, false);
 		canvas.addEventListener("touchstart", this.onTouchStart, true);
 		canvas.addEventListener("touchmove", this.onTouchMove, true);
 		canvas.addEventListener("touchend", this.onTouchEnd, true);
@@ -1164,7 +1333,7 @@ var yInput = Class.extend({
 		canvas.addEventListener("mousedown", this.onMouseDown, true);
 		canvas.addEventListener("mousemove", this.onMouseMove, true);
 		canvas.addEventListener("mouseup", this.onMouseUp, true);
-		window.addEventListener('deviceorientation', this.handleOrientation, false);
+		window.addEventListener('deviceorientation', this.handleOrientation, true);
 	},
 
 	/**
@@ -1322,7 +1491,10 @@ var yInput = Class.extend({
 	 * @memberof yInput
 	 */
 	update: function() {
-		this.lastKeyState = deepCopy(this.keyState);
+		for(var i = 0; i < this.keyState.length; i++){
+			this.lastKeyState[i] = this.keyState[i];
+		}
+		//this.lastKeyState = deepCopy(this.keyState);
 		for (var i = 0; i < this.lastTouches.length; i++) {
 			this.touches[i].update();
 		}
@@ -1389,10 +1561,10 @@ var yLayer = Class.extend({
 	updatePhysics: function(){
 		if(this.physWorld){
 			this.physDelta += delta;
-			if(this.physDelta > 1/60){
+			if(this.physDelta > 1/30){
 				this.physDelta = 0;
+				this.physWorld.Step(1/30, 1, 1);
 				this.physWorld.ClearForces();
-				this.physWorld.Step(1/60, 6, 2);
 			}
 		}
 	}
@@ -1523,7 +1695,7 @@ var yPolygon = Class.extend({
 		this.position = pPosition;
 		this.points = [];
 		this.edges = [];
-		this.lineWidth = "1";
+		this.lineWidth = "5";
 		this.strokeStyle = "rgba(20, 20, 20, 0.7)";
 		this.fillStyle = "rgba(30, 30, 30, 0.5)";
 	},
@@ -1580,75 +1752,21 @@ var yPolygon = Class.extend({
 		ctx.strokeStyle = this.strokeStyle;
 		ctx.fillStyle = this.fillStyle;
 		var points = this.getAbsolutePoints();
+		var cscale = pCamera.scale;
+		//pCamera.scale = 10;
 		if (points.length > 1) {
-			ctx.moveTo(pCamera.position.x + points[0].x, pCamera.position.y + points[0].y);
+			ctx.moveTo((pCamera.position.x + points[0].x)*pCamera.scale, (pCamera.position.y + points[0].y)*pCamera.scale);
 			for (var i = 1; i < points.length; i++) {
-				ctx.lineTo(pCamera.position.x + points[i].x, pCamera.position.y + points[i].y);
+				ctx.lineTo((pCamera.position.x + points[i].x)*pCamera.scale, (pCamera.position.y + points[i].y)*pCamera.scale);
 			}
 		}
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
+		pCamera.scale = cscale;
 	}
 });
 
-
-/**
- * @class ySound
- * @augments Class
- * @classdesc The sound class should be used to play a short sound file.
- * 
- * @author Leo Zurbriggen
- * @constructor
- * @param {String} pFileName - The file name of the sound.
- * @param {Boolean} pFallback - (optional) Tells, if the class should get the file (ogg or mp3) depending on the browser.
- */
-var ySound = Class.extend({
-	init: function(pFileName, pFallback){
-		// Loads the audio file that can be played by the browser
-		if(pFallback == true){
-			if(new Audio().canPlayType("audio/ogg; codecs=vorbis")){
-				this.audio = new Audio(pFileName + ".ogg");
-			}else{
-				this.audio = new Audio(pFileName + ".mp3");
-			}
-		}
-	},
-	
-	/**
-	 * Plays the sound
-	 * @memberof ySound
-	 */
-	play: function(){
-		this.audio.play();
-	},
-	
-	
-	/**
-	 * Pauses the sound
-	 * @memberof ySound
-	 */
-	pause: function(){
-		this.audio.pause();
-	}
-});
-
-/**
- * @class ySprite
- * @augments Class
- * @classdesc The sprite class contains an Image-element.
- * 
- * @author Leo Zurbriggen
- * @constructor
- * @param {String} pSprite - The path to an image file.
- * @property {Image} sprite - The image.
- */
-var ySprite = Class.extend({
-	init: function(pSprite){
-		this.sprite = new Image();
-		this.sprite.src = pSprite;
-	}
-});
 
 /**
  * @class ySpriteSheet
@@ -1668,8 +1786,7 @@ var ySpriteSheet = Class.extend({
 	init: function(pCols, pRows, pSprite){
 		this.cols = pCols;
 		this.rows = pRows;
-		this.sprite = new Image();
-		this.sprite.src = pSprite;
+		this.sprite = pSprite;
 		this.frameWidth = this.sprite.width / this.cols;
 		this.frameHeight = this.sprite.height / this.rows;
 	},
@@ -1692,7 +1809,7 @@ var ySpriteSheet = Class.extend({
 	 */
 	drawFrame: function(pID, pPosition, pCamera){
 		var framePosition = this.getFramePositionByID(pID);
-		ctx.drawImage(this.sprite, framePosition.x, framePosition.y, this.frameWidth, this.frameHeight, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.frameWidth, this.frameHeight);
+		ctx.drawImage(this.sprite, framePosition.x, framePosition.y, this.frameWidth, this.frameHeight, (pCamera.position.x + pPosition.x)*pCamera.scale, (pCamera.position.y + pPosition.y)*pCamera.scale, this.frameWidth*pCamera.scale, this.frameHeight*pCamera.scale);
 	}
 });
 
@@ -1775,8 +1892,7 @@ var yTileMap = Class.extend({
  */
 var yTileSet = Class.extend({
 	init: function(pSprite, pTileSize){
-		this.sprite = new Image();
-		this.sprite.src = pSprite;
+		this.sprite = pSprite;
 		this.tileSize = pTileSize;
 		this.width = this.sprite.width / this.tileSize;
 		this.height = this.sprite.height / this.tileSize;
@@ -1800,7 +1916,7 @@ var yTileSet = Class.extend({
 	 */
 	drawTile: function(pID, pPosition, pCamera){
 		var tilePosition = this.getTilePositionByID(pID);
-		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, pCamera.position.x + pPosition.x, pCamera.position.y + pPosition.y, this.tileSize, this.tileSize);
+		ctx.drawImage(this.sprite, tilePosition.x, tilePosition.y, this.tileSize, this.tileSize, (pCamera.position.x + pPosition.x)*pCamera.scale, (pCamera.position.y + pPosition.y)*pCamera.scale, this.tileSize*pCamera.scale, this.tileSize*pCamera.scale);
 	},
 	
 	/**
@@ -1913,6 +2029,139 @@ var yTouch = Class.extend({
 });
 
 
+/*
+ Execute the given function when the browser is ready to draw the next frame
+
+ Author: Paul Irish
+ URL: http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ */
+window.requestAnimFrame = (function() {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+	function(callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ */
+// Inspired by base2 and Prototype
+(function(){
+	var initializing = false,
+        fnTest = /xyz/.test(function() {
+            xyz;
+        }) ? /\b_super\b/ : /.*/;
+    // The base Class implementation (does nothing)
+    this.Class = function() {};
+
+    // Create a new Class that inherits from this class
+    Class.extend = function(prop) {
+        var _super = this.prototype;
+
+        // Instantiate a base class (but only create the instance,
+        // don't run the init constructor)
+        initializing = true;
+        var prototype = new this();
+        initializing = false;
+
+        // Copy the properties over onto the new prototype
+        for (var name in prop) {
+            // Check if we're overwriting an existing function
+            prototype[name] = typeof prop[name] == "function" && typeof _super[name] == "function" && fnTest.test(prop[name]) ? (function(name, fn) {
+                return function() {
+                    var tmp = this._super;
+
+                    // Add a new ._super() method that is the same method
+                    // but on the super-class
+                    this._super = _super[name];
+
+                    // The method only need to be bound temporarily, so we
+                    // remove it when we're done executing
+                    var ret = fn.apply(this, arguments);
+                    this._super = tmp;
+
+                    return ret;
+                };
+            })(name, prop[name]) : prop[name];
+        }
+
+        // The dummy class constructor
+
+		/**
+ 		 * @class Class
+ 		 * @description The base class all other classes should inherit from.
+ 		 */
+        function Class() {
+            // All construction is actually done in the init method
+            if (!initializing && this.init) this.init.apply(this, arguments);
+        }
+
+        // Populate our constructed prototype object
+        Class.prototype = prototype;
+
+        // Enforce the constructor to be what we expect
+        Class.prototype.constructor = Class;
+
+        // And make this class extendable
+        Class.extend = arguments.callee;
+
+        return Class;
+    };
+}());
+
+function deepCopy(obj) {
+	if (Object.prototype.toString.call(obj) === '[object Array]') {
+		var out = [], i = 0, len = obj.length;
+		for (; i < len; i++) {
+			out[i] = arguments.callee(obj[i]);
+		}
+		return out;
+	}
+	if ( typeof obj === 'object') {
+		var out = {}, i;
+		for (i in obj ) {
+			out[i] = arguments.callee(obj[i]);
+		}
+		return out;
+	}
+	return obj;
+}
+
+// Aliasing Box2DWeb-components
+var b2Vec2 = Box2D.Common.Math.b2Vec2,
+	yVector = Box2D.Common.Math.b2Vec2,
+	b2yVector = Box2D.Common.Math.b2yVector, 
+	b2AABB = Box2D.Collision.b2AABB, 
+	b2BodyDef = Box2D.Dynamics.b2BodyDef, 
+	b2Body = Box2D.Dynamics.b2Body, 
+	b2FixtureDef = Box2D.Dynamics.b2FixtureDef, 
+	b2Fixture = Box2D.Dynamics.b2Fixture, 
+	b2World = Box2D.Dynamics.b2World,
+	b2MassData = Box2D.Collision.Shapes.b2MassData, 
+	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape, 
+	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape, 
+	b2DebugDraw = Box2D.Dynamics.b2DebugDraw, 
+	b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
+	b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef,
+	b2DistanceJointDef = Box2D.Dynamics.Joints.b2DistanceJointDef,
+	b2PrismaticJointDef =  Box2D.Dynamics.Joints.b2PrismaticJointDef,
+	b2PulleyJointDef =  Box2D.Dynamics.Joints.b2PulleyJointDef,
+	b2GearJointDef =  Box2D.Dynamics.Joints.b2GearJointDef,
+	b2LineJointDef =  Box2D.Dynamics.Joints.b2LineJointDef,
+	b2WeldJointDef =  Box2D.Dynamics.Joints.b2WeldJointDef;
+	
+
 window.addEventListener("YetiJSReady", function(){
-game = new yGame(new yGameState());
+game = new yGame(new yGameState(), 1024, 600, true);
 });
