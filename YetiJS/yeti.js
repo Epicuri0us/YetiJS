@@ -899,6 +899,8 @@ var assetManager;
  * @property {yGameState} gameState - The active gamestate.
  * @property {Boolean} debugging - If in debug mode.
  * @property {Integer} lastFrame - The time of the last frame.
+ * @property {yVector} resolution - The resolution of the canvas.
+ * @property {Object} scalingMode - The scaling mode, SCALETOFIT, CENTER or STRETCH, default: STRETCH.
  */
 
 var yGame = Class.extend({
@@ -909,18 +911,17 @@ var yGame = Class.extend({
 		
 		this.resolution = new yVector(pResolutionX, pResolutionY);
 		this.scalingModes = {
-			ASPECTRATIO: 0,
-			NOSCALING: 1,
+			SCALETOFIT: 0,
+			CENTER: 1,
 			STRETCH: 2
 		};
-		this.scalingMode = this.scalingModes.STRETCH;
 		
 		// Begin updateing the game logic
 		var self = this;
 		setInterval(function(){self.update()}, 1);
 	
 		// Set viewport initial an when window gets resized
-		this.setScaling();
+		this.setScaling(this.scalingModes.STRETCH);
 		window.addEventListener("resize", function(){self.setScaling()}, false);
 	
 		// Begin drawing the game graphics
@@ -929,16 +930,18 @@ var yGame = Class.extend({
 	},
 	
 	/**
-	 * Add the canvas
+	 * Sets the scaling mode to a specific value
 	 * @memberof yGame
-	 * @param {yVector} pDimensions - The width and height of the Canvas; If null: window-height/width.
-	 * @param {Element} pParent - (optional) The parent html-Element to add the canvas to, Default: window.
+	 * @param {Integer} pScalingMode - (optional) The scaling mode.
 	 */
-	setScaling: function(){
+	setScaling: function(pScalingMode){
+		if(pScalingMode){
+			this.scalingMode = pScalingMode;
+		}
 		var windowWidth = window.innerWidth;
 		var windowHeight = window.innerHeight;
 
-		if(this.scalingMode == this.scalingModes.ASPECTRATIO){
+		if(this.scalingMode == this.scalingModes.SCALETOFIT){
 			var scaleToFitX = windowWidth / this.resolution.x;
 			var scaleToFitY = windowHeight / this.resolution.y;
 			 
@@ -959,7 +962,7 @@ var yGame = Class.extend({
 			
 			canvas.style.marginTop = ((windowHeight-parseInt(canvas.style.height))/2)+"px";
 			canvas.style.marginLeft = ((windowWidth-parseInt(canvas.style.width))/2)+"px";
-		}else if(this.scalingMode == this.scalingModes.NOSCALING){
+		}else if(this.scalingMode == this.scalingModes.CENTER){
 			canvas.width = this.resolution.x;
 			canvas.height = this.resolution.y;
 			canvas.style.width = this.resolution.x + "px";
